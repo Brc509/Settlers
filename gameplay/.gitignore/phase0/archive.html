@@ -1,0 +1,17 @@
+<select ng-model="game" ng-options="g.title for g in games">
+	<option value="">-- choose game --</option>
+</select>
+<div >
+	<select ng-model="game.player" ng-options="p.id as p.name for p in game.players" ng-if="game.players"> 
+		<option value="">-- choose player --</option>
+	</select>
+</div>
+<div ng-if="game.player">
+	<form ng-submit="login()">
+
+		<div style="color: {{game.player.color}}">
+			 id: {{game.player.id}} | password: {{game.player.name.toLowerCase()}}
+		</div>
+		<input type="submit" class="btn btn-primary" value="login">
+	</form>
+</div>

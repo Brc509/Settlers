@@ -1,0 +1,134 @@
+<html>	
+	<head>		
+		<title>Interface</title>
+		<!-- Angular -->
+		<script src="js/angular/angular.min.js"></script>
+		<script src="js/angular/angular-route.min.js"></script>
+		<!-- JQuery -->
+		<script src="/libs/jquery.js"></script>
+		<!-- Bootstrap -->
+		<script src="js/bootstrap/bootstrap.min.js"></script>
+		<!-- Angular Controller -->
+		<script src="js/scApp.js"></script>
+		<!-- Stylesheets-->
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+
+	</head>
+	<body ng-app="scApp">
+
+		<h1>Player and REST API Tester</h1>
+
+
+		<div ng-controller="playerCtrl">
+			
+			<div class="row">
+				<!-- GET GAMES, LOGIN, JOIN GAME -->
+				<form id="loginForm" class="thumbnail col-md-3 col-md-offset-1 column">
+					<h2>Games In Progress</h2>
+					
+					<div class="dropdown">
+						<button id="dropdownMenu1" type="button" class="btn dropdown-toggle btn-default" data-toggle="dropdown">
+					    	Games <span class="caret"></span>
+						</button>
+						<ul role="menu" class="dropdown-menu" aria-labelledby="dropdownMenu1">
+				    		<li ng-repeat-start="g in games" role="presentation" class="dropdown-header"> {{g.title}}</li>
+				    		<li ng-repeat="p in g.players" 	 role="presentation">
+				    			<a ng-model="player" role="menuitem" tabindex="-1" ng-click="setPlayer()">{{p.name}}</a>
+				    		</li>
+				    		<li ng-repeat-end ng-if="!$last" role="presentation" class="divider"></li>
+						</ul>
+					</div>
+					<div ng-if="player" style="color: {{player.color}}">
+						{{player.name}} | {{player.id}} | {{player.name.toLowerCase()}} | {{player.color}}
+					</div>
+					<input name="username" type="hidden" value="{{player.name}}">
+					<input name="password" type="hidden" value="{{player.name.toLowerCase()}}">
+					<button type="button" class="btn btn-primary" ng-click="login()"> Login </button><br>
+					<button type="button" class="btn btn-primary" ng-click="joinGame()">Join Game</button>
+				</form>
+
+				<!-- EXECUTE COMMANDS -->
+				<div class="thumbnail col-md-4 column">
+					<h2>Game Commands</h2>
+					<select ng-model="command" ng-options="c.url for c in commands">
+						<option value="">-- choose command --</option>
+					</select>
+					<form id="comForm" ng-submit="sendCommand()">
+						<div class="text-left" ng-model="command">
+							<hr>
+							<h4>Description </h4> 	
+							<p class="well well-sm">{{command.description}}</p>
+							<h4>Method </h4> 		
+							<p class="well well-sm">{{command.method}}</p>
+
+							<h4>Arguments ({{command.args.length}})</h4>
+							<div ng-repeat="arg in command.args">
+
+								<div class="arg-names" > 
+									<input name="{{arg.name}}" ng-model="arg.value" ng-init="arg.value=false" type="checkbox" ng-if="arg.type == 'BOOLEAN'">
+									{{arg.name}} ({{arg.type}})
+								
+								
+									<input name="{{arg.name}}" ng-model="arg.value" type="text" class="form-control input-sm" placeholder="{{arg.description}}" ng-if="arg.type != 'BOOLEAN' && arg.name != 'color'"/>
+									
+									<select name="{{arg.name}}" ng-if="arg.name == 'color'">
+										<option ng-repeat= "c in arg.values" value="{{c}}"> {{c}} </option>
+									</select>
+								</div>
+
+							</div>
+							<div ng-if="command.template">
+								<h4>Template </h4>
+								<textarea json class="well well-sm" ng-model="command.template"> </textarea>
+							</div>
+						</div>
+						<input type="submit" class="btn btn-primary" value="submit" />
+					</form>
+				</div>
+
+				<!-- DISPLAY REQUEST AND RESPONSE -->
+				<div class="thumbnail col-md-4 col-md-offset-1 column">
+					<div class="text-left" ng-model="response">
+						<h4>Response</h4> 
+						<span> {{resStatus}} </span>
+						<pre>{{response}}</pre>
+					</div>
+				</div>
+				
+			</div>
+
+
+			<hr>
+
+
+			<!-- ENTIRE API -->
+			<div class="row">
+				<div class="col-md-6 col-md-offset-1">
+					<input id="cb" type="checkbox" ng-model="showJsonDoc" />
+					<label for="cb">Show API</label>
+				</div>
+			</div>
+		
+			<div ng-if="showJsonDoc" class="row">
+				<div class="col-md-4 col-md-offset-1">
+					<input type="text" ng-model="search" placeholder="search API" class="form-control input-sm" />
+				</div>
+				<div class="col-md-8 col-md-offset-1">
+					
+					<div ng-repeat="c in commands | filter:search" >
+						<hr>
+						<h3>
+							{{c.url}}
+							<div><small>{{c.description}}</small></div> 
+						</h3>
+						<pre>{{c.args | json }}</pre>
+						<p>{{c.method}}</p>
+						<pre>{{c.template | json }}</pre>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+</html>

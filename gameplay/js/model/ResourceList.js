@@ -12,37 +12,93 @@
         INVARIANT: The numbers of each resource (parameters) are all valid numbers
     
     Constructor Specification:
-        PRE: !isNaN(_brick)
-        PRE: !isNaN(_ore)
-        PRE: !isNaN(_sheep)
-        PRE: !isNaN(_wheat)
-        PRE: !isNaN(_wood)
+        PRE: !isNaN(brick)
+        PRE: !isNaN(ore)
+        PRE: !isNaN(sheep)
+        PRE: !isNaN(wheat)
+        PRE: !isNaN(wood)
         POST: All 5 variables are positive numbers
     </pre>
     @class ResourceList
     @constructor
 
-    @param {_brick} Initial number of brick cards
-    @param {_ore} Initial number of ore cards
-    @param {_sheep} Initial number of sheep cards
-    @param {_wheat} Initial number of wheat cards
-    @param {_wood} Initial number of wood cards
+    @param {Number} brick Initial number of brick cards
+    @param {Number} ore Initial number of ore cards
+    @param {Number} sheep Initial number of sheep cards
+    @param {Number} wheat Initial number of wheat cards
+    @param {Number} wood Initial number of wood cards
 */
-function ResourceList(_brick, _ore, _sheep, _wheat, _wood) {
-
+function ResourceList(brick, ore, sheep, wheat, wood) {
+    this.brick = brick;
+    this.ore = ore;
+    this.sheep = sheep;
+    this.wheat = wheat;
+    this.wood = wood;
 }
 
 /**
     <pre>
-        PRE: All of the parameter changes are valid numbers
-        PRE: All none of the negative changes are greater than the current value
-        POST: The five numbers were changed by parameter amounts
+        PRE: The parameter (newBrick) is a non-negative integer
+        POST: The current brick value is equal to the parameter (newBrick) value
     </pre>
-    @method changeResources
-    @param ResourceList, a ResourceList of number-changes to modify this list by
+    @method setBrick
+    @param {Number} newBrick
 */
-ResourceList.prototype.changeResources = function() {
+ResourceList.prototype.setBrick = function(newBrick) {
 
+    this.brick = newBrick;
+}
+
+/**
+    <pre>
+        PRE: The parameter (newOre) is a non-negative integer
+        POST: The current ore value is equal to the parameter (newOre) value
+    </pre>
+    @method setOre
+    @param {Number} newOre
+*/
+ResourceList.prototype.setOre = function(newOre) {
+
+    this.ore = newOre;
+}
+
+/**
+    <pre>
+        PRE: The parameter (newSheep) is a non-negative integer
+        POST: The current sheep value is equal to the parameter (newSheep) value
+    </pre>
+    @method setSheep
+    @param {Number} newSheep
+*/
+ResourceList.prototype.setSheep = function(newSheep) {
+
+    this.sheep = newSheep;
+}
+
+/**
+    <pre>
+        PRE: The parameter (newWheat) is a non-negative integer
+        POST: The current wheat value is equal to the parameter (newWheat) value
+    </pre>
+    @method setWheat
+    @param {Number} newWheat
+*/
+ResourceList.prototype.setWheat = function(newWheat) {
+
+    this.wheat = newWheat;
+}
+
+/**
+    <pre>
+        PRE: The parameter (newWood) is a non-negative integer
+        POST: The current wood value is equal to the parameter (newWood) value
+    </pre>
+    @method setWood
+    @param {Number} newWood
+*/
+ResourceList.prototype.setWheat = function(newWood) {
+
+    this.wood = newWood;
 }
 
 /**
@@ -54,6 +110,7 @@ ResourceList.prototype.changeResources = function() {
 */
 ResourceList.prototype.getBrick = function () {
 
+    return this.brick;
 }
 
 /**
@@ -65,6 +122,7 @@ ResourceList.prototype.getBrick = function () {
 */
 ResourceList.prototype.getOre = function () {
 
+    return this.ore;
 }
 
 /**
@@ -76,6 +134,7 @@ ResourceList.prototype.getOre = function () {
 */
 ResourceList.prototype.getSheep = function () {
 
+    return this.sheep;
 }
 
 /**
@@ -87,6 +146,7 @@ ResourceList.prototype.getSheep = function () {
 */
 ResourceList.prototype.getWheat = function () {
 
+    return this.wheat;
 }
 
 /**
@@ -98,4 +158,5 @@ ResourceList.prototype.getWheat = function () {
 */
 ResourceList.prototype.getWood = function () {
 
+    return this.wood;
 }

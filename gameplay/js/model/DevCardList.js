@@ -12,24 +12,25 @@
         INVARIANT: The numbers of each development card (parameters) are all valid numbers
     
     Constructor Specification:
-        PRE: !isNaN(_monopoly)
-        PRE: !isNaN(_monument)
-        PRE: !isNaN(_roadBuilding)
-        PRE: !isNaN(_soldier)
-        PRE: !isNaN(_yearOfPlenty)
+        PRE: !isNaN(newDevCardList.monopoly)
+        PRE: !isNaN(newDevCardList.monument)
+        PRE: !isNaN(newDevCardList.roadBuilding)
+        PRE: !isNaN(newDevCardList.soldier)
+        PRE: !isNaN(newDevCardList.yearOfPlenty)
         POST: All 5 variables are positive numbers
     </pre>
     @class DevCardList
     @constructor
 
-    @param {_monopoly} Initial number of monopoly cards
-    @param {_monument} Initial number of monument cards
-    @param {_roadBuilding} Initial number of roadBuilding cards
-    @param {_soldier} Initial number of soldier cards
-    @param {_yearOfPlenty} Initial number of yearOfPlenty cards
+    @param {newDevCardList} An object containing the necessary values for a Dev Card List 
 */
-function DevCardList(_monopoly, _monument, _roadBuilding, _soldier, _yearOfPlenty) {
+function DevCardList(newDevCardList) {
 
+    this.monopoly = newDevCardList.monopoly;
+    this.monument = newDevCardList.monument;
+    this.roadBuilding = newDevCardList.roadBuilding;
+    this.soldier = newDevCardList.soldier;
+    this.yearOfPlenty = newDevCardList.yearOfPlenty;
 }
 
 /**

@@ -16,9 +16,7 @@
         largestArmy: Whether the player has the "Largest Army" card, boolean
         playedDevCard: Whether the player has played a dev card this turn, boolean
         discarded: Whether the player has discarded or not already this discard phase, boolean
-        playerID: Unique player ID to pick 
-        
-        this client player apart from others, int
+        playerID: Unique player ID to pick this client player apart from others, int
         orderNumber: Number in the turn order (0-3), int
         name: Player name, string
         color: Player color, string
@@ -40,8 +38,30 @@
     @param clientName, The player's name
     @param clientColor, The color that this client selected
  */
-function Player(clientID, clientName, clientColor) {
+function Player(newPlayer) {
 
+    this.MAX_GAME_POINTS = player.MAX_GAME_POINTS;
+    this.resources = ResourceList(player.resources);
+    this.newDevCards = DevCardList(player.newDevCards);
+    this.oldDevCards = DevCardList(player.oldDevCards);
+
+    this.roads = player.roads;
+    this.cities = player.cities;
+    this.settlements = player.settlements;
+    this.soldiers = player.soldiers;
+    this.victoryPoints = player.victoryPoints;
+    this.monuments = player.monuments;
+
+    this.longestRoad = player.longestRoad;
+    this.largestArmy = player.largestArmy;
+    this.playedDevCard = player.playedDevCard;
+    this.discarded = player.discarded;
+
+    this.playerID = player.playerID;
+    this.orderNumber = player.orderNumber;
+
+    this.name = player.name;
+    this.color = player.color;
 }
 
 /**

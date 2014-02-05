@@ -1,37 +1,33 @@
-// Token
-// Author: Spencer Bench
+/**
+Token Class 
+<pre>
+</pre>
+@class Token 
+@constructor
+@param {HexLocation} location
+*/
+function Token(location) {
+    this.location = location;
+}
 
-Token = (function() {
+/**
+GetLocation method
+<pre>
+</pre>
+@method getLocation
+@return {HexLocation} location
+*/
+Token.prototype.getLocation = function() {
+    return this.location;
+}
 
-	/**
-		The Token class represents a numbered token.
-		<pre>
-		Domain:
-			location: The location of the token on the game board, HexLocation
-			
-		Constructor Specification:
-			PRE: loc is a HexLocation object
-			POST: this.location = loc
-		</pre>
-		
-		@class Token
-		@constructor
-		
-		@param {HexLocation} loc The location of the token on the game board
-	*/
-	function Token(loc) {
-		this.location = loc;
-	}
-	Token.prototype = Object.create(Object.prototype);
-	Token.prototype.constructor = Token;
-	
-	/**
-		@method getLocation
-	*/
-	Token.prototype.getLocation = function() {
-		return this.location;
-	};
-	
-	return Token;
-	
-})();
+/**
+SetLocation method
+<pre>
+</pre>
+@method setLocation
+@param {HexLocation} location
+*/
+Token.prototype.setLocation = function(location) {
+    this.location = location;
+}

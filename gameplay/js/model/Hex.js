@@ -1,78 +1,81 @@
 /**
-The Hex Class 
+Hex Class 
 <pre>
-Domain:
-            isLand: unique id number of the owner
-            location: the value of the vertex
-			edges: All the edges next to Hex.
-			vertexes: All the vertexes next to Hex.
-            
-        Invariants:
-            INVARIANT: Hex is valid
-			INVARIANT: contains 6 edges and 6 vertexes
-         
-        Constructor Specification:
-            PRE: Hex is valid
-            PRE: contains 6 edges and 6 vertexes
-            POST: isLand() == isLand
-            POST: getLocation() == location
-			POST: getEdges() == edges
-			POST: getVertexes() == vertexes
 </pre>
 @class Hex 
 @constructor
-@param {:isLand} (boolean)Whether Hex is on land.
-@param {:location} (HexLocation)The location object of Hex.
-@param {:edges} (array<Edge>)All the edges next to Hex.
-@param {:vertexes} (array<Vertex>)All the vertexes next to Hex.
+@param {boolean} isLand
+@param {HexLocation} location
+@param {Edge[]} edges
+@param {Vertex[]} vertexes
 */
-function Hex(isLand, location, edges, vertexes) {
-    this.isLand = isLand;
-    this.location = location;
-	this.edges = edges;
-	this.vertexes = vertexes;
+function Hex(isLand, location) {
+	this.isLand = isLand;
+	this.location = location;
 }
 
 /**
+GetEdges method
 <pre>
-None
-</pre>
-@method isLand
-@return {boolean} Whether Hex is land or not.
-*/
-Hex.prototype.isLand = function() {
-    return this.isLand;
-}
-
-/**
-<pre>
-location must be valid HexLocation
-</pre>
-@method getLocation
-@return {HexLocation} The HexLocation object of Hex.
-*/
-Hex.prototype.getLocation = function() {
-    return this.location;
-}
-
-/**
-<pre>
-edges must be located on Hex
 </pre>
 @method getEdges
-@return {array<Edge>} All the edges next to Hex.
+@return {Edge[]} edges
 */
 Hex.prototype.getEdges = function() {
     return this.edges;
 }
 
 /**
+GetLocation method
 <pre>
-vertexes must be located on Hex
+</pre>
+@method getLocation
+@return {HexLocation} location
+*/
+Hex.prototype.getLocation = function() {
+    return this.location;
+}
+
+/**
+GetVertexes method
+<pre>
 </pre>
 @method getVertexes
-@return {array<Vertex>} All the vertexes next to Hex.
+@return {Vertex[]} vertexes
 */
 Hex.prototype.getVertexes = function() {
     return this.vertexes;
+}
+
+/**
+IsLand method
+<pre>
+</pre>
+@method isLand
+@return {boolean} isLand
+*/
+Hex.prototype.isLand = function() {
+    return this.isLand;
+}
+
+/**
+SetEdge method
+<pre>
+</pre>
+@method setEdge
+@param {Edge} edge
+*/
+Hex.prototype.setEdge = function(edge) {
+    this.edges.push(edge);
+}
+
+/**
+SetVertex method
+<pre>
+</pre>
+@method setVertex
+@param {Vertex} vertex
+*/
+Hex.prototype.setVertex = function(vertex) {
+    this.vertexes.push(vertex);
 }

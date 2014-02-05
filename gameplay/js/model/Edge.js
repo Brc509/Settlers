@@ -1,47 +1,47 @@
-
 /**
-The Edge class represents an Edge on one of the hexes on the board
-
+Edge Class 
 <pre>
-  Domain:
-    value: The value of the edge, EdgeValue
-  Invariant:
-    The Edge will always have a value
-  Constructor Specifications:
-    PRE: the value must be a legitimate EdgeValue (ownerID)
-
+direction = NE | N | NW |SW | S | SE
 </pre>
-
-@class Edge
+@class Edge 
 @constructor
-@param value {EdgeValue} the value associated with the Edge (ownerID)
-
-
+@param {String} direction
+@param {Road} road
 */
-
-  function Edge(edgeValue){
-    this.value = value
-  }
+function Edge(direction, road) {
+	this.direction = direction;
+	this.road = road;	
+}
 
 /**
-  <pre>
-  Must be a valid EdgeValue (ownerID)
-  </pre>
-  @method setValue
-  @param {EdgeValue} the value associated with the particular edge
+GetDirection method
+<pre>
+</pre>
+@method getDirection
+@return {String} direction
 */
-  Edge.prototype.setEdgeValue = function (edgeValue) {
-    this.value = edgeValue;
-  }
+Edge.prototype.getDirection = function() {
+    return this.direction;
+}
 
 /**
-  <pre>
-  returns the edgvalue for a particular edge
-  </pre>
-  @method getEdgeValue
-  @return {EdgeValue} returs the value associated with a particular edge
+GetRoad method
+<pre>
+</pre>
+@method getRoad
+@return {Road} road
 */
-  Edge.prototype.getEdgeValue = function {
-    return this.value;
-  }
+Edge.prototype.getRoad = function() {
+    return this.road;
+}
 
+/**
+SetRoad method
+<pre>
+</pre>
+@method setRoad
+@param {Road} road
+*/
+Edge.prototype.setRoad = function(road) {
+    this.road = road;
+}

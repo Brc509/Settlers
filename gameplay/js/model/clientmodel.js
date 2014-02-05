@@ -55,6 +55,9 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 								player = new Object();
 
+								game = new Object();
+								game.devCards = gameStateData.deck;
+
 								player.name = players[0].name;
 								player.resources = players[0].resources;
 								player.oldDevCards = players[0].oldDevCards;
@@ -70,10 +73,10 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 								turnTracker = gameStateData.turnTracker;
 
-								devCards = gameStateData.deck;
-
 								var cm = new catan.models.ClientModel(0);
 								cm.buyDevCard();
+
+								//you're in the good one
 
 								//Map m = new Map(map);
 								//for players 
@@ -109,13 +112,18 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			var sheepNum = resources["sheep"];
 			var oreNum = resources["ore"];
 			var wheatNum = resources["wheat"];
-			var devCards = devCards;
+			var devCards = game.devCards;
 			
 			if(sheepNum > 0 && oreNum > 0 && wheatNum > 0){
-				// player.devCard ++;
-				// devCard --;
-				Proxy.buyDevCard(player);
+			
+				// Proxy.buyDevCard(player);
+			
 				alert("bought a card");
+			
+			}else{
+				
+				return false;
+			
 			}
 		}
 

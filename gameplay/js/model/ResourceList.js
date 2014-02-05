@@ -28,12 +28,12 @@
     @param {Number} wheat Initial number of wheat cards
     @param {Number} wood Initial number of wood cards
 */
-function ResourceList(brick, ore, sheep, wheat, wood) {
-    this.brick = brick;
-    this.ore = ore;
-    this.sheep = sheep;
-    this.wheat = wheat;
-    this.wood = wood;
+function ResourceList(newResourceList) {
+    this.brick = newResourceList.brick;
+    this.ore = newResourceList.ore;
+    this.sheep = newResourceList.sheep;
+    this.wheat = newResourceList.wheat;
+    this.wood = newResourceList.wood;
 }
 
 /**

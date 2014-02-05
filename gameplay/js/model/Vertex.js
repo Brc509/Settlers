@@ -1,46 +1,33 @@
-
 /**
-The Vertex class represents one of the Vertexes associated with a particular Hex
+Vertex Class 
 <pre>
-  Domain:
-    value: The value of the vertex, VertexValue
-  Invariant:
-    The Vertex will always have a value
-  Constructor Specifications:
-    PRE: the value must be a legitimate VertexValue (ownerID, and worth)
-
 </pre>
-
-@class Vertex
+@class Vertex 
 @constructor
-@param value {VertexValue} the value associated with the Vertex
-
-
+@param {Building} building
 */
-
-  function Vertex(vertexValue){
-    this.value = vertexValue
-  }
+function Vertex(building) {
+    this.building = building;
+}
 
 /**
-  <pre>
-  Must be a valid VertexValue
-  </pre>
-  @method setValue
-  @param {VertexValue} the value associated with the particular vertex
+GetBuilding method
+<pre>
+</pre>
+@method getBuilding
+@return {Building} building
 */
-  Vertex.prototype.setVertexValue = function (vValue) {
-    this.value = vValue;
-  }
+Vertex.prototype.getBuilding = function() {
+    return this.building;
+}
 
 /**
-  <pre>
-  returns the value for a particular Vertex
-  </pre>
-  @method getVertexValue
-  @return {VertexValue} returs the value associated with a particular Vertex
+SetBuilding method
+<pre>
+</pre>
+@method setBuilding
+@param {Building} building
 */
-  Vertex.prototype.getVertexValue = function {
-    return this.value;
-  }
-
+Vertex.prototype.setBuilding = function(building) {
+    this.building = building;
+}

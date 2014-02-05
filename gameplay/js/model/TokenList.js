@@ -8,7 +8,7 @@ Token values = 2 | 3 | 4 | 5 | 6 | 8 | 9 | 10 | 11 | 12
 @param {Array<Token[]>} tokenList
 */
 function TokenList() {
-	var tokenList = { 
+	this.tokenList = { 
 					  2 : new Array(),
 					  3 : new Array(),
 					  4 : new Array(),

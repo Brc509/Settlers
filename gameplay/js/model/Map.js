@@ -1,126 +1,122 @@
-﻿/** 
-	The Map Class represents the board and holds all of the hexagons
-	<pre>
-        Domain:
-            hexGrid: The gameboard grid of hexagons, HexGrid
-            numbers: List of possible numbers that can be associated with each Hex, TokenList
-            ports: List of all the ports on the game board, array[Port]
-            radius: Radius of the map (including the center hex and ocean hexes), int
-            lastRobber: Last location of the robber, HexLocation
-            robber: Current location of the robber, HexLocation
-
-        Invariants:
-            INVARIANT: Map must belong to a game
-
-        Constructor Specifications:
-            PRE: None
-            POST: All above variables initialized
-            
-    </pre>
-	@class Map
-    @constructor
+/**
+Map Class 
+<pre>
+</pre>
+@class Map 
+@constructor
+@param {HexGrid} hexGrid
+@param {TokenList} numbers
+@param {Port[]} ports
+@param {int} radius
+@param {HexLocation} lastRobber
+@param {HexLocation} robber
+@param {JSON} mapData
 */
-function Map() {
-
+function Map(mapData) {
+	this.mapData = mapData;
+	this.setRadius(mapData.radius);
+	this.setRobber(new HexLocation(mapData.robber.x, mapData.robber.y));
+	this.setLastRobber(new HexLocation(mapData.lastRobber.x, mapData.lastRobber.y));
+	this.setNumbers(mapData.numbers);
 }
 
 /**
-    <pre>
-        PRE: location1 and location2 are legitimate locations on the HexGrid
-        POST: If true, The space is actually unoccupied and fits all criteria to be a valid placement
-        POST: If false, There is really a reason that the space cannot be occupied by that player's road
-    </pre>
-    @method canPlaceRoad
-    @param location1, The first location of the road (first vertex)
-    @param location2, The second location of the road
-    @return boolean, Whether or not the road can be placed at the location
+SetNumbers method
+<pre>
+</pre>
+@method setNumbers
+@param {JSON} modelNumbers
 */
-function canPlaceRoad(location1, location2) {
-    
+Map.prototype.setNumbers = function(modelNumbers) {
+
+	var temp = new TokenList();
+	
+	$.each(modelNumbers, function(key, value) {
+	
+		for(var i=0;i<value.length;i++)
+		{
+			var newToken = new Token(new HexLocation(value[i].x,value[i].y));
+			temp.setToken(key, newToken);
+		}
+	
+	});
+	
+    this.numbers = temp;
 }
 
 /**
-    Place the road in a specific position  
-    <pre>
-        PRE: Validated from canPlaceRoad()
-        POST: The map object now includes this road for this player
-    </pre>
-        
-    @method	placeRoad
-    @param 	{location}	where the road will be placed
-	@param	{playerID}	ID of the player who is placing the road
-	@return	{boolean}	returns true if road is placed.  false otherwise
+GetNumbers method
+<pre>
+</pre>
+@method getNumbers
+@return {TokenList} numbers
 */
-function placeRoad(location, playerID) {
-    
+Map.prototype.getNumbers = function() {
+    return this.numbers;
 }
 
 /**
-    <pre>
-        PRE: The settlement location is a valid location on the map
-        POST: If true, the settlement can really be placed on the given location for the given player
-        POST: If false, the settlement can not be placed on the location for a legitimate reason
-    </pre>
-    @method canPlaceSettlement
-    @param location, The location of the settlement to check
-    @return boolean, Whether or not the settlement can be placed in the current location
+SetRadius method
+<pre>
+</pre>
+@method setRadius
+@param {int} radius
 */
-function canPlaceSettlement(location, playerID) {
+Map.prototype.setRadius = function(radius) {
+    this.radius = radius;
 }
 
 /**
-     Place the settlement in a specific position  
-    <pre>
-        PRE: Validated from the canPlaceSettlement() method
-        POST: The map object now contains the given settlement at the location
-    </pre>
-        
-    @method	placeSettlement
-    @param 	{location}	where the settlement will be placed
-	@param	{playerID}	ID of the player who is placing the settlement
-	@return	{boolean}	returns true if settlement is placed.  false otherwise
+GetRadius method
+<pre>
+</pre>
+@method getRadius
+@return {int} radius
 */
-function placeSettlement(location, playerID) {
-    
+Map.prototype.getRadius = function() {
+    return this.radius;
 }
 
 /**
-    <pre>
-        PRE: The location is a legitimate location on the map
-        POST: If true, the city can really be placed at the given location
-        POST: If false, the city can not be placed at the location for a legitimate reason
-    </pre>
-    @canPlaceCity
-    @return boolean, Whether or not the city can be placed at the given location
+SetRobber method
+<pre>
+</pre>
+@method setRobber
+@param {HexLocation} robber
 */
-function canPlaceCity(location, playerID) {
+Map.prototype.setRobber = function(robber) {
+    this.robber = robber;
 }
 
 /**
-    Place the city in a specific position
-    <pre>
-        PRE: Validated from the canPlaceCity() method
-        POST: The map object now contains a city at the given location
-    </pre>
-        
-    @method	placeCity
-    @param 	{location}	where the city will be placed
-	@param	{playerID}	ID of the player who is placing the city
-	@return	{boolean}	returns true if city is placed.  false otherwise
+GetRobber method
+<pre>
+</pre>
+@method getRobber
+@return {HexLocation} robber
 */
-function placeCity(location, playerID) {
-    
+Map.prototype.getRobber = function() {
+    return this.robber;
 }
 
 /**
-	Move the robber to a specified position and set robber’s position
-	<pre>
-        PRE: Ensure that the robber's location is changed from the previous location
-        POST: The robber's location has actually changed to a valid location
-	</pre>
-	@method	moveRobber
-	@param {location}	where the robber is moving to
+SetLastRobber method
+<pre>
+</pre>
+@method setLastRobber
+@param {HexLocation} lastRobber
 */
-function moveRobber(location) {
-    
+Map.prototype.setLastRobber = function(lastRobber) {
+    this.lastRobber = lastRobber;
+}
+
+/**
+GetLastRobber method
+<pre>
+</pre>
+@method getLastRobber
+@return {HexLocation} lastRobber
+*/
+Map.prototype.getLastRobber = function() {
+    return this.lastRobber;
 }

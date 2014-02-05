@@ -21,9 +21,14 @@ MessageList = (function() {
 		@class MessageList
 		@constructor
 	*/
-	function MessageList() {
-		this.length = 0;
-		this.lines = {};
+	function MessageList(newMessageList) {
+		var messageLines = new Array();
+		for (var i=0;i<newMessageList.length;i++){ 
+			messageLines[i] = new MessageLine(newMessageList.lines[i]);
+		}
+		this.lines = newMessageList.lines;
+		// this.length = 0;
+		// this.lines = {};
 	}
 	MessageList.prototype = Object.create(Object.prototype);
 	MessageList.prototype.constructor = MessageList;

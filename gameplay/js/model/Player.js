@@ -38,12 +38,12 @@
     @param clientName, The player's name
     @param clientColor, The color that this client selected
  */
-function Player(newPlayer) {
+function Player(player) {
 
     this.MAX_GAME_POINTS = player.MAX_GAME_POINTS;
-    this.resources = ResourceList(player.resources);
-    this.newDevCards = DevCardList(player.newDevCards);
-    this.oldDevCards = DevCardList(player.oldDevCards);
+    this.resources = new ResourceList(player.resources);
+    this.newDevCards = new DevCardList(player.newDevCards);
+    this.oldDevCards = new DevCardList(player.oldDevCards);
 
     this.roads = player.roads;
     this.cities = player.cities;

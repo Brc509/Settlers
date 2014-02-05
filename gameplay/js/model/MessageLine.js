@@ -23,9 +23,9 @@ MessageLine = (function() {
 		@param {string} msg The message
 		@param {string} src The name of the player who authored the message
 	*/
-	function MessageLine(msg, src) {
-		this.message = msg;
-		this.source = src;
+	function MessageLine(line) {
+		this.message = line.message;
+		this.source = line.source;
 	}
 	MessageLine.prototype = Object.create(Object.prototype);
 	MessageLine.prototype.constructor = MessageLine;

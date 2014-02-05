@@ -49,31 +49,20 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 							
 							var gameState = $.get("/game/model", function(data){
 								
+								var cm = new catan.models.ClientModel(0);
+
 								var gameStateData = data;
 								var map = data["map"];
 								var players = data["players"];
 
-								player = new Object();
+								var playerCon = new Player(players[0]);
 
-								game = new Object();
-								game.devCards = gameStateData.deck;
+								var mList = new MessageList(gameStateData.chat);
 
-								player.name = players[0].name;
-								player.resources = players[0].resources;
-								player.oldDevCards = players[0].oldDevCards;
-								player.newDevCards = players[0].newDevCards;
-								player.roads = players[0].roads;
-								player.cities = players[0].cities;
-								player.settlements = players[0].settlements;
-								player.soldiers = players[0].soldiers;
-								player.monuments = players[0].monuments;
-								player.playerID = players[0].playerID;
-								player.orderNumber = players[0].orderNumber;
-								player.color = players[0].red;
+								var resources = playerCon.resources;
 
-								turnTracker = gameStateData.turnTracker;
+								var players = cm.createPlayers(players)
 
-								var cm = new catan.models.ClientModel(0);
 								cm.buyDevCard();
 
 								//you're in the good one
@@ -91,6 +80,16 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 
             // success();
+		}
+
+		ClientModel.prototype.createPlayers = function(playersData){
+			var playersList = new Array();
+			
+			for (var i=0;i<playersData.length;i++){ 
+				playersList[i] = new Player(playersData[i]);
+			}
+
+			return playersList;
 		}
 
 		ClientModel.prototype.robPlayer = function(playerIndex, victimIndex, robberPoint){

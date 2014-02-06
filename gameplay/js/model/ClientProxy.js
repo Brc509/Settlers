@@ -150,7 +150,12 @@ catan.models.ClientProxy = (function() {
 		@param {TYPE} PARAMNAME DESCRIPTION
 		@return {TYPE} DESCRIPTION
 	*/
-	ClientProxy.prototype.gameModel = function() {
+	ClientProxy.prototype.gameModel = function(success) {
+		//Skyler added this just to get the clientModel up and running.
+		//TODO refactor to use the command class.
+		$.get('/game/model', function(model){
+			success(model);
+		});
 	};
 	
 	/**

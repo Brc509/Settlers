@@ -23,8 +23,12 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 	var ClientModel = (function ClientModelClass(){
         
 		function ClientModel(playerID){
-			this.clientProxy = new catan.models.ClientProxy(playerID);
-
+			this.playerID 		= playerID;
+			this.clientProxy 	= new catan.models.ClientProxy(playerID);
+			// this.map 			= new Map(playerID);
+			this.players 		= new Array();
+			// this.turnTracker 	= new TurnTracker(playerID);
+			// this.bank			= new ResourceList();
 		}      
         
         /**
@@ -39,58 +43,25 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.initFromServer = function(success){
             
             // TODO: 1) fetch the game state from the server, 2) update the client model, 3) call the "success" function.
-
-			var login = $.post("/user/login", { username: "Sam", password : "sam"}, function(data) {
-				var loginData = data;
-					
-					
-					var join = $.post("games/join", { color: "red", id : "0"}, function(data) {
-						var joinData = data;
-						
-							
-							var gameState = $.get("/game/model", function(data){
-								
-								var cm = new catan.models.ClientModel(0);
-
-								var gameStateData = data;
-								var map = data["map"];
-								var players = data["players"];
-
-								var playerCon = new Player(players[0]);
-
-								var mList = new MessageList(gameStateData.chat);
-
-								var resources = playerCon.resources;
-
-								var players = cm.createPlayers(players)
-
-								cm.buyDevCard();
-
-								//you're in the good one
-
-								//Map m = new Map(map);
-								//for players 
-								//Player p = new Player(players[i])
+			this.clientProxy.gameModel(this.updateModel);
 			
-					});
-
-				});
-
-			});
-			
-
-
             // success();
 		}
 
-		ClientModel.prototype.createPlayers = function(playersData){
-			var playersList = new Array();
-			
-			for (var i=0;i<playersData.length;i++){ 
-				playersList[i] = new Player(playersData[i]);
-			}
+		ClientModel.prototype.updateModel = function(model) {
+			console.log(model);
 
-			return playersList;
+			// this.bank.update(model.bank);
+			// this.map.update(model.map);
+			// this.turnTracker.update(map.turnTracker);
+
+			var playersList = new Array();
+			for (p in model.players) {
+				playersList[p] = new Player(model.players[p]);
+			}
+			this.players = playersList;
+			console.log(this.players);
+
 		}
 
 		ClientModel.prototype.robPlayer = function(playerIndex, victimIndex, robberPoint){
@@ -120,7 +91,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 		}
 
-
 		/**
 		    <pre>
 		        POST: Person now has the dev card (in the dev card hand)
@@ -128,7 +98,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @method buyDevCard
 		*/
 		ClientModel.prototype.buyDevCard = function () {
-
 			if (canBuyDevCard()) {
 				clientProxy.buyDevCard();
 			}
@@ -144,7 +113,14 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @method yearOfPlenty
 		*/
 		ClientModel.prototype.yearOfPlenty = function (resource1, resource2) {
-
+			if (this.turnTracker.currentTurn == this.playerID
+				&& this.turnTracker.status == "Playing")
+			{
+				if (resources[resource1] > 0 && resources[resource2] > 0)
+				{
+					this.clientProxy.yearOfPlenty(resource1, resource2);
+				}
+			}
 		}
 
 		/**
@@ -250,14 +226,33 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @method discardCards
 		    @param ResourceHand discardedCards, The cards being discarded
 		*/
-		ClientModel.prototype.discardCards = function (discardedCards) {
-
-			this.clientProxy.discardCards(discardCards);
+		ClientModel.prototype.canDiscardCards = function (discardedCards) {
+			if (this.turnTracker.currentTurn == this.playerID
+				&& this.turnTracker.status == "Discarding") {
+				//TODO check that the player has all the cards to discard
+				//if (...) {}
+				return true;
+			}
+			else {
+				return false;
+			}
 
 		}
 
+		/**
+		    <pre>
+		        POST: If player is last one to discard, client's model status is now "Robbing"
+		        POST: Player lost the resources that they discarded
+		    </pre>
+		    @method discardCards
+		    @param ResourceHand discardedCards, The cards being discarded
+		*/
+		ClientModel.prototype.discardCards = function (discardedCards) {
 
-
+			if (canDiscardCards()) {
+				this.clientProxy.discardCards(discardCards);
+			}
+		}
 
         
 		return ClientModel;

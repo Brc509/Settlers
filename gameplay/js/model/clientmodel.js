@@ -23,6 +23,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 	var ClientModel = (function ClientModelClass(){
         
 		function ClientModel(playerID){
+			console.log('CLIENT MODEL CONSTRUCTOR. playerID: ' + playerID);
 			this.playerID 		= playerID;
 			this.clientProxy 	= new catan.models.ClientProxy(playerID);
 			// this.map 			= new Map(playerID);
@@ -60,6 +61,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 				playersList[p] = new Player(model.players[p]);
 			}
 			this.players = playersList;
+			this.clientPlayer = this.players[this.playerID];
 			console.log(this.players);
 
 		}
@@ -163,7 +165,9 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @param PlayerIndex victimIndex, index of the player being robbed
 		*/
 		ClientModel.prototype.soldier = function (robberSpot, victimIndex) {
-
+			if (this.players[p].resources.getCardCount > 0) {
+				this.clientProxy.soldier();
+			}
 		}
 
 		/**
@@ -240,14 +244,13 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.canDiscardCards = function (discardedCards) {
 			if (this.turnTracker.currentTurn == this.playerID
-				&& this.turnTracker.status == "Discarding") {
-				//TODO check that the player has all the cards to discard
-				//if (...) {}
+				&& this.turnTracker.status == "Discarding"
+				&& this.clientPlayer.resources.getCardCount > 7
+				&& this.clientPlayer.hasResources(discardedCards)) {
+
 				return true;
 			}
-			else {
-				return false;
-			}
+			else { return false; }
 
 		}
 
@@ -265,7 +268,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 				this.clientProxy.discardCards(discardCards);
 			}
 		}
-
         
 		return ClientModel;
 	}());	

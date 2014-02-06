@@ -32,6 +32,11 @@ function ResourceList(newResourceList) {
     this.wood = newResourceList.wood;
 }
 
+ResourceList.prototype.getCardCount = function () {
+    var count = this.brick + this.ore + this.sheep + this.wheat + this.wood;
+    return count;
+}
+
 /**
     <pre>
         POST: Correctly returns whether or not this ResourceList contains enough resources to afford a Road
@@ -39,7 +44,7 @@ function ResourceList(newResourceList) {
     @method canAffordRoad
     @return {boolean} Whether or not this ResourceList has the resources to buy a Road
 */
-Player.prototype.canAffordRoad = function() {
+ResourceList.prototype.canAffordRoad = function() {
 
     if (this.brick >= 1 && this.wood >= 1)
         return true;
@@ -53,7 +58,7 @@ Player.prototype.canAffordRoad = function() {
     @method canAffordSettlement
     @return {boolean} Whether or not this ResourceList has the resources to buy a Settlement
 */
-Player.prototype.canAffordSettlement = function() {
+ResourceList.prototype.canAffordSettlement = function() {
 
     if (this.brick >= 1 && this.wood >= 1 && this.wheat >= 1 && this.sheep >= 1)
         return true;
@@ -67,7 +72,7 @@ Player.prototype.canAffordSettlement = function() {
     @method canAffordCity
     @return {boolean} Whether or not this ResourceList has the resources to buy a City
 */
-Player.prototype.canAffordCity = function() {
+ResourceList.prototype.canAffordCity = function() {
 
     if (this.wheat >= 2 && this.ore >= 3) 
         return true;
@@ -81,7 +86,7 @@ Player.prototype.canAffordCity = function() {
     @method canAffordDevCard
     @return {boolean} Whether or not this ResourceList has the resources to buy a Development Card
 */
-Player.prototype.canAffordDevCard = function() {
+ResourceList.prototype.canAffordDevCard = function() {
 
     if (this.sheep >= 1 && this.wheat >= 1 && this.ore >= 1)
         return true;
@@ -95,7 +100,7 @@ Player.prototype.canAffordDevCard = function() {
     </pre>
     @method decrementRoad
 */
-Player.prototype.decrementRoad = function() {
+ResourceList.prototype.decrementRoad = function() {
 
     this.brick--;
     this.wood--;
@@ -108,7 +113,7 @@ Player.prototype.decrementRoad = function() {
     </pre>
     @method decrementSettlement
 */
-Player.prototype.decrementSettlement = function() {
+ResourceList.prototype.decrementSettlement = function() {
 
     this.brick--;
     this.wood--;
@@ -123,7 +128,7 @@ Player.prototype.decrementSettlement = function() {
     </pre>
     @method decrementCity
 */
-Player.prototype.decrementCity = function() {
+ResourceList.prototype.decrementCity = function() {
 
     this.wheat -= 2;
     this.ore -= 3;
@@ -136,7 +141,7 @@ Player.prototype.decrementCity = function() {
     </pre>
     @method decrementDevCard
 */
-Player.prototype.decrementDevCard = function() {
+ResourceList.prototype.decrementDevCard = function() {
 
     this.sheep--;
     this.wheat--;
@@ -151,7 +156,7 @@ Player.prototype.decrementDevCard = function() {
     @method discardCards
     @param {Object} A ResourceHand which contains the 5 changes in values (0 for no change) 
 */
-Player.prototype.discardCards = function(resourceHand) {
+ResourceList.prototype.discardCards = function(resourceHand) {
 
     this.brick -= resourceHand.brick;
     this.ore -= resourceHand.ore;

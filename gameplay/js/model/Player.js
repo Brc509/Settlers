@@ -205,3 +205,16 @@ Player.prototype.discardCards = function(resourceHand) {
 
 
 }
+
+
+Player.prototype.hasResources = function(resourceList) {
+
+    hasBrick    = (resources.brick <= resourceList.brick);
+    hasOre      = (resources.ore   <= resourceList.ore);
+    hasSheep    = (resources.sheep <= resourceList.sheep);
+    hasWheat    = (resources.wheat <= resourceList.wheat);
+    hasWood     = (resources.wood  <= resourceList.wood);
+
+    return (hasBrick && hasOre && hasSheep && hasWheat && hasWood);
+
+}

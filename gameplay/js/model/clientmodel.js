@@ -23,6 +23,8 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 	var ClientModel = (function ClientModelClass(){
         
 		function ClientModel(playerID){
+			this.clientProxy = new catan.models.ClientProxy(playerID);
+
 		}      
         
         /**
@@ -37,7 +39,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.initFromServer = function(success){
             
             // TODO: 1) fetch the game state from the server, 2) update the client model, 3) call the "success" function.
-
 
 			var login = $.post("/user/login", { username: "Sam", password : "sam"}, function(data) {
 				var loginData = data;
@@ -96,7 +97,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			//robbing a player
 		}
 
-
 		/**
 		    <pre>
 		        PRE: You have the necessary resources (1 ore, sheep, and wheat)
@@ -105,7 +105,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    </pre>
 		    @method buyDevCard
 		*/
-		ClientModel.prototype.buyDevCard = function () {
+		ClientModel.prototype.canbuyDevCard = function () {
 			
 			var resources = player.resources;
 			var sheepNum = resources["sheep"];
@@ -114,15 +114,23 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			var devCards = game.devCards;
 			
 			if(sheepNum > 0 && oreNum > 0 && wheatNum > 0){
-			
-				// Proxy.buyDevCard(player);
-			
-				alert("bought a card");
-			
+				return true;			
 			}else{
-				
 				return false;
-			
+			}
+		}
+
+
+		/**
+		    <pre>
+		        POST: Person now has the dev card (in the dev card hand)
+		    </pre>
+		    @method buyDevCard
+		*/
+		ClientModel.prototype.buyDevCard = function () {
+
+			if (canBuyDevCard()) {
+				clientProxy.buyDevCard();
 			}
 		}
 
@@ -243,6 +251,8 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @param ResourceHand discardedCards, The cards being discarded
 		*/
 		ClientModel.prototype.discardCards = function (discardedCards) {
+
+			this.clientProxy.discardCards(discardCards);
 
 		}
 

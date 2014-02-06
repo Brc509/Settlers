@@ -12,21 +12,17 @@
         INVARIANT: The numbers of each resource (parameters) are all valid numbers
     
     Constructor Specification:
-        PRE: !isNaN(brick)
-        PRE: !isNaN(ore)
-        PRE: !isNaN(sheep)
-        PRE: !isNaN(wheat)
-        PRE: !isNaN(wood)
+        PRE: !isNaN(newResourceList.brick)
+        PRE: !isNaN(newResourceList.ore)
+        PRE: !isNaN(newResourceList.sheep)
+        PRE: !isNaN(newResourceList.wheat)
+        PRE: !isNaN(newResourceList.wood)
         POST: All 5 variables are positive numbers
     </pre>
     @class ResourceList
     @constructor
 
-    @param {Number} brick Initial number of brick cards
-    @param {Number} ore Initial number of ore cards
-    @param {Number} sheep Initial number of sheep cards
-    @param {Number} wheat Initial number of wheat cards
-    @param {Number} wood Initial number of wood cards
+    @param {Object} newResourceList An object containing the 5 necessary values to 
 */
 function ResourceList(newResourceList) {
     this.brick = newResourceList.brick;
@@ -38,125 +34,128 @@ function ResourceList(newResourceList) {
 
 /**
     <pre>
-        PRE: The parameter (newBrick) is a non-negative integer
-        POST: The current brick value is equal to the parameter (newBrick) value
+        POST: Correctly returns whether or not this ResourceList contains enough resources to afford a Road
     </pre>
-    @method setBrick
-    @param {Number} newBrick
+    @method canAffordRoad
+    @return {boolean} Whether or not this ResourceList has the resources to buy a Road
 */
-ResourceList.prototype.setBrick = function(newBrick) {
+Player.prototype.canAffordRoad = function() {
 
-    this.brick = newBrick;
+    if (this.brick >= 1 && this.wood >= 1)
+        return true;
+    return false;
 }
 
 /**
     <pre>
-        PRE: The parameter (newOre) is a non-negative integer
-        POST: The current ore value is equal to the parameter (newOre) value
+        POST: Correctly returns whether or not this ResourceList contains enough resources to afford a Settlement
     </pre>
-    @method setOre
-    @param {Number} newOre
+    @method canAffordSettlement
+    @return {boolean} Whether or not this ResourceList has the resources to buy a Settlement
 */
-ResourceList.prototype.setOre = function(newOre) {
+Player.prototype.canAffordSettlement = function() {
 
-    this.ore = newOre;
+    if (this.brick >= 1 && this.wood >= 1 && this.wheat >= 1 && this.sheep >= 1)
+        return true;
+    return false;
 }
 
 /**
     <pre>
-        PRE: The parameter (newSheep) is a non-negative integer
-        POST: The current sheep value is equal to the parameter (newSheep) value
+        POST: Correctly returns whether or not this ResourceList contains enough resources to afford a City
     </pre>
-    @method setSheep
-    @param {Number} newSheep
+    @method canAffordCity
+    @return {boolean} Whether or not this ResourceList has the resources to buy a City
 */
-ResourceList.prototype.setSheep = function(newSheep) {
+Player.prototype.canAffordCity = function() {
 
-    this.sheep = newSheep;
+    if (this.wheat >= 2 && this.ore >= 3) 
+        return true;
+    return false;
 }
 
 /**
     <pre>
-        PRE: The parameter (newWheat) is a non-negative integer
-        POST: The current wheat value is equal to the parameter (newWheat) value
+        POST: Correctly returns whether or not this ResourceList contains enough resources to afford a Development Card
     </pre>
-    @method setWheat
-    @param {Number} newWheat
+    @method canAffordDevCard
+    @return {boolean} Whether or not this ResourceList has the resources to buy a Development Card
 */
-ResourceList.prototype.setWheat = function(newWheat) {
+Player.prototype.canAffordDevCard = function() {
 
-    this.wheat = newWheat;
+    if (this.sheep >= 1 && this.wheat >= 1 && this.ore >= 1)
+        return true;
+    return false;
 }
 
 /**
     <pre>
-        PRE: The parameter (newWood) is a non-negative integer
-        POST: The current wood value is equal to the parameter (newWood) value
+        PRE: Contains the necessary resources to buy a Road
+        POST: Brick and Wood are correctly decremented by 1 and are not negative values
     </pre>
-    @method setWood
-    @param {Number} newWood
+    @method decrementRoad
 */
-ResourceList.prototype.setWheat = function(newWood) {
+Player.prototype.decrementRoad = function() {
 
-    this.wood = newWood;
+    this.brick--;
+    this.wood--;
 }
 
 /**
     <pre>
-        POST: The correct number was returned to the client
+        PRE: Contains the necessary resources to buy a Settlement
+        POST: Brick, wood, wheat, and sheep are correctly decremented by 1 and are not negative values
     </pre>
-    @method getBrick
-    @return Number, the number of brick cards in this ResourceList
+    @method decrementSettlement
 */
-ResourceList.prototype.getBrick = function () {
+Player.prototype.decrementSettlement = function() {
 
-    return this.brick;
+    this.brick--;
+    this.wood--;
+    this.wheat--;
+    this.sheep--;
 }
 
 /**
     <pre>
-        POST: The correct number was returned to the client
+        PRE: Contains the necessary resources to buy a City
+        POST: Wheat is correctly decremented by 2, and ore is correctly decremented by 3, and neither become negative values
     </pre>
-    @method getOre
-    @return Number, the number of ore cards in this ResourceList
+    @method decrementCity
 */
-ResourceList.prototype.getOre = function () {
+Player.prototype.decrementCity = function() {
 
-    return this.ore;
+    this.wheat -= 2;
+    this.ore -= 3;
 }
 
 /**
     <pre>
-        POST: The correct number was returned to the client
+        PRE: Contains the necessary resources to buy a Development Card
+        POST: Sheep, wheat, and ore are correctly decremented by 1 and are not negative values
     </pre>
-    @method getSheep
-    @return Number, the number of sheep cards in this ResourceList
+    @method decrementDevCard
 */
-ResourceList.prototype.getSheep = function () {
+Player.prototype.decrementDevCard = function() {
 
-    return this.sheep;
+    this.sheep--;
+    this.wheat--;
+    this.ore--;
 }
 
 /**
     <pre>
-        POST: The correct number was returned to the client
+        PRE: resourceHand contains all valid, positive number
+        POST: The ResourceList correctly decremented these values 
     </pre>
-    @method getWheat
-    @return Number, the number of wheat cards in this ResourceList
+    @method discardCards
+    @param {Object} A ResourceHand which contains the 5 changes in values (0 for no change) 
 */
-ResourceList.prototype.getWheat = function () {
+Player.prototype.discardCards = function(resourceHand) {
 
-    return this.wheat;
-}
-
-/**
-    <pre>
-        POST: The correct number was returned to the client
-    </pre>
-    @method getWood
-    @return Number, the number of wood cards in this ResourceList
-*/
-ResourceList.prototype.getWood = function () {
-
-    return this.wood;
+    this.brick -= resourceHand.brick;
+    this.ore -= resourceHand.ore;
+    this.sheep -= resourceHand.sheep;
+    this.wheat -= resourceHand.wheat;
+    this.wood -= resourceHand.wood;
 }

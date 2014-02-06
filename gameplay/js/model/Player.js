@@ -34,9 +34,7 @@
     @class Player
     @constructor
 
-    @param clientID, The unique player ID of this client
-    @param clientName, The player's name
-    @param clientColor, The color that this client selected
+    @param {Object} player, 
  */
 function Player(player) {
 
@@ -66,187 +64,144 @@ function Player(player) {
 
 /**
     <pre>
-        PRE: Player has the permissions to access this info
+        POST: Correctly returns if the player can afford to purchase a Road
     </pre>
-    @method getResources
-    @return ResourceList, The player's resource list
+    @method canAffordRoad
+    @return {boolean} Whether the player can afford to buy a Road
 */
-Player.prototype.getResources = function () {
+Player.prototype.canAffordRoad = function() {
 
+    if (resources.canAffordRoad())
+        return true;
+    return false;
 }
 
 /**
     <pre>
-        PRE: Player has the permissions to access this info
+        POST: Correctly returns if the player can afford to purchase a Settlement
     </pre>
-    @method getOldDevCards
-    @return DevCardList, The player's DevCardList from the beginning of the turn
+    @method canAffordSettlement
+    @return {boolean} Whether the player can afford to buy a Settlement
 */
-Player.prototype.getOldDevCards = function () {
+Player.prototype.canAffordSettlement = function() {
 
+    if (resources.canAffordSettlement())
+        return true;
+    return false;
 }
 
 /**
     <pre>
-        PRE: Player has the permissions to access this info
+        POST: Correctly returns if the player can afford to purchase a City
     </pre>
-    @method getNewDevCards
-    @return DevCardList, The player's current DevCardList
+    @method canAffordCity
+    @return {boolean} Whether the player can afford to buy a City
 */
-Player.prototype.getNewDevCards = function () {
+Player.prototype.canAffordCity = function() {
 
+    if (resources.canAffordCity())
+        return true;
+    return false;
 }
 
 /**
     <pre>
-        PRE: Player has the permissions to access this info
+        POST: Correctly returns if the player can afford to purchase a Development Card
     </pre>
-    @method getRoadsCount
-    @return int, The player's number of roads
+    @method canAffordDevCard
+    @return {boolean} Whether the player can afford to buy a Development Card
 */
-Player.prototype.getRoadsCount = function () {
+Player.prototype.canAffordDevCard = function() {
 
+    if (resources.canAffordDevCard())
+        return true;
+    return false;
 }
 
 /**
     <pre>
-        PRE: Player has the permissions to access this info
+        PRE: Player can afford the Road 
+        POST: IF TRUE: Player loses the resource cards required to make the purchase
+        POST: IF TRUE: Player gains the Road
+        POST: IF FALSE: Player data does not change
     </pre>
-    @method getCitiesCount
-    @return int, The player's number of cities
+    @method buyRoad
+    @return {boolean} Whether buying the Road was successful
 */
-Player.prototype.getCitiesCount = function () {
+Player.prototype.buyRoad = function() {
 
+    if (!resources.canAffordRoad())
+        return false;
+    // TODO: Buy the road
+
+
+    resources.decrementRoad();
 }
 
 /**
     <pre>
-        PRE: Player has the permissions to access this info
+        PRE: Player can afford the Settlement
+        POST: IF TRUE: Player loses the resource cards required to make the purchase
+        POST: IF TRUE: Player gains the Settlement
+        POST: IF FALSE: Player data does not change
     </pre>
-    @method getSettlementsCount
-    @return int, The player's number of settlements
+    @method buySettlement
+    @return {boolean} Whether buying the Settlement was successful
 */
-Player.prototype.getSettlementsCount = function () {
+Player.prototype.buySettlement = function() {
 
+    if (!resources.canAffordSettlement())
+        return false;
+    // TODO: Buy the settlement
+
+
+    resources.decrementSettlement();
 }
 
 /**
     <pre>
-        PRE: Player has the permissions to access this info
+        PRE: Player can afford the City
+        POST: IF TRUE: Player loses the resource cards required to make the purchase
+        POST: IF TRUE: Player gains the City
+        POST: IF FALSE: Player data does not change
     </pre>
-    @method getSoldiersCount
-    @return int, The player's number of soldiers
+    @method buyCity
+    @return {boolean} Whether buying the City was successful
 */
-Player.prototype.getSoldiersCount = function () {
+Player.prototype.buyCity = function() {
 
+    if (!resources.canAffordCity())
+        return false;
+    // TODO: Buy the city
+
+
+    resources.decrementCity();
 }
 
 /**
     <pre>
-        PRE: Player has the permissions to access this info
+        PRE: Player can afford the Development Card
+        POST: IF TRUE: Player loses the resource cards required to make the purchase
+        POST: IF TRUE: Player gains the Development Card
+        POST: IF FALSE: Player data does not change
     </pre>
-    @method getVictoryPoints
-    @return int, The player's number of victory points
+    @method buyDevCard
+    @return {boolean} Whether buying the Development Card was successful
 */
-Player.prototype.getVictoryPoints = function () {
+Player.prototype.buyDevCard = function() {
 
+    if (!resources.canAffordDevCard())
+        return false;
+    // TODO: Buy the Development Card
+
+
+    resources.decrementDevCard();
 }
 
 /**
-    <pre>
-        PRE: Player has the permissions to access this info
-    </pre>
-    @method getMonumentsCount
-    @return int, The player's number of monuments
+
 */
-Player.prototype.getMonumentsCount = function () {
+Player.prototype.discardCards = function(resourceHand) {
 
-}
-
-/**
-    <pre>
-        PRE: Player has the permissions to access this info
-    </pre>
-    @method hasLongestRoad
-    @return boolean, Whether or not this player currently has the "Longest Road" card
-*/
-Player.prototype.hasLongestRoad = function () {
-
-}
-
-/**
-    <pre>
-        PRE: Player has the permissions to access this info
-    </pre>
-    @method hasLargestArmy
-    @return boolean, Whether or not this player currently has the "Largest Army" card
-*/
-Player.prototype.hasLargestArmy = function () {
-
-}
-
-/**
-    <pre>
-        PRE: Player has the permissions to access this info
-    </pre>
-    @method hasPlayedDevCard
-    @return boolean, Whether or not this player has played a Dev card this turn
-*/
-Player.prototype.hasPlayedDevCard = function () {
-
-}
-
-/**
-    <pre>
-        PRE: Player has the permissions to access this info
-    </pre>
-    @method hasDiscarded
-    @return boolean, Whether or not this player has discarded this turn
-*/
-Player.prototype.hasDiscarded = function () {
-
-}
-
-/**
-    <pre>
-        PRE: Player has the permissions to access this info
-    </pre>
-    @method getPlayerID
-    @return int, The player's unique Player ID
-*/
-Player.prototype.getPlayerID = function () {
-
-}
-
-/**
-    <pre>
-        PRE: Player has the permissions to access this info
-    </pre>
-    @method getOrderNumber
-    @return int, The player's order number (0-3) for this game
-*/
-Player.prototype.getOrderNumber = function () {
-
-}
-
-/**
-    <pre>
-        PRE: Player has the permissions to access this info
-    </pre>
-    @method getColor
-    @return String, The player's color for this game
-*/
-Player.prototype.getColor = function () {
-
-}
-
-/**
-    <pre>
-        PRE: Player has the permissions to access this info
-    </pre>
-    @method getName
-    @return String, The player's name
-*/
-Player.prototype.getName = function () {
 
 }

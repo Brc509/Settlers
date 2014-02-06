@@ -138,6 +138,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @param (EdgeLocation) spot1, The first of the new road locations
 		    @param (EdgeLocation) spot2, the second of the new road locations
 		*/
+
 		ClientModel.prototype.roadBuilding = function (spot1, spot2) {
 
 		}
@@ -173,7 +174,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @method monopoly
 		*/
 		ClientModel.prototype.monopoly = function () {
-
+			this.clientProxy.monopoly();
 		}
 
 		/**
@@ -196,8 +197,13 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @param ResourceList offer, pos numbers are traded away, negative numbers are received
 		    @param PlayerIndex receiver, The recipient of the trade
 		*/
-		ClientModel.prototype.offerTrade = function (offer, receiver) {
+		ClientModel.prototype.canOfferTrade = function (offer, receiver) {
 
+		}
+		ClientModel.prototype.offerTrade = function (offer, receiver) {
+			if (canOfferTrade()) {
+				this.clientProxy.offerTrade(offer, receiver);
+			}
 		}
 
 		/**
@@ -211,8 +217,14 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @method acceptTrade
 		    @param boolean willAccept, whether or not the player will accept the offer
 		*/
-		ClientModel.prototype.acceptTrade = function () {
+		ClientModel.prototype.canAcceptTrade = function () {
 
+		}
+
+		ClientModel.prototype.acceptTrade = function () {
+			if (canAcceptTrade()) {
+				this.clientProxy.acceptTrade();
+			}
 		}
 
 		/**

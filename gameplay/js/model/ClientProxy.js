@@ -11,6 +11,7 @@ catan.models.ClientProxy = (function() {
 		<pre>
 		Domain:
 			playerIndex: The ID of the player who controls this client, number
+			modelVersion: The current version of the model
 			
 		Constructor Specification:
 			PRE: playerIndex is an integer
@@ -23,6 +24,7 @@ catan.models.ClientProxy = (function() {
 	*/
 	function ClientProxy(playerIndex) {
 		this.playerIndex = playerIndex;
+		this.modelVersion = null;
 	};
 	ClientProxy.prototype.constructor = ClientProxy;
 	
@@ -178,23 +180,28 @@ catan.models.ClientProxy = (function() {
 	};
 	
 	/**
-		Retrieves the game model from the server.
+		Retrieves the game model from the server. Executes a callback function if the model version has changed.
 		<pre>
-		PRE: success is a function which takes a single object as a parameter
+		PRE: callback is a function which takes a single object as a parameter
 		</pre>
 		
 		@method gameModel
-		@param {function} success Callback function executed when the game model is retrieved
+		@param {function} callback Callback function executed if the model version has changed
 	*/
-	ClientProxy.prototype.gameModel = function(success) {
+	ClientProxy.prototype.gameModel = function(callback) {
 		// Create and execute the command
-		var command = new catan.models.GetCommand(catan.models.GetCommand.GAME_MODEL_URL, success);
-		command.execute();
-		//Skyler added this just to get the clientModel up and running.
-		//TODO refactor to use the command class.
-		//$.get('/game/model', function(model){
-		//	success(model);
-		//});
+		var url = catan.models.GetCommand.GAME_MODEL_URL;
+		if (modelVersion != null) {
+			url += '?version=' + modelVersion;
+		}
+		var command = new catan.models.GetCommand(url);
+		command.execute(function(data) {
+			var model = JSON.parse(data);
+			if (model != null || model != true || model != 'true') { // It's not super clear which one the server returns if the model is up to date
+				modelVersion = model.version;
+				callback(model);
+			}
+		});
 	};
 	
 	/**

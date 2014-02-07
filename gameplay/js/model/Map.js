@@ -13,11 +13,80 @@ Map Class
 @param {JSON} mapData
 */
 function Map(mapData) {
+	
 	this.mapData = mapData;
 	this.setRadius(mapData.radius);
 	this.setRobber(new HexLocation(mapData.robber.x, mapData.robber.y));
 	this.setLastRobber(new HexLocation(mapData.lastRobber.x, mapData.lastRobber.y));
 	this.setNumbers(mapData.numbers);
+	this.map = this.setMap(mapData);
+}
+
+/**
+GetMap method
+<pre>
+</pre>
+@method getMap
+@return {catan.models.Map} map
+*/
+Map.prototype.getMap = function() {
+    return this.map;
+}
+
+/**
+SetMap method
+<pre>
+</pre>
+@method setMap
+@param {JSON} mapData
+*/
+Map.prototype.setMap = function(mapData) {
+
+	// creating variables to access methods in catan.models namespace
+	var mapModel = catan.models.Map;
+	var catanEdge = catan.models.Map.CatanEdge;
+	var catanVertex = catan.models.Map.CatanVertex;
+	
+	// initialized map object
+	var map = new mapModel(mapData.radius);
+	
+	// hex data from game model JSON
+	var hexes = mapData.hexGrid.hexes;
+	
+	// initialized hexes stored in hexgrid
+	var gridHexes = map.hexGrid.hexes;
+	
+	// setting the hexes in the hexGrid
+	for(var i=0;i < hexes.length; i++)
+	{
+		var column = hexes[i];
+		var gridColumn = gridHexes[i];
+		
+		// setting map hexes with game model map hex data
+		for(var j=0; j < column.length;j++)
+		{
+			// setting 6 vertices
+			for(var k=0;k<6;k++)
+			{
+				var vertex = gridColumn[j].getVertex(k);
+				vertex.setWorth(column[j].vertexes[k].value.worth);
+				//vertex['worth']=column[j].vertexes[k].worth;
+				
+				vertex.setOwner(column[j].vertexes[k].value.ownerID)
+				//vertex['ownerID']=column[j].vertexes[k].ownerID;
+			}
+			
+			// setting 6 edges
+			for(var k=0;k<6;k++)
+			{
+				var edge = gridColumn[j].getEdge(k);
+				edge.setOwner(column[j].edges[k].value.ownerID);
+			}
+		}
+	}
+	
+	return map;
+
 }
 
 /**

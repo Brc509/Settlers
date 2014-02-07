@@ -10,7 +10,7 @@ catan.models = catan.models || {};
 */
 
 catan.models.Map = (function mapNameSpace(){
-    
+
     var hexgrid = catan.models.hexgrid;
     
     var Map = (function Map_Class(){
@@ -19,6 +19,7 @@ catan.models.Map = (function mapNameSpace(){
 		{
 			this.hexGrid = hexgrid.HexGrid.getRegular(radius, CatanHex);
 		}
+
 		return Map;
 		
     }());
@@ -30,24 +31,32 @@ catan.models.Map = (function mapNameSpace(){
     It must however implement one function that the hexgrid looks for: 'isOccupied' - look at its documentation.
     From the JSON, this object will have two properties: location, and ownerID.
     Besides the 'isOccupied' method, you may add any other methods that you need.
-    
     @constructor
     @extends hexgrid.BaseContainer
-	
 	@class CatanEdge
 	*/
     var CatanEdge = (function CatanEdge_Class(){
     
         core.forceClassInherit(CatanEdge, hexgrid.BaseContainer);
     
-        function CatanEdge(){}
+        function CatanEdge(){
+			this.ownerID = -1;
+		}
+		
+		CatanEdge.prototype.setOwner = function(ownerID){
+			this.ownerID = ownerID;
+		}
         
         // once you override this, put in some documentation
-        function isOccupied(){
-            return false; // default implementation, change this!
+        CatanEdge.prototype.isOccupied = function(){
+			if(this.ownerID == -1)
+				return false; // default implementation, change this!
+			else
+				return true;
         }
 
         return CatanEdge;
+		
     }());
     
     /**
@@ -57,26 +66,38 @@ catan.models.Map = (function mapNameSpace(){
     It must however implement one function that the hexgrid looks for: 'isOccupied' - look at its documentation.
     From the JSON, this object will have three properties: location, ownerID and worth.
     Besides the 'isOccupied' method, you may add any other methods that you need.
-    
     @constructor
     @extends hexgrid.BaseContainer
-	
 	@class CatanVertex
 	*/
     var CatanVertex = (function CatanVertex_Class(){
     
         core.forceClassInherit(CatanVertex, hexgrid.BaseContainer);
         
-        function CatanVertex(){}
+        function CatanVertex(){
+			this.worth = 0;
+			this.ownerID = -1;
+		}
+		
+		CatanVertex.prototype.setWorth = function(worth){
+			this.worth = worth;
+		}
+		
+		CatanVertex.prototype.setOwner = function(ownerID){
+			this.ownerID = ownerID;
+		}
         
         // once you override this, put in some documentation
-        function isOccupied(){ 
-            return false; // default implementation, change this!
+        CatanVertex.prototype.isOccupied = function(){ 
+			if(this.ownerID == -1)
+				return false; // default implementation, change this!
+			else
+				return true;
         }
 
         return CatanVertex;
-    }()); 
-    
+		
+    }());   
     
     /**
 	This class represents a Hex. You may add any methods that you need (e.g., to get the resource/hex type, etc.)
@@ -91,7 +112,7 @@ catan.models.Map = (function mapNameSpace(){
     @param {hexgrid.HexLocation} location - the location of this hex. It's used to generate locations for the vertexes and edges.
     @extends hexgrid.BasicHex
 	
-	@class CatanVertex
+	@class CatanHex
 	*/
     var CatanHex = (function CatanHex_Class(){
     
@@ -103,9 +124,8 @@ catan.models.Map = (function mapNameSpace(){
         
         return CatanHex;
     }());
-    
-	return Map;
 
+	return Map;
 }());
 
 

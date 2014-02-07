@@ -46,6 +46,10 @@ catan.models.Map = (function mapNameSpace(){
 		CatanEdge.prototype.setOwner = function(ownerID){
 			this.ownerID = ownerID;
 		}
+		
+		CatanEdge.prototype.getOwner = function(){
+			return this.ownerID;
+		}
         
         // once you override this, put in some documentation
         CatanEdge.prototype.isOccupied = function(){
@@ -83,8 +87,16 @@ catan.models.Map = (function mapNameSpace(){
 			this.worth = worth;
 		}
 		
+		CatanVertex.prototype.getWorth = function(){
+			return this.worth;
+		}
+		
 		CatanVertex.prototype.setOwner = function(ownerID){
 			this.ownerID = ownerID;
+		}
+		
+		CatanVertex.prototype.getOwner = function(){
+			return this.ownerID;
 		}
         
         // once you override this, put in some documentation

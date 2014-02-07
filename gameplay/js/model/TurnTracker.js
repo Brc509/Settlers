@@ -1,77 +1,90 @@
+var catan = catan || {};
+catan.models = catan.models || {};
+
 /**
 The Turn Tracker Class 
 <pre>
-Domain:
-            currentTurn: unique id number of player
-            status: string to show status
+    Domain:
+        currentTurn: unique id number of player
+        status: string to show status
             
-        Invariants:
-            INVARIANT: player ID exists
-         
-        Constructor Specification:
-            PRE: currentTurn is a player's ID
-            POST: getCurrentTurn() == currentTurn
-            POST: getStatus() == status
+    Invariants:
+        INVARIANT: player ID exists
+     
+    Constructor Specification:
+        PRE: currentTurn is a player's ID
+        POST: getCurrentTurn() == currentTurn
+        POST: getStatus() == status
 </pre>
 @class TurnTracker 
 @constructor
-@param {:currentTurn} (int)The ID of the player whose turn it is.
-@param {:status} (String)The status of the player whose turn it is.
+@param {integer} playerId The ID of the player that owns this model
 */
-function TurnTracker(newTurnTracker) {
-    this.currentTurn = newTurnTracker.currentTurn;
-    this.status = newTurnTracker.status;
-}
+var TurnTracker = (function TurnTrackerClass() {
 
-/**
-<pre>
-A currentTurn player ID needs to be defined
-</pre>
-@method getCurrentTurn
-@return {int} The current turn's player ID.
-*/
-TurnTracker.prototype.getCurrentTurn = function() {
-    return this.currentTurn;
-}
+    function TurnTracker(playerId) {
 
-/**
-<pre>
-    PRE: A currentTurn player needs to have a status defined
-</pre>
-@method getStatus
-@return {String} The status of the player whose turn it is.
-*/
-TurnTracker.prototype.getStatus = function() {
-    return this.status;
-}
+        this.playerId = playerId;
+    }
 
-/**
-    <pre>
-        PRE: queryStatus is a valid int with value in the range of 0-3
-        POST: Correctly returned true if the two statuses match up
-    </pre>
-    @method isStatus
-    @return {boolean} Whether the current status matches queryStatus
-*/
-TurnTracker.prototype.isStatus = function(queryStatus) {
+    /**
+        <pre>
+            PRE: newTurnTracker contains the two necessary values
+            POST: This object's local variables are set to the newTurnTracker's variables' values
+        </pre>
+        @method update
+        @param {Object} newTurnTracker An object containing new values for this TurnTracker
+    */
+    turnTracker.prototype.update = function(newTurnTracker) {
 
-    if (this.status == queryStatus)
-        return true;
-    return false;
-}
+        this.currentTurn = newTurnTracker.currentTurn;
+        this.status = newTurnTracker.status;
+        if (this.currentTurn == this.playerId)
+            this.isCurrentTurn = true;
+    }
 
-/**
-    <pre>
-        PRE: queryCurrentTurn is a valid string
-        POST: Correctly returned true if the two currentTurn strings match up
-    </pre>
-    @method isCurrentTurn
-    @return {boolean} Whether the "currentTurn" String matches the parameter "queryCurrentTurn"
-*/
+    /**
+        <pre>
+            PRE: update() has already been called, and "this.status" has been defined
+            PRE: queryStatus is a string
+            POST: Correctly returns whether or not the queryStatus equals this.status
+        </pre>
+        @method statusEquals
+        @param {String} queryStatus The string to compare to the current status
+        @return {boolean} Whether or not the queryStatus is that same string as the current status
+    */
+    TurnTracker.prototype.statusEquals = function(queryStatus) {
 
-TurnTracker.prototype.isCurrentTurn = function(queryCurrentTurn) {
+        if (this.status == queryStatus)
+            return true;
+        return false;
+    }
 
-    if (this.currentTurn = queryCurrentTurn)
-        return true;
-    return false;
-}
+    /**
+        <pre>
+            PRE: update() has already been called, and "this.isCurrentTurn" has been defined
+            POST: Correctly returns whether or not this.currentTurn == this.playerId
+        </pre>
+        @method isMyTurn
+        @return {boolean} 
+    */
+    TurnTracker.prototype.isMyTurn = function() {
+
+        return isCurrentTurn;
+    }
+
+    /**
+        <pre>
+            PRE: playerIs is a valid integer ID number
+            POST: Correctly returns if it is currently this player's turn
+        </pre>
+        @method isTurn
+        @param {integer} playerId The ID of the player to check 
+    */
+    TurnTracker.prototype.isTurn = function(playerId) {
+
+        if (this.playerId == playerId)
+            return true;
+        return false;
+    }
+}());

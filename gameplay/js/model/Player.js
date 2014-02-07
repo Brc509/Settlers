@@ -1,4 +1,7 @@
-﻿/**
+﻿var catan = catan || {};
+catan.models = catan.models || {};
+
+/**
     The Player class contains all objects needed to send to the client for a single game
     <pre>
     Domain:
@@ -36,185 +39,120 @@
 
     @param {Object} player, 
  */
-function Player(player) {
+var Player = (function PlayerClass() {
 
-    this.MAX_GAME_POINTS = player.MAX_GAME_POINTS;
-    this.resources = new ResourceList(player.resources);
-    this.newDevCards = new DevCardList(player.newDevCards);
-    this.oldDevCards = new DevCardList(player.oldDevCards);
+    function Player() {
 
-    this.roads = player.roads;
-    this.cities = player.cities;
-    this.settlements = player.settlements;
-    this.soldiers = player.soldiers;
-    this.victoryPoints = player.victoryPoints;
-    this.monuments = player.monuments;
+    }
 
-    this.longestRoad = player.longestRoad;
-    this.largestArmy = player.largestArmy;
-    this.playedDevCard = player.playedDevCard;
-    this.discarded = player.discarded;
+    /**
+        <pre>
+            PRE: newPlayer contains all of the necessary values to update
+            POST: All local player values are successfully updated
+        </pre>
+    */
+    Player.prototype.update = function(newPlayer) {
 
-    this.playerID = player.playerID;
-    this.orderNumber = player.orderNumber;
+        this.MAX_GAME_POINTS = player.MAX_GAME_POINTS;
+        this.resources = new ResourceList();
+        this.resources.update(player.resources);
+        this.newDevCards = new DevCardList();
+        this.newDevCards.update(player.newDevCards);
+        this.oldDevCards = new DevCardList();
+        this.oldDevCards.update(player.oldDevCards);
 
-    this.name = player.name;
-    this.color = player.color;
-}
+        this.roads = player.roads;
+        this.cities = player.cities;
+        this.settlements = player.settlements;
+        this.soldiers = player.soldiers;
+        this.victoryPoints = player.victoryPoints;
+        this.monuments = player.monuments;
 
-/**
-    <pre>
-        POST: Correctly returns if the player can afford to purchase a Road
-    </pre>
-    @method canAffordRoad
-    @return {boolean} Whether the player can afford to buy a Road
-*/
-Player.prototype.canAffordRoad = function() {
+        this.longestRoad = player.longestRoad;
+        this.largestArmy = player.largestArmy;
+        this.playedDevCard = player.playedDevCard;
+        this.discarded = player.discarded;
 
-    if (resources.canAffordRoad())
-        return true;
-    return false;
-}
+        this.playerID = player.playerID;
+        this.orderNumber = player.orderNumber;
 
-/**
-    <pre>
-        POST: Correctly returns if the player can afford to purchase a Settlement
-    </pre>
-    @method canAffordSettlement
-    @return {boolean} Whether the player can afford to buy a Settlement
-*/
-Player.prototype.canAffordSettlement = function() {
+        this.name = player.name;
+        this.color = player.color;
+    }
 
-    if (resources.canAffordSettlement())
-        return true;
-    return false;
-}
+    /**
+        <pre>
+            POST: Correctly returns if the player can afford to purchase a Road
+        </pre>
+        @method canAffordRoad
+        @return {boolean} Whether the player can afford to buy a Road
+    */
+    Player.prototype.canAffordRoad = function() {
 
-/**
-    <pre>
-        POST: Correctly returns if the player can afford to purchase a City
-    </pre>
-    @method canAffordCity
-    @return {boolean} Whether the player can afford to buy a City
-*/
-Player.prototype.canAffordCity = function() {
-
-    if (resources.canAffordCity())
-        return true;
-    return false;
-}
-
-/**
-    <pre>
-        POST: Correctly returns if the player can afford to purchase a Development Card
-    </pre>
-    @method canAffordDevCard
-    @return {boolean} Whether the player can afford to buy a Development Card
-*/
-Player.prototype.canAffordDevCard = function() {
-
-    if (resources.canAffordDevCard())
-        return true;
-    return false;
-}
-
-/**
-    <pre>
-        PRE: Player can afford the Road 
-        POST: IF TRUE: Player loses the resource cards required to make the purchase
-        POST: IF TRUE: Player gains the Road
-        POST: IF FALSE: Player data does not change
-    </pre>
-    @method buyRoad
-    @return {boolean} Whether buying the Road was successful
-*/
-Player.prototype.buyRoad = function() {
-
-    if (!resources.canAffordRoad())
+        if (resources.canAffordRoad())
+            return true;
         return false;
-    // TODO: Buy the road
+    }
 
+    /**
+        <pre>
+            POST: Correctly returns if the player can afford to purchase a Settlement
+        </pre>
+        @method canAffordSettlement
+        @return {boolean} Whether the player can afford to buy a Settlement
+    */
+    Player.prototype.canAffordSettlement = function() {
 
-    resources.decrementRoad();
-}
-
-/**
-    <pre>
-        PRE: Player can afford the Settlement
-        POST: IF TRUE: Player loses the resource cards required to make the purchase
-        POST: IF TRUE: Player gains the Settlement
-        POST: IF FALSE: Player data does not change
-    </pre>
-    @method buySettlement
-    @return {boolean} Whether buying the Settlement was successful
-*/
-Player.prototype.buySettlement = function() {
-
-    if (!resources.canAffordSettlement())
+        if (resources.canAffordSettlement())
+            return true;
         return false;
-    // TODO: Buy the settlement
+    }
 
+    /**
+        <pre>
+            POST: Correctly returns if the player can afford to purchase a City
+        </pre>
+        @method canAffordCity
+        @return {boolean} Whether the player can afford to buy a City
+    */
+    Player.prototype.canAffordCity = function() {
 
-    resources.decrementSettlement();
-}
-
-/**
-    <pre>
-        PRE: Player can afford the City
-        POST: IF TRUE: Player loses the resource cards required to make the purchase
-        POST: IF TRUE: Player gains the City
-        POST: IF FALSE: Player data does not change
-    </pre>
-    @method buyCity
-    @return {boolean} Whether buying the City was successful
-*/
-Player.prototype.buyCity = function() {
-
-    if (!resources.canAffordCity())
+        if (resources.canAffordCity())
+            return true;
         return false;
-    // TODO: Buy the city
+    }
 
+    /**
+        <pre>
+            POST: Correctly returns if the player can afford to purchase a Development Card
+        </pre>
+        @method canAffordDevCard
+        @return {boolean} Whether the player can afford to buy a Development Card
+    */
+    Player.prototype.canAffordDevCard = function() {
 
-    resources.decrementCity();
-}
-
-/**
-    <pre>
-        PRE: Player can afford the Development Card
-        POST: IF TRUE: Player loses the resource cards required to make the purchase
-        POST: IF TRUE: Player gains the Development Card
-        POST: IF FALSE: Player data does not change
-    </pre>
-    @method buyDevCard
-    @return {boolean} Whether buying the Development Card was successful
-*/
-Player.prototype.buyDevCard = function() {
-
-    if (!resources.canAffordDevCard())
+        if (resources.canAffordDevCard())
+            return true;
         return false;
-    // TODO: Buy the Development Card
+    }
 
+    /**
+        <pre>
+            PRE: The parameter resourceList contains five values that are all positive integers
+            POST: Correctly returns true if the player has the specified resources
+        </pre>
+        @hasResources
+        @param {Object} resourceList A list of 5 integers to represent the number of each resource
+        @return {boolean} If the player's resources contain the requested amounts
+    */
+    Player.prototype.hasResources = function(resourceList) {
 
-    resources.decrementDevCard();
-}
+        hasBrick    = (resources.brick <= resourceList.brick);
+        hasOre      = (resources.ore   <= resourceList.ore);
+        hasSheep    = (resources.sheep <= resourceList.sheep);
+        hasWheat    = (resources.wheat <= resourceList.wheat);
+        hasWood     = (resources.wood  <= resourceList.wood);
 
-/**
-
-*/
-Player.prototype.discardCards = function(resourceHand) {
-
-
-}
-
-
-Player.prototype.hasResources = function(resourceList) {
-
-    hasBrick    = (resources.brick <= resourceList.brick);
-    hasOre      = (resources.ore   <= resourceList.ore);
-    hasSheep    = (resources.sheep <= resourceList.sheep);
-    hasWheat    = (resources.wheat <= resourceList.wheat);
-    hasWood     = (resources.wood  <= resourceList.wood);
-
-    return (hasBrick && hasOre && hasSheep && hasWheat && hasWood);
-
-}
+        return (hasBrick && hasOre && hasSheep && hasWheat && hasWood);
+    }
+}());

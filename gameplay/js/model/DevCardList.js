@@ -1,4 +1,7 @@
-﻿/**
+﻿var catan = catan || {};
+catan.models = catan.models || {};
+
+/**
     The DevCardList class contains a list of each type of development card
     <pre>
     Domain:
@@ -24,12 +27,26 @@
 
     @param {Object} newDevCardList An object containing the five necessary values for a DevCardList 
 */
-function DevCardList(newDevCardList) {
+var DevCardList = (function DevCardListClass() {
 
-    this.monopoly = newDevCardList.monopoly;
-    this.monument = newDevCardList.monument;
-    this.roadBuilding = newDevCardList.roadBuilding;
-    this.soldier = newDevCardList.soldier;
-    this.yearOfPlenty = newDevCardList.yearOfPlenty;
-}
+    function DevCardList() {
 
+    }
+
+    /**
+        <pre>
+            PRE: newDevCardList contains the necessary values
+            POST: All values are correctly updated
+        </pre>
+        @method update
+        @param {Object} newDevCardList A list of values to update this object
+    */ 
+    DevCardList.prototype.update = function(newDevCardList) {
+
+        this.monopoly = newDevCardList.monopoly;
+        this.monument = newDevCardList.monument;
+        this.roadBuilding = newDevCardList.roadBuilding;
+        this.soldier = newDevCardList.soldier;
+        this.yearOfPlenty = newDevCardList.yearOfPlenty;
+    }
+}());

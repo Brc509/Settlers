@@ -183,23 +183,24 @@ catan.models.ClientProxy = (function() {
 		Retrieves the game model from the server. Updates the client model if the version has changed.
 		
 		@method gameModel
+		@param function callback  this is the function passed in by the clientModel
 	*/
-	ClientProxy.prototype.gameModel = function() {
+	ClientProxy.prototype.gameModel = function(callback) {
 		// Append the version number to the URL
-		var url = catan.models.GetCommand.prototype.GAME_MODEL_URL;
+		//var url = catan.models.GetCommand.prototype.GAME_MODEL_URL;
+		var url = '/game/model';
 		if (this.modelVersion != null) {
 			url += '?version=' + this.modelVersion;
 		}
 		// Create and execute the command
-		var updateModel = MovesCommand.prototype.MODEL_UPDATE_FUNCTION();
 		var command = new catan.models.GetCommand(url);
 		command.execute(function(error, data) {
 			if (error) {
-				updateModel(true, data);
+				callback(true, data);
 			} else {
 				if (data != null || data != true || data != 'true') { // It's not super clear which one the server returns if the model is up to date
 					this.modelVersion = data.version;
-					updateModel(false, data);
+					callback(false, data);
 				}
 			}
 		});

@@ -44,7 +44,7 @@ catan.models.Map = (function MapNameSpace () {
 			//TODO Figure out last robber
 			//this.setLastRobber(new catan.models.HexLocation(mapData.lastRobber.x, mapData.lastRobber.y));
 			this.setNumbers(mapData.numbers);
-			this.setPorts(mapData.map.ports);
+			this.setPorts(mapData.ports);
 			this.setMap(mapData);
 		}
 
@@ -61,12 +61,12 @@ catan.models.Map = (function MapNameSpace () {
 			
 			for(var i=0;i<modelPorts.length;i++)
 			{
-				var loc = new HexLocation(modelPorts[i].location.x, modelPorts[i].location.y);
-				var vertex1 = new VertexLocation(modelPorts[i].validVertex1.direction, modelPorts[i].validVertex1.x, modelPorts[i].validVertex1.y);
-				var vertex2 = new VertexLocation(modelPorts[i].validVertex2.direction, modelPorts[i].validVertex2.x, modelPorts[i].validVertex2.y);
-				var port = new Port(modelPorts[i].orientation, loc, modelPorts[i].ratio, vertex1, vertex2);
+				var loc = new catan.models.HexLocation(modelPorts[i].location.x, modelPorts[i].location.y);
+				var vertex1 = new catan.models.VertexLocation(modelPorts[i].validVertex1.direction, modelPorts[i].validVertex1.x, modelPorts[i].validVertex1.y);
+				var vertex2 = new catan.models.VertexLocation(modelPorts[i].validVertex2.direction, modelPorts[i].validVertex2.x, modelPorts[i].validVertex2.y);
+				var port = new catan.models.Port(modelPorts[i].orientation, loc, modelPorts[i].ratio, vertex1, vertex2);
 				
-				if(!modelPorts[i].isNull('inputResource'))
+				if(!modelPorts[i].inputResource == null)
 					port.setInputResource(modelPorts[i].inputResource);
 					
 				temp.push(port);
@@ -108,12 +108,12 @@ catan.models.Map = (function MapNameSpace () {
 		Map.prototype.setMap = function(mapData) {
 
 			// creating variables to access methods in catan.models namespace
-			var mapModel = catan.models.Map;
+			//var mapModel = catan.models.Map;
 			var catanEdge = catan.models.Map.CatanEdge;
 			var catanVertex = catan.models.Map.CatanVertex;
 			
 			// initialized map object
-			var map = new mapModel(mapData.radius);
+			//var map = new mapModel(mapData.radius);
 			
 			// hex data from game model JSON
 			var hexes = mapData.hexGrid.hexes;
@@ -163,13 +163,14 @@ catan.models.Map = (function MapNameSpace () {
 		*/
 		Map.prototype.setNumbers = function(modelNumbers) {
 
-			var temp = new TokenList();
+			var temp = new catan.models.TokenList();
 			
 			$.each(modelNumbers, function(key, value) {
 			
 				for(var i=0;i<value.length;i++)
 				{
-					var newToken = new Token(new HexLocation(value[i].x,value[i].y));
+					var hexLocation		= new catan.models.HexLocation(value[i].x,value[i].y);
+					var newToken 		= new catan.models.Token(hexLocation);
 					temp.setToken(key, newToken);
 				}
 			

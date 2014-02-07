@@ -39,7 +39,7 @@ catan.models.GetCommand = (function GetCommandNamespace() {
 		*/
 		GetCommand.prototype.execute = function(callback) {
 			jQuery.ajax({
-				url: url
+				url: this.url
 			})
 			.done(function(data) {
 				callback(false, data);

@@ -7,9 +7,7 @@ catan.models = catan.models || {};
 catan.models.MovesCommand = (function() {
 
 	var Command = catan.models.Command;
-	
-	// Define model update callback function
-	MovesCommand.prototype.MODEL_UPDATE_FUNCTION = catan.models.ClientModel.prototype.updateModel();
+
 	
 	// Define API endpoint constants
 	MovesCommand.prototype.ACCEPT_TRADE_URL			= '/moves/acceptTrade';

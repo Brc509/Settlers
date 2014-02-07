@@ -1,5 +1,6 @@
 // Command.js
 // Author: Spencer Bench
+
 var catan = catan || {};
 catan.models = catan.models || {};
 
@@ -12,18 +13,17 @@ catan.models.Command = (function CommandNamespace() {
 			<pre>
 			Domain:
 				url: The server endpoint that the command is sent to, string
-				callback: The callback function executed when the server responds, function
+				callback: The callback function executed when the request succeeds OR fails, function
 				
 			Constructor Specification:
 				PRE: url is a valid server endpoint
-				PRE: callback is a function
 			</pre>
 			
 			@class Command
 			@constructor
 			
 			@param {string} url The server endpoint that the command is sent to
-			@param {function} callback The callback function executed when the server responds
+			@param {function} callback The callback function executed when the request succeeds OR fails
 		*/
 		function Command(url, callback) {
 			this.url = url;

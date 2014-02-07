@@ -9,7 +9,7 @@ catan.models.MovesCommand = (function() {
 	var Command = catan.models.Command;
 	
 	// Define model update callback function
-	MovesCommand.prototype.MODEL_UPDATE_FUNCTION = catan.models.ClientModel.updateModel;
+	MovesCommand.prototype.MODEL_UPDATE_FUNCTION = catan.models.ClientModel.prototype.updateModel();
 	
 	// Define API endpoint constants
 	MovesCommand.prototype.ACCEPT_TRADE_URL			= '/moves/acceptTrade';
@@ -61,7 +61,16 @@ catan.models.MovesCommand = (function() {
 		@method execute
 	*/
 	MovesCommand.prototype.execute = function() {
-		jQuery.post(url, JSON.stringify(data), callback);
+		jQuery.ajax({
+			url: url,
+			data: JSON.stringify(data)
+		})
+		.done(function(data) {
+			callback(false, data);
+		})
+		.fail(function(jqxhr) {
+			callback(true, jqxhr);
+		});
 	};
 	
 	return MovesCommand;

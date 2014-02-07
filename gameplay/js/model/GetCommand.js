@@ -7,7 +7,10 @@ catan.models = catan.models || {};
 catan.models.GetCommand = (function GetCommandNamespace() {
 
 	var GetCommand = (function GetCommandClass(){
-
+	
+		// Define API endpoint constants
+		GetCommand.prototype.GAME_MODEL_URL	= '/game/model';
+		
 		/**
 			The GetCommand class represents any command which GETs from the server.
 			<pre>			
@@ -25,11 +28,6 @@ catan.models.GetCommand = (function GetCommandNamespace() {
 			// Call the Command constructor
 			catan.models.Command.call(this, url, null);
 		}
-
-		
-		
-		// Define API endpoint constants
-		GetCommand.prototype.GAME_MODEL_URL	= '/game/model';
 		GetCommand.prototype = Object.create(catan.models.Command.prototype);
 		GetCommand.prototype.constructor = GetCommand;
 		
@@ -37,11 +35,20 @@ catan.models.GetCommand = (function GetCommandNamespace() {
 			GETs from the server and executes a callback function.
 			
 			@method execute
-			@param {function} callback The callback function to execute when the server responds
+			@param {function} callback The callback function executed when the request succeeds OR fails
 		*/
 		GetCommand.prototype.execute = function(callback) {
-			jQuery.get(this.url, callback);
+			jQuery.ajax({
+				url: url
+			})
+			.done(function(data) {
+				callback(false, data);
+			})
+			.fail(function(jqxhr) {
+				callback(true, jqxhr);
+			});
 		};
+		
 		return GetCommand;
 		
 	})();

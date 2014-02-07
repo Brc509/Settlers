@@ -41,7 +41,7 @@ catan.models.ClientProxy = (function() {
 		data.playerIndex = this.playerIndex;
 		data.willAccept = willAccept;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.ACCEPT_TRADE_URL, data);
+		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.ACCEPT_TRADE_URL, data);
 		command.execute();
 	};
 	
@@ -67,7 +67,7 @@ catan.models.ClientProxy = (function() {
 		data.vertexLocation.direction = vertex.direction;
 		data.free = free;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.BUILD_CITY_URL, data);
+		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.BUILD_CITY_URL, data);
 		command.execute();
 	};
 	
@@ -93,7 +93,7 @@ catan.models.ClientProxy = (function() {
 		data.roadLocation.direction = edge.direction;
 		data.free = free;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.BUILD_ROAD_URL, data);
+		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.BUILD_ROAD_URL, data);
 		command.execute();
 	};
 	
@@ -119,7 +119,7 @@ catan.models.ClientProxy = (function() {
 		data.vertexLocation.direction = vertex.direction;
 		data.free = free;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.BUILD_SETTLEMENT_URL, data);
+		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.BUILD_SETTLEMENT_URL, data);
 		command.execute();
 	};
 	
@@ -137,7 +137,7 @@ catan.models.ClientProxy = (function() {
 		data.type = 'buyDevCard';
 		data.playerIndex = this.playerIndex;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.BUY_DEV_CARD_URL, data);
+		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.BUY_DEV_CARD_URL, data);
 		command.execute();
 	};
 	
@@ -157,7 +157,7 @@ catan.models.ClientProxy = (function() {
 		data.playerIndex = this.playerIndex;
 		data.discardedCards = discardedCards;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.DISCARD_CARDS_URL, data);
+		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.DISCARD_CARDS_URL, data);
 		command.execute();
 	};
 	
@@ -175,31 +175,32 @@ catan.models.ClientProxy = (function() {
 		data.type = 'finishTurn';
 		data.playerIndex = this.playerIndex;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.FINISH_TURN_URL, data);
+		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.FINISH_TURN_URL, data);
 		command.execute();
 	};
 	
 	/**
-		Retrieves the game model from the server. Executes a callback function if the model version has changed.
-		<pre>
-		PRE: callback is a function which takes a single object as a parameter
-		</pre>
+		Retrieves the game model from the server. Updates the client model if the version has changed.
 		
 		@method gameModel
-		@param {function} callback Callback function executed if the model version has changed
 	*/
-	ClientProxy.prototype.gameModel = function(callback) {
-		// Create and execute the command
-		var url = '/game/model';
+	ClientProxy.prototype.gameModel = function() {
+		// Append the version number to the URL
+		var url = catan.models.GetCommand.prototype.GAME_MODEL_URL;
 		if (this.modelVersion != null) {
 			url += '?version=' + this.modelVersion;
 		}
+		// Create and execute the command
+		var updateModel = MovesCommand.prototype.MODEL_UPDATE_FUNCTION();
 		var command = new catan.models.GetCommand(url);
-		command.execute(function(data) {
-			var model = data;
-			if (model != null || model != true || model != 'true') { // It's not super clear which one the server returns if the model is up to date
-				this.modelVersion = model.version;
-				callback(model);
+		command.execute(function(error, data) {
+			if (error) {
+				updateModel(true, data);
+			} else {
+				if (data != null || data != true || data != 'true') { // It's not super clear which one the server returns if the model is up to date
+					this.modelVersion = data.version;
+					updateModel(false, data);
+				}
 			}
 		});
 	};
@@ -226,7 +227,7 @@ catan.models.ClientProxy = (function() {
 		data.inputResource = inputResource;
 		data.outputResource = outputResource;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.MARITIME_TRADE_URL, data);
+		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.MARITIME_TRADE_URL, data);
 		command.execute();
 	};
 	
@@ -247,7 +248,7 @@ catan.models.ClientProxy = (function() {
 		data.playerIndex = this.playerIndex;
 		data.resource = resource;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.MONOPOLY_URL, data);
+		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.MONOPOLY_URL, data);
 		command.execute();
 	};
 	
@@ -265,7 +266,7 @@ catan.models.ClientProxy = (function() {
 		data.type = 'Monument';
 		data.playerIndex = this.playerIndex;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.MONUMENT_URL, data);
+		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.MONUMENT_URL, data);
 		command.execute();
 	};
 	
@@ -288,7 +289,7 @@ catan.models.ClientProxy = (function() {
 		data.receiver = receiver;
 		data.offer = offer;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.OFFER_TRADE_URL, data);
+		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.OFFER_TRADE_URL, data);
 		command.execute();
 	};
 	
@@ -319,7 +320,7 @@ catan.models.ClientProxy = (function() {
 		data.spot2.y = hex2.y;
 		data.spot2.direction = edge2.direction;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.ROAD_BUILDING_URL, data);
+		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.ROAD_BUILDING_URL, data);
 		command.execute();
 	};
 	
@@ -343,7 +344,7 @@ catan.models.ClientProxy = (function() {
 		data.victimIndex = victimIndex;
 		data.robberSpot = robberSpot;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.ROB_PLAYER_URL, data);
+		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.ROB_PLAYER_URL, data);
 		command.execute();
 	};
 	
@@ -364,7 +365,7 @@ catan.models.ClientProxy = (function() {
 		data.playerIndex = this.playerIndex;
 		data.number = number;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.ROLL_NUMBER_URL, data);
+		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.ROLL_NUMBER_URL, data);
 		command.execute();
 	};
 	
@@ -381,7 +382,7 @@ catan.models.ClientProxy = (function() {
 		data.playerIndex = this.playerIndex;
 		data.content = content;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.SEND_CHAT_URL, data);
+		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.SEND_CHAT_URL, data);
 		command.execute();
 	};
 	
@@ -405,7 +406,7 @@ catan.models.ClientProxy = (function() {
 		data.victimIndex = victimIndex;
 		data.robberSpot = robberSpot;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.SOLDIER_URL, data);
+		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.SOLDIER_URL, data);
 		command.execute();
 	};
 	
@@ -428,7 +429,7 @@ catan.models.ClientProxy = (function() {
 		data.resource1 = resource1;
 		data.resource2 = resource2;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.YEAR_OF_PLENTY_URL, data);
+		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.YEAR_OF_PLENTY_URL, data);
 		command.execute();
 	};
 	

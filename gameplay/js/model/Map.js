@@ -36,7 +36,46 @@ function update(mapData) {
 	this.setRobber(new HexLocation(mapData.robber.x, mapData.robber.y));
 	this.setLastRobber(new HexLocation(mapData.lastRobber.x, mapData.lastRobber.y));
 	this.setNumbers(mapData.numbers);
-	this.map = this.setMap(mapData);
+	this.setPorts(mapData.map.ports);
+	this.setMap(mapData);
+}
+
+/**
+SetPorts method
+<pre>
+</pre>
+@method setPorts
+@param {JSON} modelPorts
+*/
+Map.prototype.setPorts = function(modelPorts) {
+
+	var temp = new Array();
+	
+	for(var i=0;i<modelPorts.length;i++)
+	{
+		var loc = new HexLocation(modelPorts[i].location.x, modelPorts[i].location.y);
+		var vertex1 = new VertexLocation(modelPorts[i].validVertex1.direction, modelPorts[i].validVertex1.x, modelPorts[i].validVertex1.y);
+		var vertex2 = new VertexLocation(modelPorts[i].validVertex2.direction, modelPorts[i].validVertex2.x, modelPorts[i].validVertex2.y);
+		var port = new Port(modelPorts[i].orientation, loc, modelPorts[i].ratio, vertex1, vertex2);
+		
+		if(!modelPorts[i].isNull('inputResource'))
+			port.setInputResource(modelPorts[i].inputResource);
+			
+		temp.push(port);
+	}
+	
+    this.ports = temp;
+}
+
+/**
+GetPorts method
+<pre>
+</pre>
+@method getPorts
+@return {Port[]} ports
+*/
+Map.prototype.getPorts = function() {
+    return this.ports;
 }
 
 

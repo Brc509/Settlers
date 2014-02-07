@@ -28,7 +28,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			this.clientProxy 	= new catan.models.ClientProxy(playerID);
 			//this.map 			= new Map(playerID);
 			this.players 		= new Array();
-			// this.turnTracker 	= new TurnTracker(playerID);
+			this.turnTracker 	= new catan.models.TurnTracker(playerID);
 			// this.bank			= new ResourceList();
 		}     
 		ClientModel.prototype.constructor = ClientModel; 
@@ -45,7 +45,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.initFromServer = function(success){
 
 			var myself = this;
-            
             // TODO: 1) fetch the game state from the server, 2) update the client model, 3) call the "success" function.
 			this.clientProxy.gameModel(function (model) {
 				myself.updateModel(model, myself);
@@ -58,7 +57,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			myself.bank = model.bank;
 			myself.deck = model.deck;
 			// myself.map.update(model.map);
-			// myself.turnTracker.update(map.turnTracker);
+			myself.turnTracker.update(model.turnTracker);
 
 			var playersList = {};
 			for (p in model.players) {

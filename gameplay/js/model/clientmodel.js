@@ -72,6 +72,60 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 		}
 
+		/**
+			<pre>
+				PRE: The settlement location is open
+				PRE: The settlement location is not on water
+				PRE: The settlement location is connected to one of client's roads
+				PRE: The client has the necessary resources (1 wood, 1 brick, 1 road)
+				POST: Client loses the resources to play the road
+				POST: Map lists the road correctly
+			</pre>
+			@method buildRoad
+			@param {boolean} free Whether or not client gets this piece for free (i.e. setup)
+			@param {} 
+		*/
+		ClientModel.prototype.buildRoad = function(free, hex, direction) {
+
+			if (!this.clientPlayer.canAffordRoad())
+				console.log("You can't afford a road!");
+			//TODO: Finish the conditions (The conditions should be easy to check
+			// after learning how to reference a single edge or single vertex - 
+			// Parameters will have to be modified to reference the map -> hex -> edge)
+		}
+
+		/**
+			<pre>
+				PRE: The settlement location is open
+				PRE: The settlement location is not on water
+				PRE: The settlement location is connected to one of your roads
+				PRE: You have the resources (1 wood, 1 brick, 1 sheep, 1 settlement)
+				POST: The resources required to build the settlement are expanded
+				POST: The map lists the settlement correctly
+			</pre>
+			@method buildSettlement
+			@param {boolean} free Whether or not the client gets this piece for free (i.e. setup)
+		*/
+		ClientModel.prototype.buildSettlement = function(free) {
+
+
+		}
+
+		/**
+			<pre>
+				PRE: The city location is where you currently have a settlement
+				PRE: You have the resources (2 wheat, 3 ore)
+				POST: You expend the resources to build the city
+				POST: You get a settlement back
+				POST: Map displays the city correctly
+			</pre>
+			@method buildcity
+		*/
+		ClientModel.prototype.buildCity = function() {
+
+
+		}
+
 		ClientModel.prototype.robPlayer = function(playerIndex, victimIndex, robberPoint){
 			//robbing a player
 		}
@@ -113,7 +167,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.buyDevCard = function () {
 			if (canBuyDevCard()) {
-				clientProxy.buyDevCard();
+				this.clientProxy.buyDevCard();
 			}
 		}
 
@@ -154,6 +208,9 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 
 		ClientModel.prototype.roadBuilding = function (spot1, spot2) {
+
+			if (!this.turnTracker.isMyturn() || !this.turnTracker.statusEquals("Playing"))
+				console.log("Cannot build road - not MY turn or not \"Playing\"");
 
 		}
 

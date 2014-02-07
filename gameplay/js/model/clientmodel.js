@@ -26,7 +26,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			console.log('CLIENT MODEL CONSTRUCTOR. playerID: ' + playerID);
 			this.playerID 		= playerID;
 			this.clientProxy 	= new catan.models.ClientProxy(playerID);
-			// this.map 			= new Map(playerID);
+			//this.map 			= new Map(playerID);
 			this.players 		= new Array();
 			// this.turnTracker 	= new TurnTracker(playerID);
 			// this.bank			= new ResourceList();
@@ -58,7 +58,12 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 			var playersList = new Array();
 			for (p in model.players) {
-				playersList[p] = new Player(model.players[p]);
+				var temp = new catan.models.Player();
+				var player = {
+					p : temp
+				}
+				playersList.push(player);
+				playersList[p].update(model.players[p]);
 			}
 			this.players = playersList;
 			this.clientPlayer = this.players[this.playerID];
@@ -80,7 +85,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.canbuyDevCard = function () {
 			
-			var resources = player.resources;
+			var resources = this.clientPlayer.resources;
 			var sheepNum = resources["sheep"];
 			var oreNum = resources["ore"];
 			var wheatNum = resources["wheat"];

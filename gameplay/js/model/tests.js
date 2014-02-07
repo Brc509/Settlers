@@ -10,37 +10,36 @@ function loginPlayer(player, password, color, id){
 
 					var model = $.get("/game/model", function(data){
 						var modelData = data;
-							
-						if(player == "Sam"){
-							this.player = modelData.players[0];
-					
-							var resources = this.player.resources;
-							resources["ore"] = 1;
-						}
+						this.player = modelData.players[0];
+						console.log(this.player);
+						start();
 					});
 				});
 			});
 }
 
-test( "hello test", function() {
-	var clientModel = new catan.models.ClientModel(0);
+// test( "hello test", function() {
+// 	var clientModel = new catan.models.ClientModel(0);
 
-	ok( 1 == "1", "Passed!" );
-});
+// 	ok( 1 == "1", "Passed!" );
+// });
 
 // BUYDEVCARD, FINISHTURN, MONUMENT
 // ONLY REQUIRE MOVE TYPE AND PLAYER INDEX
 test( "Moves Simple", function() {
 	var clientModel = new catan.models.ClientModel(0);
+	stop();
 	loginPlayer("Sam", "sam", "red", "0");
 
 
-	while(typeof this.player === 'undefined'){
+	// while(typeof this.player === 'undefined'){
 
-	}
-
-	// clientModel.initFromServer();
-	
+	// }
+	stop();
+	clientModel.initFromServer(function () {
+		start();
+	});
+	console.log(this.player);
 	var result = clientModel.canbuyDevCard();
 
 	// loginPlayer("Brooke")
@@ -48,54 +47,54 @@ test( "Moves Simple", function() {
 	ok( 1 == "1", "Passed!" );
 });
 
-//BUILD ROAD, SETTLEMENT, CITY, ROAD_BUILDING
-test( "Moves Build Tests", function() {
-	var clientModel = new catan.models.ClientModel(0);
+// //BUILD ROAD, SETTLEMENT, CITY, ROAD_BUILDING
+// test( "Moves Build Tests", function() {
+// 	var clientModel = new catan.models.ClientModel(0);
 
-	ok( 1 == "1", "Passed!" );
-});
+// 	ok( 1 == "1", "Passed!" );
+// });
 
-//OFFER AND ACCEPT TRADE
-test( "Moves Trade Test", function() {
-	var clientModel = new catan.models.ClientModel(0);
+// //OFFER AND ACCEPT TRADE
+// test( "Moves Trade Test", function() {
+// 	var clientModel = new catan.models.ClientModel(0);
 
-	ok( 1 == "1", "Passed!" );
-});
+// 	ok( 1 == "1", "Passed!" );
+// });
 
 
-test( "sendChat", function() {
-	var clientModel = new catan.models.ClientModel(0);
+// test( "sendChat", function() {
+// 	var clientModel = new catan.models.ClientModel(0);
 
-	ok( 1 == "1", "Passed!" );
-});
+// 	ok( 1 == "1", "Passed!" );
+// });
 
-test( "rollNumber", function() {
-	var clientModel = new catan.models.ClientModel(0);
+// test( "rollNumber", function() {
+// 	var clientModel = new catan.models.ClientModel(0);
 
-	ok( 1 == "1", "Passed!" );
-});
+// 	ok( 1 == "1", "Passed!" );
+// });
 
-test( "Year_of_Plenty", function() {
-	var clientModel = new catan.models.ClientModel(0);
+// test( "Year_of_Plenty", function() {
+// 	var clientModel = new catan.models.ClientModel(0);
 
-	ok( 1 == "1", "Passed!" );
-});
+// 	ok( 1 == "1", "Passed!" );
+// });
 
-test( "Soldier", function() {
-	var clientModel = new catan.models.ClientModel(0);
+// test( "Soldier", function() {
+// 	var clientModel = new catan.models.ClientModel(0);
 
-	ok( 1 == "1", "Passed!" );
-});
-test( "Monopoly", function() {
-	var clientModel = new catan.models.ClientModel(0);
+// 	ok( 1 == "1", "Passed!" );
+// });
+// test( "Monopoly", function() {
+// 	var clientModel = new catan.models.ClientModel(0);
 
-	ok( 1 == "1", "Passed!" );
-});
+// 	ok( 1 == "1", "Passed!" );
+// });
 
-test( "discardCards", function() {
-	var clientModel = new catan.models.ClientModel(0);
+// test( "discardCards", function() {
+// 	var clientModel = new catan.models.ClientModel(0);
 
-	ok( 1 == "1", "Passed!" );
-});
+// 	ok( 1 == "1", "Passed!" );
+// });
 
 

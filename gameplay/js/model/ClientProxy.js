@@ -190,15 +190,15 @@ catan.models.ClientProxy = (function() {
 	*/
 	ClientProxy.prototype.gameModel = function(callback) {
 		// Create and execute the command
-		var url = catan.models.GetCommand.GAME_MODEL_URL;
-		if (modelVersion != null) {
-			url += '?version=' + modelVersion;
+		var url = '/game/model';
+		if (this.modelVersion != null) {
+			url += '?version=' + this.modelVersion;
 		}
 		var command = new catan.models.GetCommand(url);
 		command.execute(function(data) {
-			var model = JSON.parse(data);
+			var model = data;
 			if (model != null || model != true || model != 'true') { // It's not super clear which one the server returns if the model is up to date
-				modelVersion = model.version;
+				this.modelVersion = model.version;
 				callback(model);
 			}
 		});

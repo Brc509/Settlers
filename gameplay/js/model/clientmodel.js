@@ -30,7 +30,8 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			this.players 		= new Array();
 			// this.turnTracker 	= new TurnTracker(playerID);
 			// this.bank			= new ResourceList();
-		}      
+		}     
+		ClientModel.prototype.constructor = ClientModel; 
         
         /**
          * This is called to fetch the game state from the server the very first time.
@@ -46,12 +47,11 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
             // TODO: 1) fetch the game state from the server, 2) update the client model, 3) call the "success" function.
 			this.clientProxy.gameModel(this.updateModel);
 			
-            // success();
+            success();
 		}
 
 		ClientModel.prototype.updateModel = function(model) {
 			console.log(model);
-
 			// this.bank.update(model.bank);
 			// this.map.update(model.map);
 			// this.turnTracker.update(map.turnTracker);

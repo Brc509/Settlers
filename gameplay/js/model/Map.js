@@ -12,8 +12,25 @@ Map Class
 @param {HexLocation} robber
 @param {JSON} mapData
 */
-function Map(mapData) {
-	
+function Map(playerID) {
+	this.playerID = playerID;
+}
+
+/**
+Map Class 
+<pre>
+</pre>
+@class Map 
+@constructor
+@param {HexGrid} hexGrid
+@param {TokenList} numbers
+@param {Port[]} ports
+@param {int} radius
+@param {HexLocation} lastRobber
+@param {HexLocation} robber
+@param {JSON} mapData
+*/
+function update(mapData) {
 	this.mapData = mapData;
 	this.setRadius(mapData.radius);
 	this.setRobber(new HexLocation(mapData.robber.x, mapData.robber.y));
@@ -21,6 +38,7 @@ function Map(mapData) {
 	this.setNumbers(mapData.numbers);
 	this.map = this.setMap(mapData);
 }
+
 
 /**
 GetMap method

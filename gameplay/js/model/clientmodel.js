@@ -43,31 +43,33 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
          * @param {function} success - A callback function that is called after the game state has been fetched from the server and the client model updated. This function is passed a single parameter which is the game state object received from the server.
          * */
 		ClientModel.prototype.initFromServer = function(success){
+
+			var myself = this;
             
             // TODO: 1) fetch the game state from the server, 2) update the client model, 3) call the "success" function.
-			this.clientProxy.gameModel(this.updateModel);
-			
-            success();
+			this.clientProxy.gameModel(function (model) {
+				myself.updateModel(model, myself);
+				success();
+			});
 		}
 
-		ClientModel.prototype.updateModel = function(model) {
+		ClientModel.prototype.updateModel = function(model, myself) {
 			console.log(model);
-			// this.bank.update(model.bank);
-			// this.map.update(model.map);
-			// this.turnTracker.update(map.turnTracker);
+			myself.bank = model.bank;
+			myself.deck = model.deck;
+			// myself.map.update(model.map);
+			// myself.turnTracker.update(map.turnTracker);
 
-			var playersList = new Array();
+			var playersList = {};
 			for (p in model.players) {
 				var temp = new catan.models.Player();
-				var player = {
-					p : temp
-				}
-				playersList.push(player);
-				playersList[p].update(model.players[p]);
+				temp.update(model.players[p]);
+
+				playersList[p] = temp;
 			}
-			this.players = playersList;
-			this.clientPlayer = this.players[this.playerID];
-			console.log(this.players);
+			myself.players = playersList;
+			myself.clientPlayer = myself.players[0];
+			console.log(myself.players);
 
 		}
 
@@ -89,9 +91,15 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			var sheepNum = resources["sheep"];
 			var oreNum = resources["ore"];
 			var wheatNum = resources["wheat"];
-			var devCards = game.devCards;
+			console.log('THE BANK! : ', this.bank);
+			var hasDevCard = false;
+			for (card in this.deck) {
+				if (this.deck[card] > 0)
+					hasDevCard = true;
+			}
 			
-			if(sheepNum > 0 && oreNum > 0 && wheatNum > 0){
+			if(sheepNum > 0 && oreNum > 0 && wheatNum > 0 && hasDevCard){
+				console.log('can buy f** hasDevCard');
 				return true;			
 			}else{
 				return false;

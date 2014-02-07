@@ -28,94 +28,105 @@ catan.models = catan.models || {};
     @param {Object} newResourceList An object containing the 5 necessary values to 
 */
 
-var ResourceList = (function ResourceListClass() {
+var catan = catan || {};
+catan.models = catan.models || {};
 
-    function ResourceList() {
 
-    }
+catan.models.ResourceList  = (function clientModelNameSpace(){
 
-    /**
-        <pre>
-            PRE: newResourceList contains five values that are all positive integers
-            POST: Successfully updates the five local variables
-        </pre>
-        @method update
-        @param {Object} newResourceList A new list to update current values to
-    */
-    ResourceList.prototype.update = function(newResourceList) {
+    var ResourceList = (function ResourceListClass() {
 
-        this.brick = newResourceList.brick;
-        this.ore = newResourceList.ore;
-        this.sheep = newResourceList.sheep;
-        this.wheat = newResourceList.wheat;
-        this.wood = newResourceList.wood;
-    }
+        function ResourceList() {
 
-    /**
-        <pre>
-            POST: Returns correct count
-        </pre>
-        @method getCardCount
-        @return {int} Number of cards that the player has
-    */
-    ResourceList.prototype.getCardCount = function () {
+        }
 
-        return this.brick + this.ore + this.sheep + this.wheat + this.wood;
-    }
+        /**
+            <pre>
+                PRE: newResourceList contains five values that are all positive integers
+                POST: Successfully updates the five local variables
+            </pre>
+            @method update
+            @param {Object} newResourceList A new list to update current values to
+        */
+        ResourceList.prototype.update = function(newResourceList) {
 
-    /**
-        <pre>
-            POST: Correctly returns whether or not this ResourceList contains enough resources to afford a Road
-        </pre>
-        @method canAffordRoad
-        @return {boolean} Whether or not this ResourceList has the resources to buy a Road
-    */
-    ResourceList.prototype.canAffordRoad = function() {
+            this.brick = newResourceList.brick;
+            this.ore = newResourceList.ore;
+            this.sheep = newResourceList.sheep;
+            this.wheat = newResourceList.wheat;
+            this.wood = newResourceList.wood;
+        }
 
-        if (this.brick >= 1 && this.wood >= 1)
-            return true;
-        return false;
-    }
+        /**
+            <pre>
+                POST: Returns correct count
+            </pre>
+            @method getCardCount
+            @return {int} Number of cards that the player has
+        */
+        ResourceList.prototype.getCardCount = function () {
 
-    /**
-        <pre>
-            POST: Correctly returns whether or not this ResourceList contains enough resources to afford a Settlement
-        </pre>
-        @method canAffordSettlement
-        @return {boolean} Whether or not this ResourceList has the resources to buy a Settlement
-    */
-    ResourceList.prototype.canAffordSettlement = function() {
+            return this.brick + this.ore + this.sheep + this.wheat + this.wood;
+        }
 
-        if (this.brick >= 1 && this.wood >= 1 && this.wheat >= 1 && this.sheep >= 1)
-            return true;
-        return false;
-    }
+        /**
+            <pre>
+                POST: Correctly returns whether or not this ResourceList contains enough resources to afford a Road
+            </pre>
+            @method canAffordRoad
+            @return {boolean} Whether or not this ResourceList has the resources to buy a Road
+        */
+        ResourceList.prototype.canAffordRoad = function() {
 
-    /**
-        <pre>
-            POST: Correctly returns whether or not this ResourceList contains enough resources to afford a City
-        </pre>
-        @method canAffordCity
-        @return {boolean} Whether or not this ResourceList has the resources to buy a City
-    */
-    ResourceList.prototype.canAffordCity = function() {
+            if (this.brick >= 1 && this.wood >= 1)
+                return true;
+            return false;
+        }
 
-        if (this.wheat >= 2 && this.ore >= 3) 
-            return true;
-        return false;
-    }
+        /**
+            <pre>
+                POST: Correctly returns whether or not this ResourceList contains enough resources to afford a Settlement
+            </pre>
+            @method canAffordSettlement
+            @return {boolean} Whether or not this ResourceList has the resources to buy a Settlement
+        */
+        ResourceList.prototype.canAffordSettlement = function() {
 
-    /**
-        <pre>
-            POST: Correctly returns whether or not this ResourceList contains enough resources to afford a Development Card
-        </pre>
-        @method canAffordDevCard
-        @return {boolean} Whether or not this ResourceList has the resources to buy a Development Card
-    */
-    ResourceList.prototype.canAffordDevCard = function() {
+            if (this.brick >= 1 && this.wood >= 1 && this.wheat >= 1 && this.sheep >= 1)
+                return true;
+            return false;
+        }
 
-        if (this.sheep >= 1 && this.wheat >= 1 && this.ore >= 1)
-            return true;
-        return false;
-    }
-}());
+        /**
+            <pre>
+                POST: Correctly returns whether or not this ResourceList contains enough resources to afford a City
+            </pre>
+            @method canAffordCity
+            @return {boolean} Whether or not this ResourceList has the resources to buy a City
+        */
+        ResourceList.prototype.canAffordCity = function() {
+
+            if (this.wheat >= 2 && this.ore >= 3) 
+                return true;
+            return false;
+        }
+
+        /**
+            <pre>
+                POST: Correctly returns whether or not this ResourceList contains enough resources to afford a Development Card
+            </pre>
+            @method canAffordDevCard
+            @return {boolean} Whether or not this ResourceList has the resources to buy a Development Card
+        */
+        ResourceList.prototype.canAffordDevCard = function() {
+
+            if (this.sheep >= 1 && this.wheat >= 1 && this.ore >= 1)
+                return true;
+            return false;
+        }
+
+        return ResourceList;
+    }());
+
+        return ResourceList;
+}());  

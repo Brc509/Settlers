@@ -60,33 +60,33 @@ catan.models.Player  = (function clientModelNameSpace(){
                 POST: All local player values are successfully updated
             </pre>
         */
-        Player.prototype.update = function(newPlayer) {
+        Player.prototype.update = function(player) {
 
-            this.MAX_GAME_POINTS = player.MAX_GAME_POINTS;
-            this.resources = new ResourceList();
+            this.MAX_GAME_POINTS    = player.MAX_GAME_POINTS;
+            this.resources          = new catan.models.ResourceList();
             this.resources.update(player.resources);
-            this.newDevCards = new DevCardList();
+            this.newDevCards        = new catan.models.DevCardList();
             this.newDevCards.update(player.newDevCards);
-            this.oldDevCards = new DevCardList();
+            this.oldDevCards        = new catan.models.DevCardList();
             this.oldDevCards.update(player.oldDevCards);
 
-            this.roads = player.roads;
-            this.cities = player.cities;
-            this.settlements = player.settlements;
-            this.soldiers = player.soldiers;
-            this.victoryPoints = player.victoryPoints;
-            this.monuments = player.monuments;
+            this.roads          = player.roads;
+            this.cities         = player.cities;
+            this.settlements    = player.settlements;
+            this.soldiers       = player.soldiers;
+            this.victoryPoints  = player.victoryPoints;
+            this.monuments      = player.monuments;
 
-            this.longestRoad = player.longestRoad;
-            this.largestArmy = player.largestArmy;
-            this.playedDevCard = player.playedDevCard;
-            this.discarded = player.discarded;
+            this.longestRoad    = player.longestRoad;
+            this.largestArmy    = player.largestArmy;
+            this.playedDevCard  = player.playedDevCard;
+            this.discarded      = player.discarded;
 
-            this.playerID = player.playerID;
-            this.orderNumber = player.orderNumber;
+            this.playerID       = player.playerID;
+            this.orderNumber    = player.orderNumber;
 
-            this.name = player.name;
-            this.color = player.color;
+            this.name   = player.name;
+            this.color  = player.color;
         }
 
         /**

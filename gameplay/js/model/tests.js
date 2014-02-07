@@ -1,5 +1,27 @@
 
 
+function loginPlayer(player, password, color, id){
+	this.player;
+	var login = $.post("/user/login", { username: player, password : password}, function(data) {
+			var loginData = data;					
+					
+				var join = $.post("/games/join", { color: color, id : id}, function(data) {
+					var joinData = data;
+
+					var model = $.get("/game/model", function(data){
+						var modelData = data;
+							
+						if(player == "Sam"){
+							this.player = modelData.players[0];
+					
+							var resources = this.player.resources;
+							resources["ore"] = 1;
+						}
+					});
+				});
+			});
+}
+
 test( "hello test", function() {
 	var clientModel = new catan.models.ClientModel(0);
 
@@ -10,10 +32,18 @@ test( "hello test", function() {
 // ONLY REQUIRE MOVE TYPE AND PLAYER INDEX
 test( "Moves Simple", function() {
 	var clientModel = new catan.models.ClientModel(0);
+	loginPlayer("Sam", "sam", "red", "0");
 
-	loginSam();
-	clientModel.initFromServer();
-	var result = clientModel.buyDevCard();
+
+	while(typeof this.player === 'undefined'){
+
+	}
+
+	// clientModel.initFromServer();
+	
+	var result = clientModel.canbuyDevCard();
+
+	// loginPlayer("Brooke")
 
 	ok( 1 == "1", "Passed!" );
 });
@@ -68,16 +98,4 @@ test( "discardCards", function() {
 	ok( 1 == "1", "Passed!" );
 });
 
-function loginSam(){
-	
-	var login = $.post("/user/login", { username: "Sam", password : "sam"}, function(data) {
-				var loginData = data;
-					
-					
-					var join = $.post("/games/join", { color: "red", id : "0"}, function(data) {
-						var joinData = data;
-
-					});
-				});
-}
 

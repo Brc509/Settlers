@@ -7,43 +7,28 @@ catan.models = catan.models || {};
 catan.models.Command = (function() {
 
 	/**
-		CLASS DESCRIPTION
+		The Command class represents any command sent from the client to the server.
 		<pre>
 		Domain:
-			MEMBERNAME: DESCRIPTION, TYPE
-			
-		Invariants:
-			INVARIANT: DESCRIPTION
+			url: The server endpoint that the command is sent to, string
+			callback: The callback function executed when the server responds, function
 			
 		Constructor Specification:
-			PRE: DESCRIPTION
-			POST: DESCRIPTION
+			PRE: url is a valid server endpoint
+			PRE: callback is a function
 		</pre>
 		
 		@class Command
 		@constructor
 		
-		@param {TYPE} PARAMNAME DESCRIPTION
+		@param {string} url The server endpoint that the command is sent to
+		@param {function} callback The callback function executed when the server responds
 	*/
-	function Command(PARAMS) {
-		// TODO: Other constructor operations
+	function Command(url, callback) {
+		this.url = url;
+		this.callback = callback;
 	}
 	Command.prototype.constructor = Command;
-	
-	/**
-		FUNCTION DESCRIPTION
-		<pre>
-		PRE: DESCRIPTION
-		POST: DESCRIPTION
-		</pre>
-		
-		@method FUNCTIONNAME
-		@param {TYPE} PARAMNAME DESCRIPTION
-		@return {TYPE} DESCRIPTION
-	*/
-	Command.prototype.FUNCTIONNAME = function(PARAMS) {
-		// TODO: Other function operations
-	};
 	
 	return Command;
 	

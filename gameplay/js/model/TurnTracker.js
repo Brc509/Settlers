@@ -20,7 +20,7 @@ Domain:
 */
 function TurnTracker(newTurnTracker) {
     this.currentTurn = newTurnTracker.currentTurn;
-    this.status = newTurntracker.status;
+    this.status = newTurnTracker.status;
 }
 
 /**

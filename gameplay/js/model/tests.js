@@ -135,14 +135,77 @@ asyncTest( "Moves Simple", 6, function() {
 
 
 test( "Soldier", function() {
+	stop();
 	var clientModel = new catan.models.ClientModel(0);
+	loginPlayer("Sam", "sam", "red", "0", function () {
 
-	ok( 1 == "1", "Passed!" );
+		ok(true, "Logged in");
+		start();
+		stop();
+		clientModel.initFromServer(function () {
+
+			ok(true, "inited Sam");
+			start();
+
+			var proxy = new catan.models.ClientProxy(0, clientModel);
+
+			stop();
+			proxy.rollNumber(6, function (error, model){
+				
+				ok(true, "rolled number");
+				start();
+
+				clientModel.turnTracker = model.turnTracker;
+				var status = clientModel.soldier(1, 2);
+
+				if(error){
+				}else{
+					ok(true == true, status);
+				}
+			});
+			
+		});
+	});
+
+	var status = clientModel.soldier(1,2);
+	ok(true == true, status);
+
 });
 test( "Monopoly", function() {
+	stop();
 	var clientModel = new catan.models.ClientModel(0);
+	loginPlayer("Sam", "sam", "red", "0", function () {
 
-	ok( 1 == "1", "Passed!" );
+		ok(true, "Logged in");
+		start();
+		stop();
+		clientModel.initFromServer(function () {
+
+			ok(true, "inited Sam");
+			start();
+
+			var proxy = new catan.models.ClientProxy(0, clientModel);
+
+			stop();
+			proxy.rollNumber(6, function (error, model){
+				
+				ok(true, "rolled number");
+				start();
+
+				clientModel.turnTracker = model.turnTracker;
+				var status = clientModel.monopoly();
+
+				if(error){
+				}else{
+					ok(true == true, status);
+				}
+			});
+			
+		});
+	});
+
+	var status = clientModel.monopoly();
+	ok(true == true, status);
 });
 
 test( "discardCards", function() {

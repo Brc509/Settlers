@@ -5,7 +5,7 @@ catan.models = catan.models || {};
 /**
 	This module contains the map
 	
-	@module		catan.models
+	@module catan.models
 	@namespace models
 */
 
@@ -19,6 +19,10 @@ catan.models.Map = (function mapNameSpace(){
 		{
 			this.hexGrid = hexgrid.HexGrid.getRegular(radius, CatanHex);
 		}
+		
+		Map.prototype.update = function(mapModel) {
+			console.log(mapModel);
+		};
 
 		return Map;
 		
@@ -53,10 +57,11 @@ catan.models.Map = (function mapNameSpace(){
         
         // once you override this, put in some documentation
         CatanEdge.prototype.isOccupied = function(){
-			if(this.ownerID == -1)
-				return false; // default implementation, change this!
-			else
+			if (this.ownerID == -1) {
+				return false;
+			} else {
 				return true;
+			}
         }
 
         return CatanEdge;
@@ -101,10 +106,11 @@ catan.models.Map = (function mapNameSpace(){
         
         // once you override this, put in some documentation
         CatanVertex.prototype.isOccupied = function(){ 
-			if(this.ownerID == -1)
-				return false; // default implementation, change this!
-			else
+			if (this.ownerID == -1) {
+				return false;
+			} else {
 				return true;
+			}
         }
 
         return CatanVertex;
@@ -135,9 +141,9 @@ catan.models.Map = (function mapNameSpace(){
         } 
         
         return CatanHex;
+		
     }());
 
 	return Map;
+	
 }());
-
-

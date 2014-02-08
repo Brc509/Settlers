@@ -287,7 +287,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			if (this.turnTracker.currentTurn != this.playerID || this.turnTracker.status != "Playing")
 			{
 				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
-				return "It's not current players turn or their status is not playing";
+				return "ERROR: It's not current players turn or their status is not playing";
 			} 
 			if (this.clientPlayer.playedDevCard)
 			{

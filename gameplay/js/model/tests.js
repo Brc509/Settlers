@@ -18,17 +18,17 @@ function loginPlayer(player, password, color, id, callback){
 			});
 }
 
-test( "Year_of_Plenty", 5, function() {
+test( "model.yearOfPlenty()", 5, function() {
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Sam", "sam", "red", "0", function () {
 
-		ok(true, "Logged in");
+		ok(true, "Sam has logged in.");
 		start();
 		stop();
 		clientModel.initFromServer(function () {
 
-			ok(true, "inited Sam");
+			ok(true, "Initialized the server with Sam as the current player.");
 			start();
 
 			var proxy = new catan.models.ClientProxy(0, clientModel);
@@ -36,7 +36,7 @@ test( "Year_of_Plenty", 5, function() {
 			stop();
 			proxy.rollNumber(6, function (error, model){
 				
-				ok(true, "rolled number");
+				ok(true, "Successfully rolled a number (rolled the die)");
 				clientModel.turnTracker = model.turnTracker;
 				start();
 
@@ -51,24 +51,24 @@ test( "Year_of_Plenty", 5, function() {
 
 	
 	var result = clientModel.yearOfPlenty("ore", "wheat");
-	ok(false == false, "Sam has not yet rolled, his status is not Playing");
+	ok(false == false, "ERROR: Sam has not yet rolled, his status is not Playing");
 
 });
 
 // BUYDEVCARD, FINISHTURN, MONUMENT
 // ONLY REQUIRE MOVE TYPE AND PLAYER INDEX
-asyncTest( "Moves Simple", 6, function() {
+asyncTest( "model.canBuyDevCard()", 6, function() {
 	
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Sam", "sam", "red", "0", function () {
 
-		ok(true, "Logged in");
+		ok(true, "Sam has logged in.");
 		start();
 		stop();
 		clientModel.initFromServer(function () {
 
-			ok(true, "inited Sam");
+			ok(true, "Initialized the server with Sam as the current player.");
 			start();
 
 			clientModel.clientPlayer.resources['ore'] ++;
@@ -81,16 +81,16 @@ asyncTest( "Moves Simple", 6, function() {
 
 	loginPlayer("Brooke", "brooke", "blue", "0", function () {
 		
-		ok(true, "Logged in");
+		ok(true, "Brooke has logged in.");
 		start();
 		stop();
 
 		clientModel.initFromServer(function () {
-			ok(true, "inited brooke");
+			ok(true, "Initialized the server with Brooke as the current player.");
 			start();
 			
 			var result = clientModel.canbuyDevCard();
-			ok(result == false, "Brooke cannont buy a devCard");
+			ok(result == false, "ERROR: Brooke cannot buy a devCard, she doesn't have the proper resources.");
 			console.log(result);
 		});
 	});
@@ -126,17 +126,17 @@ asyncTest( "Moves Simple", 6, function() {
 // });
 
 
-test( "Soldier", function() {
+test( "model.soldier(robberSpot, victimID)", function() {
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Sam", "sam", "red", "0", function () {
 
-		ok(true, "Logged in");
+		ok(true, "Sam has logged in.");
 		start();
 		stop();
 		clientModel.initFromServer(function () {
 
-			ok(true, "inited Sam");
+			ok(true, "Initialized the server with Sam as the current player.");
 			start();
 
 			var proxy = new catan.models.ClientProxy(0, clientModel);
@@ -144,7 +144,7 @@ test( "Soldier", function() {
 			stop();
 			proxy.rollNumber(6, function (error, model){
 				
-				ok(true, "rolled number");
+				ok(true, "Successfully rolled a number (rolled the die)");
 				start();
 
 				clientModel.turnTracker = model.turnTracker;
@@ -163,17 +163,17 @@ test( "Soldier", function() {
 	ok(true == true, status);
 
 });
-test( "Monopoly", function() {
+test( "model.monopoly()", function() {
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Sam", "sam", "red", "0", function () {
 
-		ok(true, "Logged in");
+		ok(true, "Sam has logged in.");
 		start();
 		stop();
 		clientModel.initFromServer(function () {
 
-			ok(true, "inited Sam");
+			ok(true, "Initialized the server with Sam as the current player.");
 			start();
 
 			var proxy = new catan.models.ClientProxy(0, clientModel);
@@ -181,7 +181,7 @@ test( "Monopoly", function() {
 			stop();
 			proxy.rollNumber(6, function (error, model){
 				
-				ok(true, "rolled number");
+				ok(true, "Successfully rolled a number (rolled the die)");
 				start();
 
 				clientModel.turnTracker = model.turnTracker;
@@ -200,24 +200,24 @@ test( "Monopoly", function() {
 	ok(true == true, status);
 });
 
-asyncTest( "discardCards", function() {
+asyncTest( "model.canDiscardCards()", function() {
 	var clientModel = new catan.models.ClientModel(0);
 
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Sam", "sam", "red", "0", function () {
 
-		ok(true, "Logged in");
+		ok(true, "Sam has logged in.");
 		start();
 		stop();
 		clientModel.initFromServer(function () {
 
-			ok(true, "inited Sam");
+			ok(true, "Initialized server with current player (Sam).");
 			start();
 
 			clientModel.clientPlayer.resources['ore'] ++;
 			var result = clientModel.canDiscardCards();
-			ok(result == false, "Sam does not have enough resources");
+			ok(result == false, "ERROR: Sam does not have enough resources");
 			console.log(result);
 		});
 	});
@@ -225,16 +225,16 @@ asyncTest( "discardCards", function() {
 
 	loginPlayer("Brooke", "brooke", "blue", "0", function () {
 		
-		ok(true, "Logged in");
+		ok(true, "Brooke has logged in.");
 		start();
 		stop();
 
 		clientModel.initFromServer(function () {
-			ok(true, "inited brooke");
+			ok(true, "Initialized server with current player (Brooke).");
 			start();
 			
 			var result = clientModel.canDiscardCards();
-			ok(result == false, "Brooke cannont buy a devCard");
+			ok(result == false, "ERROR: Brooke cannot discard cards.");
 			console.log(result);
 		});
 	});

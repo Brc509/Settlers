@@ -119,11 +119,53 @@ asyncTest( "model.canBuyDevCard()", 6, function() {
 // 	ok( 1 == "1", "Passed!" );
 // });
 
-// test( "rollNumber", function() {
-// 	var clientModel = new catan.models.ClientModel(0);
+asyncTest( "clientProxy.rollNumber()", function() {
+	stop();
+	var clientModel = new catan.models.ClientModel(0);
+	loginPlayer("Sam", "sam", "red", "0", function () {
 
-// 	ok( 1 == "1", "Passed!" );
-// });
+		ok(true, "Logged in");
+		start();
+		stop();
+		clientModel.initFromServer(function () {
+
+			ok(true, "inited Sam");
+			start();
+
+			clientModel.clientPlayer.resources['ore'] ++;
+			stop();
+			clientModel.clientProxy.rollNumber(6, function (result) {
+				ok(result == false, "Sam rolled a 6.  Good work there sammy");
+				start();
+				console.log(result);
+			});
+			
+		});
+	});
+
+
+	loginPlayer("Brooke", "brooke", "blue", "0", function () {
+		
+		ok(true, "Logged in as Brooke");
+		start();
+		stop();
+
+		clientModel.initFromServer(function () {
+			ok(true, "inited brooke");
+			start();
+			
+			stop();
+			clientModel.clientProxy.rollNumber(7, function (result) {
+				ok(result == false, "Brook rolled a seven.  Everyone watch out.");
+				start();
+				console.log(result);
+			});
+
+		});
+	});
+
+	ok( 1 == "1", "Called both clientProxy methods.  Wait for callback" );
+});
 
 
 test( "model.soldier(robberSpot, victimID)", function() {

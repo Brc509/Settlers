@@ -26,96 +26,113 @@ function loginPlayer(player, password, color, id, callback){
 
 // BUYDEVCARD, FINISHTURN, MONUMENT
 // ONLY REQUIRE MOVE TYPE AND PLAYER INDEX
-asyncTest( "Moves Simple", function() {
+asyncTest( "Moves Simple", 6, function() {
+	
+	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Sam", "sam", "red", "0", function () {
 
 		ok(true, "Logged in");
 		start();
-
+		stop();
 		clientModel.initFromServer(function () {
+
+			ok(true, "inited Sam");
+			start();
+
 			clientModel.clientPlayer.resources['ore'] ++;
 			var result = clientModel.canbuyDevCard();
+			ok(result == true, "Sam can buy a devCard");
+			console.log(result);
 		});
-		
-
 	});
 
 
+	loginPlayer("Brooke", "brooke", "blue", "0", function () {
+		
+		ok(true, "Logged in");
+		start();
+		stop();
+
+		clientModel.initFromServer(function () {
+			ok(true, "inited brooke");
+			start();
+			
+			var result = clientModel.canbuyDevCard();
+			ok(result == false, "Brooke cannont buy a devCard");
+			console.log(result);
+		});
+	});
 
 });
 
 
-// test( "Moves Simple", function() {
-// 	var clientModel = new catan.models.ClientModel(0);
-// 	stop();
-// 	loginPlayer("Sam", "sam", "red", "0");
+//BUILD ROAD, SETTLEMENT, CITY, ROAD_BUILDING
+test( "Moves Build Tests", function() {
+	var clientModel = new catan.models.ClientModel(0);
+
+	ok( 1 == "1", "Passed!" );
+});
+
+//OFFER AND ACCEPT TRADE
+test( "Moves Trade Test", function() {
+	var clientModel = new catan.models.ClientModel(0);
+
+	ok( 1 == "1", "Passed!" );
+});
 
 
-// 	// while(typeof this.player === 'undefined'){
+test( "sendChat", function() {
+	var clientModel = new catan.models.ClientModel(0);
 
-// 	// }
-// 	stop();
-// 	clientModel.initFromServer(function () {
-// 		start();
-// 	});
-// 	console.log(this.player);
-	
-// 	var result = clientModel.canbuyDevCard();
+	ok( 1 == "1", "Passed!" );
+});
 
-// 	// loginPlayer("Brooke")
+test( "rollNumber", function() {
+	var clientModel = new catan.models.ClientModel(0);
 
-// 	ok( 1 == "1", "Passed!" );
-// });
+	ok( 1 == "1", "Passed!" );
+});
 
-// //BUILD ROAD, SETTLEMENT, CITY, ROAD_BUILDING
-// test( "Moves Build Tests", function() {
-// 	var clientModel = new catan.models.ClientModel(0);
+test( "Year_of_Plenty", function() {
+	stop();
+	var clientModel = new catan.models.ClientModel(0);
+	loginPlayer("Sam", "sam", "red", "0", function () {
 
-// 	ok( 1 == "1", "Passed!" );
-// });
+		ok(true, "Logged in");
+		start();
+		stop();
+		clientModel.initFromServer(function () {
 
-// //OFFER AND ACCEPT TRADE
-// test( "Moves Trade Test", function() {
-// 	var clientModel = new catan.models.ClientModel(0);
+			ok(true, "inited Sam");
+			start();
 
-// 	ok( 1 == "1", "Passed!" );
-// });
+			clientModel.rollNumber(6);
 
+			var result = clientModel.yearOfPlenty("ore", "wheat");
+			ok(true == true, "Sam can buy a devCard");
+			console.log(result);
+		});
+	});
 
-// test( "sendChat", function() {
-// 	var clientModel = new catan.models.ClientModel(0);
+	ok( 1 == "1", "Passed!" );
+});
 
-// 	ok( 1 == "1", "Passed!" );
-// });
+test( "Soldier", function() {
+	var clientModel = new catan.models.ClientModel(0);
 
-// test( "rollNumber", function() {
-// 	var clientModel = new catan.models.ClientModel(0);
+	ok( 1 == "1", "Passed!" );
+});
+test( "Monopoly", function() {
+	var clientModel = new catan.models.ClientModel(0);
 
-// 	ok( 1 == "1", "Passed!" );
-// });
+	ok( 1 == "1", "Passed!" );
+});
 
-// test( "Year_of_Plenty", function() {
-// 	var clientModel = new catan.models.ClientModel(0);
+test( "discardCards", function() {
+	var clientModel = new catan.models.ClientModel(0);
 
-// 	ok( 1 == "1", "Passed!" );
-// });
-
-// test( "Soldier", function() {
-// 	var clientModel = new catan.models.ClientModel(0);
-
-// 	ok( 1 == "1", "Passed!" );
-// });
-// test( "Monopoly", function() {
-// 	var clientModel = new catan.models.ClientModel(0);
-
-// 	ok( 1 == "1", "Passed!" );
-// });
-
-// test( "discardCards", function() {
-// 	var clientModel = new catan.models.ClientModel(0);
-
-// 	ok( 1 == "1", "Passed!" );
-// });
+	ok( 1 == "1", "Passed!" );
+});
 
 

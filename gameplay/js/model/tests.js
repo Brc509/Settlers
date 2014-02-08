@@ -18,14 +18,6 @@ function loginPlayer(player, password, color, id, callback){
 			});
 }
 
-// test( "hello test", function() {
-// 	var clientModel = new catan.models.ClientModel(0);
-
-// 	ok( 1 == "1", "Passed!" );
-// });
-
-
-
 test( "Year_of_Plenty", 5, function() {
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
@@ -208,8 +200,44 @@ test( "Monopoly", function() {
 	ok(true == true, status);
 });
 
-test( "discardCards", function() {
+asyncTest( "discardCards", function() {
 	var clientModel = new catan.models.ClientModel(0);
+
+	stop();
+	var clientModel = new catan.models.ClientModel(0);
+	loginPlayer("Sam", "sam", "red", "0", function () {
+
+		ok(true, "Logged in");
+		start();
+		stop();
+		clientModel.initFromServer(function () {
+
+			ok(true, "inited Sam");
+			start();
+
+			clientModel.clientPlayer.resources['ore'] ++;
+			var result = clientModel.canDiscardCards();
+			ok(result == false, "Sam does not have enough resources");
+			console.log(result);
+		});
+	});
+
+
+	loginPlayer("Brooke", "brooke", "blue", "0", function () {
+		
+		ok(true, "Logged in");
+		start();
+		stop();
+
+		clientModel.initFromServer(function () {
+			ok(true, "inited brooke");
+			start();
+			
+			var result = clientModel.canDiscardCards();
+			ok(result == false, "Brooke cannont buy a devCard");
+			console.log(result);
+		});
+	});
 
 	ok( 1 == "1", "Passed!" );
 });

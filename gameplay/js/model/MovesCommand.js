@@ -27,11 +27,7 @@ catan.models.MovesCommand = (function() {
 		@param {string} url The server endpoint that the command is sent to
 		@param {object} data The data to send to the server
 	*/
-	function MovesCommand(clientModel) {
-		// Call the Command constructor
-		this.clientModel = clientModel;
-		//Command.call(this, url, MODEL_UPDATE_FUNCTION);
-		//this.data = data;
+	function MovesCommand() {
 	}
 	MovesCommand.prototype = Object.create(Command.prototype);
 	MovesCommand.prototype.constructor = MovesCommand;
@@ -41,24 +37,14 @@ catan.models.MovesCommand = (function() {
 		
 		@method execute
 	*/
-	MovesCommand.prototype.execute = function() {
+	MovesCommand.prototype.execute = function(callback) {
 		var myself = this;
-		JQuery.post(this.url, this.data, function (data) {
-			myself.clientModel.prototype.updateModel(false, data);
+		jQuery.post(this.url, JSON.stringify(this.data), function (data) {
+			callback(false, data);
 		})
 		.fail (function () {
 			alert('error');
 		});
-		// jQuery.post({
-		// 	type: 'POST', this.url,
-		// 	data: JSON.stringify(this.data)
-		// })
-		// .done(function(data) {
-			
-		// })
-		// .fail(function(jqxhr) {
-		// 	myself.clientModel.prototype.updateModel(true, jqxhr);
-		// });
 	};
 	
 	return MovesCommand;

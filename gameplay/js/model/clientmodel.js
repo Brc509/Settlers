@@ -66,7 +66,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 			//TODO finish the map class
 			//myself.map.update(model.map);
-			myself.turnTracker.update(model.turnTracker);
+			//myself.turnTracker.update(model.turnTracker);
 
 			var playersList = {};
 			for (p in model.players) {
@@ -169,9 +169,11 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @method buyDevCard
 		*/
 		ClientModel.prototype.buyDevCard = function () {
-
+			var myself = this;
 			if (canBuyDevCard()) {
-				this.clientProxy.buyDevCard();
+				this.clientProxy.buyDevCard(function () {
+					myself.updateModel;
+				});
 			}
 		}
 
@@ -208,7 +210,10 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 
 			// Success!
-			this.clientProxy.yearOfPlenty(resource1, resource2);
+			var myself = this;
+			this.clientProxy.yearOfPlenty(resource1, resource2, function () {
+					myself.updateModel;
+			});
 		}
 
 		/**
@@ -254,7 +259,10 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			// TODO: check if the road locations are valid (something should be implemented within Map)
 
 			// Success!
-			this.clientProxy.roadBuilding(hex1, edge1, hex2, edge2);
+			var myself = this;
+			this.clientProxy.roadBuilding(hex1, edge1, hex2, edge2, function () {
+					myself.updateModel;
+				});
 		}
 
 		/**
@@ -292,7 +300,10 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 
 			// Success!
-			this.clientProxy.soldier(victimID, robberSpot);
+			var myself = this;
+			this.clientProxy.soldier(victimID, robberSpot, function () {
+					myself.updateModel;
+				});
 		}
 
 		/**
@@ -321,7 +332,10 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 			
 			// Success!
-			this.clientProxy.monopoly();
+			var myself = this;
+			this.clientProxy.monopoly(function () {
+					myself.updateModel;
+				});
 		}
 
 		/**
@@ -350,7 +364,10 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 
 			// Success!
-			this.clientProxy.monument();
+			var myself = this;
+			this.clientProxy.monument(function () {
+					myself.updateModel;
+				});
 		}
 
 		/**
@@ -389,7 +406,10 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 		ClientModel.prototype.acceptTrade = function () {
 			if (canAcceptTrade()) {
-				this.clientProxy.acceptTrade();
+				var myself = this;
+				this.clientProxy.acceptTrade(function () {
+					myself.updateModel;
+				});
 			}
 		}
 
@@ -427,7 +447,10 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.discardCards = function (discardedCards) {
 
 			if (canDiscardCards()) {
-				this.clientProxy.discardCards(discardCards);
+				var myself = this;
+				this.clientProxy.discardCards(discardCards, function () {
+					myself.updateModel;
+				});
 			}
 		}
         

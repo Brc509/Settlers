@@ -429,7 +429,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.canDiscardCards = function (discardedCards) {
 
-			if (this.turnTracker.isMyTurn() && this.turnTracker.statusEquals("Discarding")
+			if (this.turnTracker.currentTurn == this.playerID && this.turnTracker.status == "Discarding"
 				&& this.clientPlayer.resources.getCardCount() > 7
 				&& this.clientPlayer.hasResources(discardedCards)) {
 

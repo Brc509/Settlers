@@ -8,6 +8,7 @@ catan.models.MovesCommand = (function() {
 
 	var Command = catan.models.Command;
 
+	MovesCommand.prototype.MODEL_UPDATE_FUNCTION	= catan.models.ClientModel.prototype.update;
 	
 	// Define API endpoint constants
 	MovesCommand.prototype.ACCEPT_TRADE_URL			= '/moves/acceptTrade';
@@ -45,10 +46,11 @@ catan.models.MovesCommand = (function() {
 		@param {string} url The server endpoint that the command is sent to
 		@param {object} data The data to send to the server
 	*/
-	function MovesCommand(url, data) {
+	function MovesCommand(clientModel) {
 		// Call the Command constructor
-		Command.call(this, url, MODEL_UPDATE_FUNCTION);
-		this.data = data;
+		this.clientModel = clientModel;
+		//Command.call(this, url, MODEL_UPDATE_FUNCTION);
+		//this.data = data;
 	}
 	MovesCommand.prototype = Object.create(Command.prototype);
 	MovesCommand.prototype.constructor = MovesCommand;
@@ -60,14 +62,15 @@ catan.models.MovesCommand = (function() {
 	*/
 	MovesCommand.prototype.execute = function() {
 		jQuery.ajax({
+			type: 'POST',
 			url: url,
 			data: JSON.stringify(data)
 		})
 		.done(function(data) {
-			callback(false, data);
+			this.clientModel.updateModel(false, data);
 		})
 		.fail(function(jqxhr) {
-			callback(true, jqxhr);
+			this.clientModel.updateModel(true, jqxhr);
 		});
 	};
 	

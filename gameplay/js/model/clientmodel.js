@@ -25,11 +25,12 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		function ClientModel(playerID){
 			console.log('CLIENT MODEL CONSTRUCTOR. playerID: ' + playerID);
 			this.playerID 		= playerID;
-			this.clientProxy 	= new catan.models.ClientProxy(playerID);
+			this.clientProxy 	= new catan.models.ClientProxy(playerID, this);
 			this.map 			= new catan.models.Map(4);
 			this.players 		= new Array();
 			this.turnTracker 	= new catan.models.TurnTracker(playerID);
 			this.bank			= {};
+			this.deck 			= {};
 		}     
 		ClientModel.prototype.constructor = ClientModel; 
         
@@ -152,8 +153,13 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @method buyDevCard
 		*/
 		ClientModel.prototype.canbuyDevCard = function () {
+
+			var deckCardCount = 0;
+			for (card in this.deck) {
+				deckCardCount += this.deck[card];
+			}
 			
-			return (this.clientPlayer.canAffordDevCard() && this.bank.hasAnyCard())
+			return (this.clientPlayer.canAffordDevCard() && deckCardCount > 0);
 		}
 
 		/**
@@ -165,7 +171,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.buyDevCard = function () {
 
 			if (canBuyDevCard()) {
-
 				this.clientProxy.buyDevCard();
 			}
 		}
@@ -192,8 +197,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			} 
 			if (this.clientPlayer.playedDevCard || this.clientPlayer.oldDevCards.yearOfPlenty < 1)
 			{
-				console.log("ERROR: Player has already played a dev card this turn -OR- they do not
-					have a YearOfPlenty card");
+				console.log("ERROR: Player has already played a dev card this turn -OR- they do not have a YearOfPlenty card");
 				return;
 			}
 			if (this.bank[resource1] < 1 || this.bank[resource2] < 1 || 
@@ -238,8 +242,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			} 
 			if (this.clientPlayer.playedDevCard || this.clientPlayer.oldDevCards.roadBuilding < 1)
 			{
-				console.log("ERROR: Player has already played a dev card this turn -OR- they do not
-					have a roadBuilding card");
+				console.log("ERROR: Player has already played a dev card this turn -OR- they do not have a roadBuilding card");
 				return;
 			}
 			if (this.clientPlayer.roads < 2)
@@ -279,8 +282,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			} 
 			if (this.clientPlayer.playedDevCard || this.clientPlayer.oldDevCards.soldier < 1)
 			{
-				console.log("ERROR: Player has already played a dev card this turn -OR- they do not
-					have a soldier card");
+				console.log("ERROR: Player has already played a dev card this turn -OR- they do not	have a soldier card");
 				return;
 			}
 			if (victimID != -1 && this.players[victimID].resources.getCardCount() < 1)
@@ -314,8 +316,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			} 
 			if (this.clientPlayer.playedDevCard || this.clientPlayer.oldDevCards.monopoly < 1)
 			{
-				console.log("ERROR: Player has already played a dev card this turn -OR- they do not
-					have a monopoly card");
+				console.log("ERROR: Player has already played a dev card this turn -OR- they do not	have a monopoly card");
 				return;
 			}
 			
@@ -344,8 +345,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			if (this.clientPlayer.playedDevCard ||
 				(this.clientPlayer.oldDevCards.monument < 1 && this.clientPlayer.newDevCards.monument < 1))
 			{
-				console.log("ERROR: Player has already played a dev card this turn -OR- they do not
-					have a monopoly card");
+				console.log("ERROR: Player has already played a dev card this turn -OR- they do not	have a monopoly card");
 				return;
 			}
 
@@ -413,6 +413,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 				return true;
 			}
 			else { return false; }
+
 		}
 
 		/**

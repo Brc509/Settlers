@@ -24,9 +24,10 @@ catan.models.GetCommand = (function GetCommandNamespace() {
 			
 			@param {string} url The server endpoint to GET
 		*/
-		function GetCommand(url) {
+		function GetCommand(clientModel) {
 			// Call the Command constructor
-			catan.models.Command.call(this, url, null);
+			this.clientModel = clientModel;
+			//catan.models.Command.call(this, url, null);
 		}
 		GetCommand.prototype = Object.create(catan.models.Command.prototype);
 		GetCommand.prototype.constructor = GetCommand;
@@ -39,7 +40,7 @@ catan.models.GetCommand = (function GetCommandNamespace() {
 		*/
 		GetCommand.prototype.execute = function(callback) {
 			jQuery.ajax({
-				url: this.url
+				url: '/game/model'
 			})
 			.done(function(data) {
 				callback(false, data);

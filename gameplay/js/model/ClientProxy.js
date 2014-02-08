@@ -22,9 +22,11 @@ catan.models.ClientProxy = (function() {
 		
 		@param {number} playerIndex The ID of the player who controls this client
 	*/
-	function ClientProxy(playerIndex) {
+	function ClientProxy(playerIndex, clientModel) {
 		this.playerIndex = playerIndex;
 		this.modelVersion = null;
+		this.clientModel = clientModel;
+		this.movesCommand = new catan.models.MovesCommand(clientModel);
 	};
 	ClientProxy.prototype.constructor = ClientProxy;
 	
@@ -41,7 +43,8 @@ catan.models.ClientProxy = (function() {
 		data.playerIndex = this.playerIndex;
 		data.willAccept = willAccept;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.ACCEPT_TRADE_URL, data);
+		this.movesCommand.url 	= catan.models.MovesCommand.prototype.ACCEPT_TRADE_URL;
+		this.movesCommand.data 	= data;
 		command.execute();
 	};
 	
@@ -67,7 +70,8 @@ catan.models.ClientProxy = (function() {
 		data.vertexLocation.direction = vertex.direction;
 		data.free = free;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.BUILD_CITY_URL, data);
+		this.movesCommand.url 	= catan.models.MovesCommand.prototype.BUILD_CITY_URL;
+		this.movesCommand.data 	= data;
 		command.execute();
 	};
 	
@@ -93,7 +97,8 @@ catan.models.ClientProxy = (function() {
 		data.roadLocation.direction = edge.direction;
 		data.free = free;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.BUILD_ROAD_URL, data);
+		this.movesCommand.url 	= catan.models.MovesCommand.prototype.BUILD_ROAD_URL;
+		this.movesCommand.data 	= data;
 		command.execute();
 	};
 	
@@ -119,7 +124,8 @@ catan.models.ClientProxy = (function() {
 		data.vertexLocation.direction = vertex.direction;
 		data.free = free;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.BUILD_SETTLEMENT_URL, data);
+		this.movesCommand.url 	= catan.models.MovesCommand.prototype.BUILD_SETTLEMENT_URL;
+		this.movesCommand.data 	= data;
 		command.execute();
 	};
 	
@@ -137,7 +143,9 @@ catan.models.ClientProxy = (function() {
 		data.type = 'buyDevCard';
 		data.playerIndex = this.playerIndex;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.BUY_DEV_CARD_URL, data);
+		this.movesCommand.url 	= catan.models.MovesCommand.prototype.BUY_DEV_CARD_URL;
+		this.movesCommand.data 	= data;
+
 		command.execute();
 	};
 	
@@ -157,7 +165,8 @@ catan.models.ClientProxy = (function() {
 		data.playerIndex = this.playerIndex;
 		data.discardedCards = discardedCards;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.DISCARD_CARDS_URL, data);
+		this.movesCommand.url 	= catan.models.MovesCommand.prototype.DISCARD_CARDS_URL;
+		this.movesCommand.data 	= data;
 		command.execute();
 	};
 	
@@ -175,7 +184,8 @@ catan.models.ClientProxy = (function() {
 		data.type = 'finishTurn';
 		data.playerIndex = this.playerIndex;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.FINISH_TURN_URL, data);
+		this.movesCommand.url 	= catan.models.MovesCommand.prototype.FINISH_TURN_URL;
+		this.movesCommand.data 	= data;
 		command.execute();
 	};
 	
@@ -189,11 +199,11 @@ catan.models.ClientProxy = (function() {
 		// Append the version number to the URL
 		//var url = catan.models.GetCommand.prototype.GAME_MODEL_URL;
 		var url = '/game/model';
-		if (this.modelVersion != null) {
-			url += '?version=' + this.modelVersion;
-		}
+		// if (this.modelVersion != null) {
+		// 	url += '?version=' + this.modelVersion;
+		// }
 		// Create and execute the command
-		var command = new catan.models.GetCommand(url);
+		var command = new catan.models.GetCommand(this.clientModel);
 		command.execute(function(error, data) {
 			if (error) {
 				callback(true, data);
@@ -228,7 +238,8 @@ catan.models.ClientProxy = (function() {
 		data.inputResource = inputResource;
 		data.outputResource = outputResource;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.MARITIME_TRADE_URL, data);
+		this.movesCommand.url 	= catan.models.MovesCommand.prototype.MARITIME_TRADE_URL;
+		this.movesCommand.data 	= data;
 		command.execute();
 	};
 	
@@ -249,7 +260,8 @@ catan.models.ClientProxy = (function() {
 		data.playerIndex = this.playerIndex;
 		data.resource = resource;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.MONOPOLY_URL, data);
+		this.movesCommand.url 	= catan.models.MovesCommand.prototype.MONOPOLY_URL;
+		this.movesCommand.data 	= data;
 		command.execute();
 	};
 	
@@ -267,7 +279,8 @@ catan.models.ClientProxy = (function() {
 		data.type = 'Monument';
 		data.playerIndex = this.playerIndex;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.MONUMENT_URL, data);
+		this.movesCommand.url 	= catan.models.MovesCommand.prototype.MONUMENT_URL;
+		this.movesCommand.data 	= data;
 		command.execute();
 	};
 	
@@ -290,7 +303,8 @@ catan.models.ClientProxy = (function() {
 		data.receiver = receiver;
 		data.offer = offer;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.OFFER_TRADE_URL, data);
+		this.movesCommand.url 	= catan.models.MovesCommand.prototype.OFFER_TRADE_URL;
+		this.movesCommand.data 	= data;
 		command.execute();
 	};
 	
@@ -321,7 +335,8 @@ catan.models.ClientProxy = (function() {
 		data.spot2.y = hex2.y;
 		data.spot2.direction = edge2.direction;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.ROAD_BUILDING_URL, data);
+		this.movesCommand.url 	= catan.models.MovesCommand.prototype.ROAD_BUILDING_URL;
+		this.movesCommand.data 	= data;
 		command.execute();
 	};
 	
@@ -345,7 +360,8 @@ catan.models.ClientProxy = (function() {
 		data.victimIndex = victimIndex;
 		data.robberSpot = robberSpot;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.ROB_PLAYER_URL, data);
+		this.movesCommand.url 	= catan.models.MovesCommand.prototype.ROB_PLAYER_URL;
+		this.movesCommand.data 	= data;
 		command.execute();
 	};
 	
@@ -366,7 +382,8 @@ catan.models.ClientProxy = (function() {
 		data.playerIndex = this.playerIndex;
 		data.number = number;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.ROLL_NUMBER_URL, data);
+		this.movesCommand.url 	= catan.models.MovesCommand.prototype.ROLL_NUMBER_URL;
+		this.movesCommand.data 	= data;
 		command.execute();
 	};
 	
@@ -383,7 +400,8 @@ catan.models.ClientProxy = (function() {
 		data.playerIndex = this.playerIndex;
 		data.content = content;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.SEND_CHAT_URL, data);
+		this.movesCommand.url 	= catan.models.MovesCommand.prototype.SEND_CHAT_URL;
+		this.movesCommand.data 	= data;
 		command.execute();
 	};
 	
@@ -407,7 +425,8 @@ catan.models.ClientProxy = (function() {
 		data.victimIndex = victimIndex;
 		data.robberSpot = robberSpot;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.SOLDIER_URL, data);
+		this.movesCommand.url 	= catan.models.MovesCommand.prototype.SOLDIER_URL;
+		this.movesCommand.data 	= data;
 		command.execute();
 	};
 	
@@ -430,7 +449,8 @@ catan.models.ClientProxy = (function() {
 		data.resource1 = resource1;
 		data.resource2 = resource2;
 		// Create and execute the command
-		var command = new catan.models.MovesCommand(catan.models.MovesCommand.prototype.YEAR_OF_PLENTY_URL, data);
+		this.movesCommand.url 	= catan.models.MovesCommand.prototype.YEAR_OF_PLENTY_URL;
+		this.movesCommand.data 	= data;
 		command.execute();
 	};
 	

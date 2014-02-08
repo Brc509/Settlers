@@ -82,9 +82,11 @@ catan.models.Map = (function mapNameSpace(){
 			
 			// TODO UPDATE THE PORTS
 			
-			// UPDATE THE ROBBER
-			this.robber.x = mapModel.robber.x;
-			this.robber.y = mapModel.robber.y;
+			// UPDATE THE ROBBER (IF DEFINED)
+			if (mapModel.robber) {
+				this.robber.x = mapModel.robber.x;
+				this.robber.y = mapModel.robber.y;
+			}
 		};
 		
 		return Map;

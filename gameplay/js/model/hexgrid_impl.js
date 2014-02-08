@@ -35,7 +35,11 @@ catan.models.Map = (function mapNameSpace(){
 				for (hex in modelLine) {
 					var modelHex = modelLine[hex];
 					var localHex = localLine[hex];
-					// Update "isLand"
+					// Update the land type (if defined)
+					if (modelHex.landtype) {
+						localHex.landtype = modelHex.landtype;
+					}
+					// Update is land
 					localHex.isLand = modelHex.isLand;
 					var modelLocation = modelHex.location;
 					var localLocation = localHex.location;

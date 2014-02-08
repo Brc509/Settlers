@@ -18,6 +18,8 @@ catan.models.Map = (function mapNameSpace(){
 		function Map(radius)
 		{
 			this.hexGrid = hexgrid.HexGrid.getRegular(radius, CatanHex);
+			// TODO Decompose the robber into a separate class
+			this.robber = {};
 		}
 		
 		Map.prototype.update = function(mapModel) {
@@ -80,7 +82,9 @@ catan.models.Map = (function mapNameSpace(){
 			
 			// TODO UPDATE THE PORTS
 			
-			// TODO UPDATE THE ROBBER
+			// UPDATE THE ROBBER
+			this.robber.x = mapModel.robber.x;
+			this.robber.y = mapModel.robber.y;
 		};
 		
 		return Map;

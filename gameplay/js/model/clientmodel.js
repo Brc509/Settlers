@@ -65,7 +65,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			myself.deck = model.deck;
 
 			//TODO finish the map class
-			//myself.map.update(model.map);
+			myself.map.update(model.map);
 			//myself.turnTracker.update(model.turnTracker);
 
 			var playersList = {};

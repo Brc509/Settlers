@@ -24,6 +24,45 @@ function loginPlayer(player, password, color, id, callback){
 // 	ok( 1 == "1", "Passed!" );
 // });
 
+
+
+test( "Year_of_Plenty", 5, function() {
+	stop();
+	var clientModel = new catan.models.ClientModel(0);
+	loginPlayer("Sam", "sam", "red", "0", function () {
+
+		ok(true, "Logged in");
+		start();
+		stop();
+		clientModel.initFromServer(function () {
+
+			ok(true, "inited Sam");
+			start();
+
+			var proxy = new catan.models.ClientProxy(0, clientModel);
+
+			stop();
+			proxy.rollNumber(6, function (error, model){
+				
+				ok(true, "rolled number");
+				clientModel.turnTracker = model.turnTracker;
+				start();
+
+				if(error){
+				}else{
+					ok(true == true, "Sam successfully executed year of plenty");
+				}
+			});
+			
+		});
+	});
+
+	
+	var result = clientModel.yearOfPlenty("ore", "wheat");
+	ok(false == false, "Sam has not yet rolled, his status is not Playing");
+
+});
+
 // BUYDEVCARD, FINISHTURN, MONUMENT
 // ONLY REQUIRE MOVE TYPE AND PLAYER INDEX
 asyncTest( "Moves Simple", 6, function() {
@@ -67,67 +106,33 @@ asyncTest( "Moves Simple", 6, function() {
 });
 
 
-//BUILD ROAD, SETTLEMENT, CITY, ROAD_BUILDING
-test( "Moves Build Tests", function() {
-	var clientModel = new catan.models.ClientModel(0);
+// //BUILD ROAD, SETTLEMENT, CITY, ROAD_BUILDING
+// test( "Moves Build Tests", function() {
+// 	var clientModel = new catan.models.ClientModel(0);
 
-	ok( 1 == "1", "Passed!" );
-});
+// 	ok( 1 == "1", "Passed!" );
+// });
 
-//OFFER AND ACCEPT TRADE
-test( "Moves Trade Test", function() {
-	var clientModel = new catan.models.ClientModel(0);
+// //OFFER AND ACCEPT TRADE
+// test( "Moves Trade Test", function() {
+// 	var clientModel = new catan.models.ClientModel(0);
 
-	ok( 1 == "1", "Passed!" );
-});
+// 	ok( 1 == "1", "Passed!" );
+// });
 
 
-test( "sendChat", function() {
-	var clientModel = new catan.models.ClientModel(0);
+// test( "sendChat", function() {
+// 	var clientModel = new catan.models.ClientModel(0);
 
-	ok( 1 == "1", "Passed!" );
-});
+// 	ok( 1 == "1", "Passed!" );
+// });
 
-test( "rollNumber", function() {
-	var clientModel = new catan.models.ClientModel(0);
+// test( "rollNumber", function() {
+// 	var clientModel = new catan.models.ClientModel(0);
 
-	ok( 1 == "1", "Passed!" );
-});
+// 	ok( 1 == "1", "Passed!" );
+// });
 
-test( "Year_of_Plenty", 3, function() {
-	stop();
-	var clientModel = new catan.models.ClientModel(0);
-	loginPlayer("Sam", "sam", "red", "0", function () {
-
-		ok(true, "Logged in");
-		start();
-		stop();
-		clientModel.initFromServer(function () {
-
-			ok(true, "inited Sam");
-			start();
-
-			var proxy = new catan.models.ClientProxy(0, clientModel);
-
-			stop();
-			proxy.rollNumber(6, function (error, model){
-				
-				ok(true, "rolled number");
-				start();
-
-				if(error){
-				}else{
-					var result = clientModel.yearOfPlenty("ore", "wheat");
-					ok(true == true, "Sam can buy a devCard");
-					console.log(result);
-				}
-			});
-			
-		});
-	});
-
-	ok( 1 == "1", "Passed!" );
-});
 
 test( "Soldier", function() {
 	var clientModel = new catan.models.ClientModel(0);

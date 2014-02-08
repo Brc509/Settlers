@@ -66,7 +66,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 			//TODO finish the map class
 			//myself.map.update(model.map);
-			myself.turnTracker.update(model.turnTracker);
+			//myself.turnTracker.update(model.turnTracker);
 
 			var playersList = {};
 			for (p in model.players) {
@@ -169,9 +169,11 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @method buyDevCard
 		*/
 		ClientModel.prototype.buyDevCard = function () {
-
+			var myself = this;
 			if (canBuyDevCard()) {
-				this.clientProxy.buyDevCard();
+				this.clientProxy.buyDevCard(function () {
+					myself.updateModel;
+				});
 			}
 		}
 
@@ -190,25 +192,29 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.yearOfPlenty = function (resource1, resource2) {
 
 			// All of the potentially failed pre-conditions
-			if (!this.turnTracker.isMyTurn() || !this.turnTracker.statusEquals("Playing"))
+			if (this.turnTracker.currentTurn != this.playerID || this.turnTracker.status != "Playing")
 			{
 				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
-				return;
+				return false;
 			} 
-			if (this.clientPlayer.playedDevCard || this.clientPlayer.oldDevCards.yearOfPlenty < 1)
+			if (this.clientPlayer.playedDevCard)
 			{
 				console.log("ERROR: Player has already played a dev card this turn -OR- they do not have a YearOfPlenty card");
-				return;
+				return false;
 			}
 			if (this.bank[resource1] < 1 || this.bank[resource2] < 1 || 
 				(resource1 == resource2 && this.bank[resource1] < 2))
 			{
 				console.log("ERROR: Bank does not have one or both of the desired resources");
-				return;
+				return false;
 			}
 
 			// Success!
-			this.clientProxy.yearOfPlenty(resource1, resource2);
+			// var myself = this;
+			// this.clientProxy.yearOfPlenty(resource1, resource2, function () {
+			// 		myself.updateModel;
+			// });
+			return true;
 		}
 
 		/**
@@ -254,7 +260,10 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			// TODO: check if the road locations are valid (something should be implemented within Map)
 
 			// Success!
-			this.clientProxy.roadBuilding(hex1, edge1, hex2, edge2);
+			var myself = this;
+			this.clientProxy.roadBuilding(hex1, edge1, hex2, edge2, function () {
+					myself.updateModel;
+				});
 		}
 
 		/**
@@ -292,7 +301,10 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 
 			// Success!
-			this.clientProxy.soldier(victimID, robberSpot);
+			var myself = this;
+			this.clientProxy.soldier(victimID, robberSpot, function () {
+					myself.updateModel;
+				});
 		}
 
 		/**
@@ -321,7 +333,10 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 			
 			// Success!
-			this.clientProxy.monopoly();
+			var myself = this;
+			this.clientProxy.monopoly(function () {
+					myself.updateModel;
+				});
 		}
 
 		/**
@@ -350,7 +365,10 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 
 			// Success!
-			this.clientProxy.monument();
+			var myself = this;
+			this.clientProxy.monument(function () {
+					myself.updateModel;
+				});
 		}
 
 		/**
@@ -389,7 +407,10 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 		ClientModel.prototype.acceptTrade = function () {
 			if (canAcceptTrade()) {
-				this.clientProxy.acceptTrade();
+				var myself = this;
+				this.clientProxy.acceptTrade(function () {
+					myself.updateModel;
+				});
 			}
 		}
 
@@ -427,7 +448,10 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.discardCards = function (discardedCards) {
 
 			if (canDiscardCards()) {
-				this.clientProxy.discardCards(discardCards);
+				var myself = this;
+				this.clientProxy.discardCards(discardCards, function () {
+					myself.updateModel;
+				});
 			}
 		}
         

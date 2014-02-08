@@ -25,7 +25,7 @@ catan.models.ClientProxy = (function() {
 		this.playerIndex = playerIndex;
 		this.modelVersion = null;
 		this.clientModel = clientModel;
-		this.movesCommand = new catan.models.MovesCommand(clientModel);
+		this.movesCommand = new catan.models.MovesCommand();
 	};
 	ClientProxy.prototype.constructor = ClientProxy;
 
@@ -62,7 +62,7 @@ catan.models.ClientProxy = (function() {
 		@method acceptTrade
 		@param {boolean} willAccept Whether or not the owning player accepts the trade
 	*/
-	ClientProxy.prototype.acceptTrade = function(willAccept) {
+	ClientProxy.prototype.acceptTrade = function(willAccept, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'acceptTrade';
@@ -71,7 +71,7 @@ catan.models.ClientProxy = (function() {
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/acceptTrade';
 		this.movesCommand.data 	= data;
-		this.movesCommand.execute();
+		this.movesCommand.execute(callback);
 	};
 	
 	/**
@@ -85,7 +85,7 @@ catan.models.ClientProxy = (function() {
 		@param {Vertex} vertex The vertex of the hex to build the city on
 		@param {boolean} free Whether or not the city is built for free
 	*/
-	ClientProxy.prototype.buildCity = function(hex, vertex, free) {
+	ClientProxy.prototype.buildCity = function(hex, vertex, free, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'buildCity';
@@ -98,7 +98,7 @@ catan.models.ClientProxy = (function() {
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/buildCity';
 		this.movesCommand.data 	= data;
-		this.movesCommand.execute();
+		this.movesCommand.execute(callback);
 	};
 	
 	/**
@@ -112,7 +112,7 @@ catan.models.ClientProxy = (function() {
 		@param {Edge} edge The edge of the hex to build the road on
 		@param {boolean} free Whether or not the road is built for free
 	*/
-	ClientProxy.prototype.buildRoad = function(hex, edge, free) {
+	ClientProxy.prototype.buildRoad = function(hex, edge, free, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'buildRoad';
@@ -125,7 +125,7 @@ catan.models.ClientProxy = (function() {
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/buildRoad';
 		this.movesCommand.data 	= data;
-		this.movesCommand.execute();
+		this.movesCommand.execute(callback);
 	};
 	
 	/**
@@ -139,7 +139,7 @@ catan.models.ClientProxy = (function() {
 		@param {Vertex} vertex The vertex of the hex to build the settlement on
 		@param {boolean} free Whether or not the settlement is built for free
 	*/
-	ClientProxy.prototype.buildSettlement = function(hex, vertex, free) {
+	ClientProxy.prototype.buildSettlement = function(hex, vertex, free, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'buildSettlement';
@@ -152,7 +152,7 @@ catan.models.ClientProxy = (function() {
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/buildSettlement';
 		this.movesCommand.data 	= data;
-		this.movesCommand.execute();
+		this.movesCommand.execute(callback);
 	};
 	
 	/**
@@ -172,7 +172,7 @@ catan.models.ClientProxy = (function() {
 		this.movesCommand.url 	= '/moves/buyDevCard';
 		this.movesCommand.data 	= data;
 
-		this.movesCommand.execute();
+		this.movesCommand.execute(callback);
 	};
 	
 	/**
@@ -184,7 +184,7 @@ catan.models.ClientProxy = (function() {
 		@method discardCards
 		@param {ResourceList} discardedCards A ResourceList representing the cards the owning player is to discard
 	*/
-	ClientProxy.prototype.discardCards = function(discardedCards) {
+	ClientProxy.prototype.discardCards = function(discardedCards, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'discardCards';
@@ -193,7 +193,7 @@ catan.models.ClientProxy = (function() {
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/discardCards';
 		this.movesCommand.data 	= data;
-		this.movesCommand.execute();
+		this.movesCommand.execute(callback);
 	};
 	
 	/**
@@ -204,7 +204,7 @@ catan.models.ClientProxy = (function() {
 		
 		@method finishTurn
 	*/
-	ClientProxy.prototype.finishTurn = function() {
+	ClientProxy.prototype.finishTurn = function(callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'finishTurn';
@@ -212,7 +212,7 @@ catan.models.ClientProxy = (function() {
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/finishTurn';
 		this.movesCommand.data 	= data;
-		this.movesCommand.execute();
+		this.movesCommand.execute(callback);
 	};
 	
 	/**
@@ -228,7 +228,7 @@ catan.models.ClientProxy = (function() {
 		@param {string} inputResource The type of resource the owning player is giving
 		@param {string} outputResource The type of resource the owning player is receiving
 	*/
-	ClientProxy.prototype.maritimeTrade = function(ratio, inputResource, outputResource) {
+	ClientProxy.prototype.maritimeTrade = function(ratio, inputResource, outputResource, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'maritimeTrade';
@@ -239,7 +239,7 @@ catan.models.ClientProxy = (function() {
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/maritimeTrade';
 		this.movesCommand.data 	= data;
-		this.movesCommand.execute();
+		this.movesCommand.execute(callback);
 	};
 	
 	/**
@@ -252,7 +252,7 @@ catan.models.ClientProxy = (function() {
 		@method monopoly
 		@param {string} resource The type of resource the owning player is monopolizing
 	*/
-	ClientProxy.prototype.monopoly = function(resource) {
+	ClientProxy.prototype.monopoly = function(resource, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'Monopoly';
@@ -261,7 +261,7 @@ catan.models.ClientProxy = (function() {
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/Monopoly';
 		this.movesCommand.data 	= data;
-		this.movesCommand.execute();
+		this.movesCommand.execute(callback);
 	};
 	
 	/**
@@ -272,7 +272,7 @@ catan.models.ClientProxy = (function() {
 		
 		@method monument
 	*/
-	ClientProxy.prototype.monument = function() {
+	ClientProxy.prototype.monument = function(callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'Monument';
@@ -280,7 +280,7 @@ catan.models.ClientProxy = (function() {
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/Monument';
 		this.movesCommand.data 	= data;
-		this.movesCommand.execute();
+		this.movesCommand.execute(callback);
 	};
 	
 	/**
@@ -294,7 +294,7 @@ catan.models.ClientProxy = (function() {
 		@param {number} receiver The player to extend the offer to
 		@param {ResourceList} offer What the owning player gives (-) and receives (+)
 	*/
-	ClientProxy.prototype.offerTrade = function(receiver, offer) {
+	ClientProxy.prototype.offerTrade = function(receiver, offer, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'offerTrade';
@@ -304,7 +304,7 @@ catan.models.ClientProxy = (function() {
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/offerTrade';
 		this.movesCommand.data 	= data;
-		this.movesCommand.execute();
+		this.movesCommand.execute(callback);
 	};
 	
 	/**
@@ -320,7 +320,7 @@ catan.models.ClientProxy = (function() {
 		@param {HexLocation} hex2 The hex to build the second road on
 		@param {Edge} edge2 The edge of the second hex to build the second road on
 	*/
-	ClientProxy.prototype.roadBuilding = function(hex1, edge1, hex2, edge2) {
+	ClientProxy.prototype.roadBuilding = function(hex1, edge1, hex2, edge2, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'Road_Building';
@@ -336,7 +336,7 @@ catan.models.ClientProxy = (function() {
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/Road_Building';
 		this.movesCommand.data 	= data;
-		this.movesCommand.execute();
+		this.movesCommand.execute(callback);
 	};
 	
 	/**
@@ -351,7 +351,7 @@ catan.models.ClientProxy = (function() {
 		@param {number} victimIndex The ID of the player to rob
 		@param {HexLocation} robberSpot The hex to move the robber to
 	*/
-	ClientProxy.prototype.robPlayer = function(victimIndex, robberSpot) {
+	ClientProxy.prototype.robPlayer = function(victimIndex, robberSpot, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'robPlayer';
@@ -361,7 +361,7 @@ catan.models.ClientProxy = (function() {
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/robPlayer';
 		this.movesCommand.data 	= data;
-		this.movesCommand.execute();
+		this.movesCommand.execute(callback);
 	};
 	
 	/**
@@ -374,7 +374,7 @@ catan.models.ClientProxy = (function() {
 		@method rollNumber
 		@param {number} number The number the owning player rolled
 	*/
-	ClientProxy.prototype.rollNumber = function(number) {
+	ClientProxy.prototype.rollNumber = function(number, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'rollNumber';
@@ -383,7 +383,7 @@ catan.models.ClientProxy = (function() {
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/rollNumber';
 		this.movesCommand.data 	= data;
-		this.movesCommand.execute();
+		this.movesCommand.execute(callback);
 	};
 	
 	/**
@@ -392,7 +392,7 @@ catan.models.ClientProxy = (function() {
 		@method sendChat
 		@param {string} content The content of the message
 	*/
-	ClientProxy.prototype.sendChat = function(content) {
+	ClientProxy.prototype.sendChat = function(content, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'sendChat';
@@ -401,7 +401,7 @@ catan.models.ClientProxy = (function() {
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/sendChat';
 		this.movesCommand.data 	= data;
-		this.movesCommand.execute();
+		this.movesCommand.execute(callback);
 	};
 	
 	/**
@@ -416,7 +416,7 @@ catan.models.ClientProxy = (function() {
 		@param {number} victimIndex The ID of the player to rob
 		@param {HexLocation} robberSpot the hex to move the robber to
 	*/
-	ClientProxy.prototype.soldier = function(victimIndex, robberSpot) {
+	ClientProxy.prototype.soldier = function(victimIndex, robberSpot, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'Soldier';
@@ -426,7 +426,7 @@ catan.models.ClientProxy = (function() {
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/Soldier';
 		this.movesCommand.data 	= data;
-		this.movesCommand.execute();
+		this.movesCommand.execute(callback);
 	};
 	
 	/**
@@ -440,7 +440,7 @@ catan.models.ClientProxy = (function() {
 		@param {string} resource1 The first resource the owning player wants to obtain
 		@param {string} resource2 The second resource the owning player wants to obtain
 	*/
-	ClientProxy.prototype.yearOfPlenty = function(resource1, resource2) {
+	ClientProxy.prototype.yearOfPlenty = function(resource1, resource2, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'Year_of_Plenty';
@@ -450,7 +450,7 @@ catan.models.ClientProxy = (function() {
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/Year_of_Plenty';
 		this.movesCommand.data 	= data;
-		this.movesCommand.execute();
+		this.movesCommand.execute(callback);
 	};
 	
 	return ClientProxy;

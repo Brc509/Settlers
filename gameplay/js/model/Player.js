@@ -98,7 +98,7 @@ catan.models.Player  = (function clientModelNameSpace(){
         */
         Player.prototype.canAffordRoad = function() {
 
-            if (resources.canAffordRoad())
+            if (this.resources.canAffordRoad() && this.roads > 0)
                 return true;
             return false;
         }
@@ -112,7 +112,7 @@ catan.models.Player  = (function clientModelNameSpace(){
         */
         Player.prototype.canAffordSettlement = function() {
 
-            if (resources.canAffordSettlement())
+            if (this.resources.canAffordSettlement() && this.settlements > 0)
                 return true;
             return false;
         }
@@ -126,7 +126,7 @@ catan.models.Player  = (function clientModelNameSpace(){
         */
         Player.prototype.canAffordCity = function() {
 
-            if (resources.canAffordCity())
+            if (this.resources.canAffordCity() && this.cities > 0)
                 return true;
             return false;
         }
@@ -140,7 +140,7 @@ catan.models.Player  = (function clientModelNameSpace(){
         */
         Player.prototype.canAffordDevCard = function() {
 
-            if (resources.canAffordDevCard())
+            if (this.resources.canAffordDevCard())
                 return true;
             return false;
         }
@@ -156,11 +156,11 @@ catan.models.Player  = (function clientModelNameSpace(){
         */
         Player.prototype.hasResources = function(resourceList) {
 
-            hasBrick    = (resources.brick <= resourceList.brick);
-            hasOre      = (resources.ore   <= resourceList.ore);
-            hasSheep    = (resources.sheep <= resourceList.sheep);
-            hasWheat    = (resources.wheat <= resourceList.wheat);
-            hasWood     = (resources.wood  <= resourceList.wood);
+            hasBrick    = (this.resources.brick <= resourceList.brick);
+            hasOre      = (this.resources.ore   <= resourceList.ore);
+            hasSheep    = (this.resources.sheep <= resourceList.sheep);
+            hasWheat    = (this.resources.wheat <= resourceList.wheat);
+            hasWood     = (this.resources.wood  <= resourceList.wood);
 
             return (hasBrick && hasOre && hasSheep && hasWheat && hasWood);
         }

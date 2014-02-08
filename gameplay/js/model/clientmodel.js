@@ -95,7 +95,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 			if (!this.clientPlayer.canAffordRoad())
 				console.log("You can't afford a road!");
-			//TODO: Finish the conditions (The conditions should be easy to check
+			// TODO: Finish the conditions (The conditions should be easy to check
 			// after learning how to reference a single edge or single vertex - 
 			// Parameters will have to be modified to reference the map -> hex -> edge)
 		}
@@ -114,7 +114,9 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.buildSettlement = function(free) {
 
-
+			if (!this.clientPlayer.canAffordSettlement())
+				console.log("You can't afford a settlement!");
+			// TODO: Finish checking conditions
 		}
 
 		/**
@@ -129,11 +131,14 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.buildCity = function() {
 
-
+			if (!this.clientPlayer.canAffordCity())
+				console.log("You can't afford a city!");
+			// TODO: Finish Checking Conditions
 		}
 
-		ClientModel.prototype.robPlayer = function(playerIndex, victimIndex, robberPoint){
-			//robbing a player
+		ClientModel.prototype.robPlayer = function(playerIndex, victimIndex, robberPoint) {
+
+			//TODO: Implement
 		}
 
 		/**
@@ -146,23 +151,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.canbuyDevCard = function () {
 			
-			var resources = this.clientPlayer.resources;
-			var sheepNum = resources["sheep"];
-			var oreNum = resources["ore"];
-			var wheatNum = resources["wheat"];
-			console.log('THE BANK! : ', this.bank);
-			var hasDevCard = false;
-			for (card in this.deck) {
-				if (this.deck[card] > 0)
-					hasDevCard = true;
-			}
-			
-			if(sheepNum > 0 && oreNum > 0 && wheatNum > 0 && hasDevCard){
-				console.log('can buy f** hasDevCard');
-				return true;			
-			}else{
-				return false;
-			}
+			return (this.clientPlayer.canAffordDevCard() && this.bank.hasAnyCard())
 		}
 
 		/**
@@ -172,35 +161,57 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @method buyDevCard
 		*/
 		ClientModel.prototype.buyDevCard = function () {
+
 			if (canBuyDevCard()) {
+
 				this.clientProxy.buyDevCard();
 			}
 		}
 
 		/**
 		    <pre>
-		        PRE: Client's turn and status is "Playing"
-		        PRE: Person hasn't played a dev card yet this turn
+				PRE: Client has the specific card they want to play in their "oldDevCard" list
+		    	PRE: Client hasn't played a dev card yet this turn
+		    	PRE: It's the client's turn
+		    	PRE: The client model status is "Playing"
+
 		        PRE: Client's two specified resources are in the bank
 		        POST: Person now has the two specified resources
 		    </pre>
 		    @method yearOfPlenty
 		*/
 		ClientModel.prototype.yearOfPlenty = function (resource1, resource2) {
-			if (this.turnTracker.currentTurn == this.playerID
-				&& this.turnTracker.status == "Playing")
+
+			// All of the potentially failed pre-conditions
+			if (!this.turnTracker.isMyTurn() || !this.turnTracker.statusEquals("Playing"))
 			{
-				if (resources[resource1] > 0 && resources[resource2] > 0)
-				{
-					this.clientProxy.yearOfPlenty(resource1, resource2);
-				}
+				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
+				return;
+			} 
+			if (this.clientPlayer.playedDevCard || this.clientPlayer.oldDevCards.yearOfPlenty < 1)
+			{
+				console.log("ERROR: Player has already played a dev card this turn -OR- they do not
+					have a YearOfPlenty card");
+				return;
 			}
+			if (this.bank[resource1] < 1 || this.bank[resource2] < 1 || 
+				(resource1 == resource2 && this.bank[resource1] < 2))
+			{
+				console.log("ERROR: Bank does not have one or both of the desired resources");
+				return;
+			}
+
+			// Success!
+			this.clientProxy.yearOfPlenty(resource1, resource2);
 		}
 
 		/**
 		    <pre>
-		        PRE: Client's turn and status is "Playing"
-		        PRE: Person hasn't played a dev card yet this turn
+				PRE: Client has the specific card they want to play in their "oldDevCard" list
+		    	PRE: Client hasn't played a dev card yet this turn
+		    	PRE: It's the client's turn
+		    	PRE: The client model status is "Playing"
+
 		        PRE: First road location is connected to one of the client's roads
 		        PRE: Second road location is connected either to one of the client's roads or to the first road location
 		        PRE: Neither road location is on water
@@ -209,27 +220,44 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		        POST: The map registered the road successfully
 		    </pre>
 		    @method roadBuilding
-		    @param (EdgeLocation) spot1, The first of the new road locations
-		    @param (EdgeLocation) spot2, the second of the new road locations
+			@param {HexLocation} hex1 The hex to build the first road on
+			@param {Edge} edge1 The edge of the first hex to build the first road on
+			@param {HexLocation} hex2 The hex to build the second road on
+			@param {Edge} edge2 The edge of the second hex to build the second road on
 		*/
 
-		ClientModel.prototype.roadBuilding = function (spot1, spot2) {
+		ClientModel.prototype.roadBuilding = function (hex1, edge1, hex2, edge2) {
 
-			if (!this.turnTracker.isMyturn() || !this.turnTracker.statusEquals("Playing"))
-				console.log("Cannot build road - not MY turn or not \"Playing\"");
+			// All of the potentially failed pre-conditions
+			if (!this.turnTracker.isMyTurn() || !this.turnTracker.statusEquals("Playing"))
+			{
+				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
+				return;
+			} 
+			if (this.clientPlayer.playedDevCard || this.clientPlayer.oldDevCards.roadBuilding < 1)
+			{
+				console.log("ERROR: Player has already played a dev card this turn -OR- they do not
+					have a roadBuilding card");
+				return;
+			}
+			if (this.clientPlayer.roads < 2)
+			{
+				console.log("ERROR: Player does not have 2 roads to place")
+				return;
+			}
 
-		}
+			// TODO: check if the road locations are valid (something should be implemented within Map)
 
-		ClientModel.prototype.cityBuilding = function (spot1, spot2) {
-
-		}
-
-		ClientModel.prototype.settlementBuilding = function (spot1, spot2) {
-
+			// Success!
+			this.clientProxy.roadBuilding(hex1, edge1, hex2, edge2);
 		}
 
 		/**
 		    <pre>
+		    	PRE: Client has the specific card they want to play in their "oldDevCard" list
+		    	PRE: Client hasn't played a dev card yet this turn
+		    	PRE: It's the client's turn
+		    	PRE: The client model status is "Playing"
 		        PRE: Robber has moved
 		        PRE: The victim has cards (or -1 if can't rob anyone)
 		        POST: Robber is in a new location
@@ -239,32 +267,88 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @param HexLocation robberSpot, location of the robber
 		    @param PlayerIndex victimIndex, index of the player being robbed
 		*/
-		ClientModel.prototype.soldier = function (robberSpot, victimIndex) {
-			if (this.players[p].resources.getCardCount > 0) {
-				this.clientProxy.soldier();
+		ClientModel.prototype.soldier = function (robberSpot, victimID) {
+
+			// All of the potentially failed pre-conditions
+			if (!this.turnTracker.isMyTurn() || !this.turnTracker.statusEquals("Playing"))
+			{
+				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
+				return;
+			} 
+			if (this.clientPlayer.playedDevCard || this.clientPlayer.oldDevCards.soldier < 1)
+			{
+				console.log("ERROR: Player has already played a dev card this turn -OR- they do not
+					have a soldier card");
+				return;
 			}
+			if (victimID != -1 && this.players[victimID].resources.getCardCount() < 1)
+			{
+				console.log("ERROR: Player to rob has no cards!")
+				return;
+			}
+
+			// Success!
+			this.clientProxy.soldier(victimID, robberSpot);
 		}
 
 		/**
 		    <pre>
+		    	PRE: Client has the specific card they want to play in their "oldDevCard" list
+		    	PRE: Client hasn't played a dev card yet this turn
+		    	PRE: It's the client's turn
+		    	PRE: The client model status is "Playing"
 		        POST: All other players lose the resource type that's chosen
 		        POST: The player of the card gets an equal number
 		    </pre>
 		    @method monopoly
 		*/
 		ClientModel.prototype.monopoly = function () {
+			
+			// All of the potentially failed pre-conditions
+			if (!this.turnTracker.isMyTurn() || !this.turnTracker.statusEquals("Playing"))
+			{
+				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
+				return;
+			} 
+			if (this.clientPlayer.playedDevCard || this.clientPlayer.oldDevCards.monopoly < 1)
+			{
+				console.log("ERROR: Player has already played a dev card this turn -OR- they do not
+					have a monopoly card");
+				return;
+			}
+			
+			// Success!
 			this.clientProxy.monopoly();
 		}
 
 		/**
 		    <pre>
-		        PRE: CAN be played on the turn that you buy it
+		        PRE: Client has the specific card they want to play in EITHER DevCardList (This is an exception!)
+		        PRE: Client hasn't played a dev card yet this turn
+		    	PRE: It's the client's turn
+		    	PRE: The client model status is "Playing"
 		        POST: You gain one victory point
 		    </pre>
 		    @method monument
 		*/
 		ClientModel.prototype.monument = function () {
 
+			// All of the potentially failed pre-conditions
+			if (!this.turnTracker.isMyTurn() || !this.turnTracker.statusEquals("Playing"))
+			{
+				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
+				return;
+			} 
+			if (this.clientPlayer.playedDevCard ||
+				(this.clientPlayer.oldDevCards.monument < 1 && this.clientPlayer.newDevCards.monument < 1))
+			{
+				console.log("ERROR: Player has already played a dev card this turn -OR- they do not
+					have a monopoly card");
+				return;
+			}
+
+			// Success!
+			this.clientProxy.monument();
 		}
 
 		/**
@@ -279,6 +363,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.canOfferTrade = function (offer, receiver) {
 
 		}
+
 		ClientModel.prototype.offerTrade = function (offer, receiver) {
 			if (canOfferTrade()) {
 				this.clientProxy.offerTrade(offer, receiver);
@@ -318,15 +403,14 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @param ResourceHand discardedCards, The cards being discarded
 		*/
 		ClientModel.prototype.canDiscardCards = function (discardedCards) {
-			if (this.turnTracker.currentTurn == this.playerID
-				&& this.turnTracker.status == "Discarding"
-				&& this.clientPlayer.resources.getCardCount > 7
+
+			if (this.turnTracker.isMyTurn() && this.turnTracker.statusEquals("Discarding")
+				&& this.clientPlayer.resources.getCardCount() > 7
 				&& this.clientPlayer.hasResources(discardedCards)) {
 
 				return true;
 			}
 			else { return false; }
-
 		}
 
 		/**

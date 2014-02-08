@@ -26,7 +26,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			console.log('CLIENT MODEL CONSTRUCTOR. playerID: ' + playerID);
 			this.playerID 		= playerID;
 			this.clientProxy 	= new catan.models.ClientProxy(playerID);
-			this.map 			= new catan.models.Map(playerID);
+			this.map 			= new catan.models.Map(4);
 			this.players 		= new Array();
 			this.turnTracker 	= new catan.models.TurnTracker(playerID);
 			this.bank			= {};
@@ -62,7 +62,9 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			console.log(model);
 			myself.bank = model.bank;
 			myself.deck = model.deck;
-			myself.map.update(model.map);
+
+			//TODO finish the map class
+			//myself.map.update(model.map);
 			myself.turnTracker.update(model.turnTracker);
 
 			var playersList = {};

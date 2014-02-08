@@ -42,17 +42,23 @@ catan.models.MovesCommand = (function() {
 		@method execute
 	*/
 	MovesCommand.prototype.execute = function() {
-		jQuery.ajax({
-			type: 'POST',
-			url: url,
-			data: JSON.stringify(data)
+		var myself = this;
+		JQuery.post(this.url, this.data, function (data) {
+			myself.clientModel.prototype.updateModel(false, data);
 		})
-		.done(function(data) {
-			this.clientModel.updateModel(false, data);
-		})
-		.fail(function(jqxhr) {
-			this.clientModel.updateModel(true, jqxhr);
+		.fail (function () {
+			alert('error');
 		});
+		// jQuery.post({
+		// 	type: 'POST', this.url,
+		// 	data: JSON.stringify(this.data)
+		// })
+		// .done(function(data) {
+			
+		// })
+		// .fail(function(jqxhr) {
+		// 	myself.clientModel.prototype.updateModel(true, jqxhr);
+		// });
 	};
 	
 	return MovesCommand;

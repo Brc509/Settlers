@@ -21,11 +21,62 @@ catan.models.Map = (function mapNameSpace(){
 		}
 		
 		Map.prototype.update = function(mapModel) {
-			console.log(mapModel);
-			console.log('HEXES FROM MODEL:');
-			console.log(JSON.stringify(mapModel.hexes, '    ', null));
-			console.log('HEXES IN MAP:');
-			console.log(JSON.stringify(this.hexGrid.hexes, '    ', null));
+		
+			// UPDATE THE HEXGRID
+			var modelHexGrid = mapModel.hexGrid;
+			var localHexGrid = this.hexGrid;
+			var modelHexes = modelHexGrid.hexes;
+			var localHexes = localHexGrid.hexes;
+			// Update the hexes line by line
+			for (line in modelHexes) {
+				var modelLine = modelHexes[line];
+				var localLine = localHexes[line];
+				// Update each hex in the line
+				for (hex in modelLine) {
+					var modelHex = modelLine[hex];
+					var localHex = localLine[hex];
+					// Update "isLand"
+					localHex.isLand = modelHex.isLand;
+					var modelLocation = modelHex.location;
+					var localLocation = localHex.location;
+					// Update the hex location
+					localLocation.x = modelLocation.x;
+					localLocation.y = modelLocation.y;
+					var modelVertexes = modelHex.vertexes;
+					var localVertexes = localHex.vertexes;
+					// Update the vertexes
+					for (vertex in modelVertexes) {
+						var modelVertex = modelVertexes[vertex];
+						var localVertex = localVertexes[vertex];
+						// Update the worth
+						localVertex.worth = modelVertex.value.worth;
+						// Update the ownerID
+						localVertex.ownerID = modelVertex.value.ownerID;
+					}
+					var modelEdges = modelHex.edges;
+					var localEdges = localHex.edges;
+					// Update the edges
+					for (edge in modelEdges) {
+						var modelEdge = modelEdges[edge];
+						var localEdge = localEdges[edge];
+						// Update the ownerID
+						localEdge.ownerID = modelEdge.value.ownerID;
+					}
+				}
+			}
+			// Update the offsets
+			localHexGrid.offsets = modelHexGrid.offsets;
+			// Update the radius
+			localHexGrid.radius = modelHexGrid.radius;
+			// Update the origin
+			localHexGrid.x0 = modelHexGrid.x0;
+			localHexGrid.y0 = modelHexGrid.y0;
+			
+			// TODO UPDATE THE NUMBERS
+			
+			// TODO UPDATE THE PORTS
+			
+			// TODO UPDATE THE ROBBER
 		};
 		
 		return Map;

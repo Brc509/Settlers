@@ -192,28 +192,29 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.yearOfPlenty = function (resource1, resource2) {
 
 			// All of the potentially failed pre-conditions
-			if (!this.turnTracker.isMyTurn() || !this.turnTracker.statusEquals("Playing"))
+			if (this.turnTracker.currentTurn != this.playerID || this.turnTracker.status != "Playing")
 			{
 				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
-				return;
+				return false;
 			} 
-			if (this.clientPlayer.playedDevCard || this.clientPlayer.oldDevCards.yearOfPlenty < 1)
+			if (this.clientPlayer.playedDevCard)
 			{
 				console.log("ERROR: Player has already played a dev card this turn -OR- they do not have a YearOfPlenty card");
-				return;
+				return false;
 			}
 			if (this.bank[resource1] < 1 || this.bank[resource2] < 1 || 
 				(resource1 == resource2 && this.bank[resource1] < 2))
 			{
 				console.log("ERROR: Bank does not have one or both of the desired resources");
-				return;
+				return false;
 			}
 
 			// Success!
-			var myself = this;
-			this.clientProxy.yearOfPlenty(resource1, resource2, function () {
-					myself.updateModel;
-			});
+			// var myself = this;
+			// this.clientProxy.yearOfPlenty(resource1, resource2, function () {
+			// 		myself.updateModel;
+			// });
+			return true;
 		}
 
 		/**

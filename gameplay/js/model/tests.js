@@ -26,7 +26,7 @@ function loginPlayer(player, password, color, id, callback){
 
 
 
-test( "Year_of_Plenty", 3, function() {
+test( "Year_of_Plenty", 5, function() {
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Sam", "sam", "red", "0", function () {
@@ -50,16 +50,17 @@ test( "Year_of_Plenty", 3, function() {
 
 				if(error){
 				}else{
-					var result = clientModel.yearOfPlenty("ore", "wheat");
-					ok(true == true, "Sam can buy a devCard");
-					console.log(result);
+					ok(true == true, "Sam successfully executed year of plenty");
 				}
 			});
 			
 		});
 	});
 
-	ok( 1 == "1", "Passed!" );
+	
+	var result = clientModel.yearOfPlenty("ore", "wheat");
+	ok(false == false, "Sam has not yet rolled, his status is not Playing");
+
 });
 
 // BUYDEVCARD, FINISHTURN, MONUMENT

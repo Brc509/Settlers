@@ -107,7 +107,7 @@ test( "Year_of_Plenty", 3, function() {
 			ok(true, "inited Sam");
 			start();
 
-			var proxy = new catan.models.ClientProxy(0);
+			var proxy = new catan.models.ClientProxy(0, clientModel);
 
 			stop();
 			proxy.rollNumber(6, function (error, model){

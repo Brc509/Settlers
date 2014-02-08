@@ -42,16 +42,17 @@ catan.models.MovesCommand = (function() {
 		@method execute
 	*/
 	MovesCommand.prototype.execute = function() {
+		var myself = this;
 		jQuery.ajax({
 			type: 'POST',
-			url: url,
-			data: JSON.stringify(data)
+			url: this.url,
+			data: JSON.stringify(this.data)
 		})
 		.done(function(data) {
-			this.clientModel.updateModel(false, data);
+			myself.clientModel.prototype.updateModel(false, data);
 		})
 		.fail(function(jqxhr) {
-			this.clientModel.updateModel(true, jqxhr);
+			myself.clientModel.prototype.updateModel(true, jqxhr);
 		});
 	};
 	

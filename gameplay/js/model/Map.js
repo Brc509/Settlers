@@ -118,8 +118,8 @@ catan.models.Map = (function MapNameSpace () {
 			// hex data from game model JSON
 			var hexes = mapData.hexGrid.hexes;
 			
-			// initialized hexes stored in hexgrid
-			var gridHexes = map.hexGrid.hexes;
+			// retrieving initialized hexes stored in hexgrid
+			var gridHexes = this.hexGrid.hexes;
 			
 			// setting the hexes in the hexGrid
 			for(var i=0;i < hexes.length; i++)

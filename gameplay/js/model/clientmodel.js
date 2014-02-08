@@ -241,12 +241,12 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.roadBuilding = function (hex1, edge1, hex2, edge2) {
 
 			// All of the potentially failed pre-conditions
-			if (!this.turnTracker.isMyTurn() || !this.turnTracker.statusEquals("Playing"))
+			if (this.turnTracker.currentTurn != this.playerID || this.turnTracker.status != "Playing")
 			{
 				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
 				return;
 			} 
-			if (this.clientPlayer.playedDevCard || this.clientPlayer.oldDevCards.roadBuilding < 1)
+			if (this.clientPlayer.playedDevCar)
 			{
 				console.log("ERROR: Player has already played a dev card this turn -OR- they do not have a roadBuilding card");
 				return;
@@ -284,20 +284,20 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.soldier = function (robberSpot, victimID) {
 
 			// All of the potentially failed pre-conditions
-			if (!this.turnTracker.isMyTurn() || !this.turnTracker.statusEquals("Playing"))
+			if (this.turnTracker.currentTurn != this.playerID || this.turnTracker.status != "Playing")
 			{
 				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
-				return;
+				return "It's not current players turn or their status is not playing";
 			} 
-			if (this.clientPlayer.playedDevCard || this.clientPlayer.oldDevCards.soldier < 1)
+			if (this.clientPlayer.playedDevCard)
 			{
 				console.log("ERROR: Player has already played a dev card this turn -OR- they do not	have a soldier card");
-				return;
+				return "ERROR: Player has already played a dev card this turn -OR- they do not	have a soldier card";
 			}
 			if (victimID != -1 && this.players[victimID].resources.getCardCount() < 1)
 			{
 				console.log("ERROR: Player to rob has no cards!")
-				return;
+				return "ERROR: Player to rob has no cards!";
 			}
 
 			// Success!
@@ -321,22 +321,24 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.monopoly = function () {
 			
 			// All of the potentially failed pre-conditions
-			if (!this.turnTracker.isMyTurn() || !this.turnTracker.statusEquals("Playing"))
+			if (this.turnTracker.currentTurn != this.playerID || this.turnTracker.status != "Playing")
 			{
 				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
-				return;
+				return "ERROR: Isn't player's turn -OR- isn't \"Playing\"";
 			} 
-			if (this.clientPlayer.playedDevCard || this.clientPlayer.oldDevCards.monopoly < 1)
+			if (this.clientPlayer.playedDevCard)
 			{
 				console.log("ERROR: Player has already played a dev card this turn -OR- they do not	have a monopoly card");
-				return;
+				return "ERROR: Player has already played a dev card this turn -OR- they do not	have a monopoly card";
 			}
 			
 			// Success!
 			var myself = this;
 			this.clientProxy.monopoly(function () {
 					myself.updateModel;
+					return "player successfully played monopoly card"
 				});
+
 		}
 
 		/**

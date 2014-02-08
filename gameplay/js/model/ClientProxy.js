@@ -5,7 +5,6 @@ var catan = catan || {};
 catan.models = catan.models || {};
 
 catan.models.ClientProxy = (function() {
-
 	/**
 		The ClientProxy class is an intermediary between the server and the client.
 		<pre>
@@ -29,6 +28,33 @@ catan.models.ClientProxy = (function() {
 		this.movesCommand = new catan.models.MovesCommand(clientModel);
 	};
 	ClientProxy.prototype.constructor = ClientProxy;
+
+	/**
+	Retrieves the game model from the server. Updates the client model if the version has changed.
+	
+	@method gameModel
+	@param function callback  this is the function passed in by the clientModel
+	*/
+	ClientProxy.prototype.gameModel = function(callback) {
+		// Append the version number to the URL
+		//var url = catan.models.GetCommand.prototype.GAME_MODEL_URL;
+		var url = '/game/model';
+		// if (this.modelVersion != null) {
+		// 	url += '?version=' + this.modelVersion;
+		// }
+		// Create and execute the command
+		var command = new catan.models.GetCommand(this.clientModel);
+		command.execute(function(error, data) {
+			if (error) {
+				callback(true, data);
+			} else {
+				if (data != null || data != true || data != 'true') { // It's not super clear which one the server returns if the model is up to date
+					this.modelVersion = data.version;
+					callback(false, data);
+				}
+			}
+		});
+	};
 	
 	/**
 		Accepts/rejects a trade offer.
@@ -43,9 +69,9 @@ catan.models.ClientProxy = (function() {
 		data.playerIndex = this.playerIndex;
 		data.willAccept = willAccept;
 		// Create and execute the command
-		this.movesCommand.url 	= catan.models.MovesCommand.prototype.ACCEPT_TRADE_URL;
+		this.movesCommand.url 	= '/moves/acceptTrade';
 		this.movesCommand.data 	= data;
-		command.execute();
+		this.MovesCommand.execute();
 	};
 	
 	/**
@@ -70,9 +96,9 @@ catan.models.ClientProxy = (function() {
 		data.vertexLocation.direction = vertex.direction;
 		data.free = free;
 		// Create and execute the command
-		this.movesCommand.url 	= catan.models.MovesCommand.prototype.BUILD_CITY_URL;
+		this.movesCommand.url 	= '/moves/buildCity';
 		this.movesCommand.data 	= data;
-		command.execute();
+		this.MovesCommand.execute();
 	};
 	
 	/**
@@ -97,9 +123,9 @@ catan.models.ClientProxy = (function() {
 		data.roadLocation.direction = edge.direction;
 		data.free = free;
 		// Create and execute the command
-		this.movesCommand.url 	= catan.models.MovesCommand.prototype.BUILD_ROAD_URL;
+		this.movesCommand.url 	= '/moves/buildRoad';
 		this.movesCommand.data 	= data;
-		command.execute();
+		this.MovesCommand.execute();
 	};
 	
 	/**
@@ -124,9 +150,9 @@ catan.models.ClientProxy = (function() {
 		data.vertexLocation.direction = vertex.direction;
 		data.free = free;
 		// Create and execute the command
-		this.movesCommand.url 	= catan.models.MovesCommand.prototype.BUILD_SETTLEMENT_URL;
+		this.movesCommand.url 	= '/moves/buildSettlement';
 		this.movesCommand.data 	= data;
-		command.execute();
+		this.MovesCommand.execute();
 	};
 	
 	/**
@@ -143,10 +169,10 @@ catan.models.ClientProxy = (function() {
 		data.type = 'buyDevCard';
 		data.playerIndex = this.playerIndex;
 		// Create and execute the command
-		this.movesCommand.url 	= catan.models.MovesCommand.prototype.BUY_DEV_CARD_URL;
+		this.movesCommand.url 	= '/moves/buyDevCard';
 		this.movesCommand.data 	= data;
 
-		command.execute();
+		this.MovesCommand.execute();
 	};
 	
 	/**
@@ -165,9 +191,9 @@ catan.models.ClientProxy = (function() {
 		data.playerIndex = this.playerIndex;
 		data.discardedCards = discardedCards;
 		// Create and execute the command
-		this.movesCommand.url 	= catan.models.MovesCommand.prototype.DISCARD_CARDS_URL;
+		this.movesCommand.url 	= '/moves/discardCards';
 		this.movesCommand.data 	= data;
-		command.execute();
+		this.MovesCommand.execute();
 	};
 	
 	/**
@@ -184,36 +210,9 @@ catan.models.ClientProxy = (function() {
 		data.type = 'finishTurn';
 		data.playerIndex = this.playerIndex;
 		// Create and execute the command
-		this.movesCommand.url 	= catan.models.MovesCommand.prototype.FINISH_TURN_URL;
+		this.movesCommand.url 	= '/moves/finishTurn';
 		this.movesCommand.data 	= data;
-		command.execute();
-	};
-	
-	/**
-		Retrieves the game model from the server. Updates the client model if the version has changed.
-		
-		@method gameModel
-		@param function callback  this is the function passed in by the clientModel
-	*/
-	ClientProxy.prototype.gameModel = function(callback) {
-		// Append the version number to the URL
-		//var url = catan.models.GetCommand.prototype.GAME_MODEL_URL;
-		var url = '/game/model';
-		// if (this.modelVersion != null) {
-		// 	url += '?version=' + this.modelVersion;
-		// }
-		// Create and execute the command
-		var command = new catan.models.GetCommand(this.clientModel);
-		command.execute(function(error, data) {
-			if (error) {
-				callback(true, data);
-			} else {
-				if (data != null || data != true || data != 'true') { // It's not super clear which one the server returns if the model is up to date
-					this.modelVersion = data.version;
-					callback(false, data);
-				}
-			}
-		});
+		this.MovesCommand.execute();
 	};
 	
 	/**
@@ -238,9 +237,9 @@ catan.models.ClientProxy = (function() {
 		data.inputResource = inputResource;
 		data.outputResource = outputResource;
 		// Create and execute the command
-		this.movesCommand.url 	= catan.models.MovesCommand.prototype.MARITIME_TRADE_URL;
+		this.movesCommand.url 	= '/moves/maritimeTrade';
 		this.movesCommand.data 	= data;
-		command.execute();
+		this.MovesCommand.execute();
 	};
 	
 	/**
@@ -260,9 +259,9 @@ catan.models.ClientProxy = (function() {
 		data.playerIndex = this.playerIndex;
 		data.resource = resource;
 		// Create and execute the command
-		this.movesCommand.url 	= catan.models.MovesCommand.prototype.MONOPOLY_URL;
+		this.movesCommand.url 	= '/moves/Monopoly';
 		this.movesCommand.data 	= data;
-		command.execute();
+		this.MovesCommand.execute();
 	};
 	
 	/**
@@ -279,9 +278,9 @@ catan.models.ClientProxy = (function() {
 		data.type = 'Monument';
 		data.playerIndex = this.playerIndex;
 		// Create and execute the command
-		this.movesCommand.url 	= catan.models.MovesCommand.prototype.MONUMENT_URL;
+		this.movesCommand.url 	= '/moves/Monument';
 		this.movesCommand.data 	= data;
-		command.execute();
+		this.MovesCommand.execute();
 	};
 	
 	/**
@@ -303,9 +302,9 @@ catan.models.ClientProxy = (function() {
 		data.receiver = receiver;
 		data.offer = offer;
 		// Create and execute the command
-		this.movesCommand.url 	= catan.models.MovesCommand.prototype.OFFER_TRADE_URL;
+		this.movesCommand.url 	= '/moves/offerTrade';
 		this.movesCommand.data 	= data;
-		command.execute();
+		this.MovesCommand.execute();
 	};
 	
 	/**
@@ -335,9 +334,9 @@ catan.models.ClientProxy = (function() {
 		data.spot2.y = hex2.y;
 		data.spot2.direction = edge2.direction;
 		// Create and execute the command
-		this.movesCommand.url 	= catan.models.MovesCommand.prototype.ROAD_BUILDING_URL;
+		this.movesCommand.url 	= '/moves/Road_Building';
 		this.movesCommand.data 	= data;
-		command.execute();
+		this.MovesCommand.execute();
 	};
 	
 	/**
@@ -360,9 +359,9 @@ catan.models.ClientProxy = (function() {
 		data.victimIndex = victimIndex;
 		data.robberSpot = robberSpot;
 		// Create and execute the command
-		this.movesCommand.url 	= catan.models.MovesCommand.prototype.ROB_PLAYER_URL;
+		this.movesCommand.url 	= '/moves/robPlayer';
 		this.movesCommand.data 	= data;
-		command.execute();
+		this.MovesCommand.execute();
 	};
 	
 	/**
@@ -382,9 +381,9 @@ catan.models.ClientProxy = (function() {
 		data.playerIndex = this.playerIndex;
 		data.number = number;
 		// Create and execute the command
-		this.movesCommand.url 	= catan.models.MovesCommand.prototype.ROLL_NUMBER_URL;
+		this.movesCommand.url 	= '/moves/rollNumber';
 		this.movesCommand.data 	= data;
-		command.execute();
+		this.MovesCommand.execute();
 	};
 	
 	/**
@@ -400,9 +399,9 @@ catan.models.ClientProxy = (function() {
 		data.playerIndex = this.playerIndex;
 		data.content = content;
 		// Create and execute the command
-		this.movesCommand.url 	= catan.models.MovesCommand.prototype.SEND_CHAT_URL;
+		this.movesCommand.url 	= '/moves/sendChat';
 		this.movesCommand.data 	= data;
-		command.execute();
+		this.MovesCommand.execute();
 	};
 	
 	/**
@@ -425,9 +424,9 @@ catan.models.ClientProxy = (function() {
 		data.victimIndex = victimIndex;
 		data.robberSpot = robberSpot;
 		// Create and execute the command
-		this.movesCommand.url 	= catan.models.MovesCommand.prototype.SOLDIER_URL;
+		this.movesCommand.url 	= '/moves/Soldier';
 		this.movesCommand.data 	= data;
-		command.execute();
+		this.MovesCommand.execute();
 	};
 	
 	/**
@@ -449,9 +448,9 @@ catan.models.ClientProxy = (function() {
 		data.resource1 = resource1;
 		data.resource2 = resource2;
 		// Create and execute the command
-		this.movesCommand.url 	= catan.models.MovesCommand.prototype.YEAR_OF_PLENTY_URL;
+		this.movesCommand.url 	= '/moves/Year_of_Plenty';
 		this.movesCommand.data 	= data;
-		command.execute();
+		this.MovesCommand.execute();
 	};
 	
 	return ClientProxy;

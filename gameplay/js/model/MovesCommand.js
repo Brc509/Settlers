@@ -10,25 +10,6 @@ catan.models.MovesCommand = (function() {
 
 	MovesCommand.prototype.MODEL_UPDATE_FUNCTION	= catan.models.ClientModel.prototype.update;
 	
-	// Define API endpoint constants
-	MovesCommand.prototype.ACCEPT_TRADE_URL			= '/moves/acceptTrade';
-	MovesCommand.prototype.BUILD_CITY_URL			= '/moves/buildCity';
-	MovesCommand.prototype.BUILD_ROAD_URL			= '/moves/buildRoad';
-	MovesCommand.prototype.BUILD_SETTLEMENT_URL		= '/moves/buildSettlement';
-	MovesCommand.prototype.BUY_DEV_CARD_URL			= '/moves/buyDevCard';
-	MovesCommand.prototype.DISCARD_CARDS_URL		= '/moves/discardCards';
-	MovesCommand.prototype.FINISH_TURN_URL			= '/moves/finishTurn';
-	MovesCommand.prototype.MARITIME_TRADE_URL		= '/moves/maritimeTrade';
-	MovesCommand.prototype.MONOPOLY_URL				= '/moves/Monopoly';
-	MovesCommand.prototype.MONUMENT_URL				= '/moves/Monument';
-	MovesCommand.prototype.OFFER_TRADE_URL			= '/moves/offerTrade';
-	MovesCommand.prototype.ROAD_BUILDING_URL		= '/moves/Road_Building';
-	MovesCommand.prototype.ROB_PLAYER_URL			= '/moves/robPlayer';
-	MovesCommand.prototype.ROLL_NUMBER_URL			= '/moves/rollNumber';
-	MovesCommand.prototype.SEND_CHAT_URL			= '/moves/sendChat';
-	MovesCommand.prototype.SOLDIER_URL				= '/moves/Soldier';
-	MovesCommand.prototype.YEAR_OF_PLENTY_URL		= '/moves/Year_of_Plenty';
-
 	/**
 		The MovesCommand class represents any command which modifies the state of the game and returns the game model.
 		<pre>

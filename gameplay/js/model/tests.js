@@ -94,7 +94,7 @@ test( "rollNumber", function() {
 	ok( 1 == "1", "Passed!" );
 });
 
-test( "Year_of_Plenty", function() {
+test( "Year_of_Plenty", 3, function() {
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Sam", "sam", "red", "0", function () {
@@ -107,11 +107,22 @@ test( "Year_of_Plenty", function() {
 			ok(true, "inited Sam");
 			start();
 
-			clientModel.rollNumber(6);
+			var proxy = new catan.models.ClientProxy(0);
 
-			var result = clientModel.yearOfPlenty("ore", "wheat");
-			ok(true == true, "Sam can buy a devCard");
-			console.log(result);
+			stop();
+			proxy.rollNumber(6, function (error, model){
+				
+				ok(true, "rolled number");
+				start();
+
+				if(error){
+				}else{
+					var result = clientModel.yearOfPlenty("ore", "wheat");
+					ok(true == true, "Sam can buy a devCard");
+					console.log(result);
+				}
+			});
+			
 		});
 	});
 

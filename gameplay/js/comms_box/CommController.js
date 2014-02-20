@@ -69,6 +69,20 @@ catan.comm.Controller = (function () {
 		**/
 		function ChatController(chatView,model){
 			BaseCommController.call(this,chatView,model);
+			// console.log('model.chat inside ChatController', model.chat);
+			// console.log('chatView inside ChatController', chatView);
+			this.model = model;
+			this.chatView = chatView;
+			chatView.resetLines(model.chat.lines);
+		}
+
+		/**
+		Called by the model whenever the model is updated
+		@method update
+		@param {ClientModel} model The newest version of the model
+		**/
+		ChatController.prototype.update = function (model){
+			this.chatView.resetLines(model.chat.lines);
 		}
         
 		/**
@@ -77,6 +91,8 @@ catan.comm.Controller = (function () {
 		@param {String} lineContents The contents of the submitted string
 		**/
 		ChatController.prototype.addLine = function(lineContents){
+			console.log('line contents', lineContents);
+			this.model.sendChat(lineContents);
 		};
 		
 		return ChatController;

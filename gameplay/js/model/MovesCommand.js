@@ -7,9 +7,6 @@ catan.models = catan.models || {};
 catan.models.MovesCommand = (function() {
 
 	var Command = catan.models.Command;
-
-	MovesCommand.prototype.MODEL_UPDATE_FUNCTION	= catan.models.ClientModel.prototype.update;
-	
 	/**
 		The MovesCommand class represents any command which modifies the state of the game and returns the game model.
 		<pre>

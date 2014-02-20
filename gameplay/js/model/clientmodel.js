@@ -21,9 +21,12 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 	@param {integer} playerID The id of the local player, extracted from the cookie
     */
 	var ClientModel = (function ClientModelClass(){
+
+		var myself;
         
 		function ClientModel(playerID){
-			console.log('CLIENT MODEL CONSTRUCTOR. playerID: ' + playerID);
+			myself = this;
+
 			this.playerID 		= playerID;
 			this.clientProxy 	= new catan.models.ClientProxy(playerID, this);
 			this.map 			= new catan.models.Map(4);
@@ -31,6 +34,8 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			this.turnTracker 	= new catan.models.TurnTracker(playerID);
 			this.bank			= {};
 			this.deck 			= {};
+			this.chat 			= {};
+			this.observers		= new Array();
 		}     
 		ClientModel.prototype.constructor = ClientModel; 
         
@@ -44,8 +49,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
          * @param {function} success - A callback function that is called after the game state has been fetched from the server and the client model updated. This function is passed a single parameter which is the game state object received from the server.
          * */
 		ClientModel.prototype.initFromServer = function(success){
-
-			var myself = this;
             // TODO: 1) fetch the game state from the server, 2) update the client model, 3) call the "success" function.
 			this.clientProxy.gameModel(function (error, model) {
 				if (error) {
@@ -53,20 +56,21 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 					alert ('clientProxy returned error');
 				}
 				else {
-					myself.updateModel(model, myself);
+					myself.updateModel(error, model);
 					success();
 				}
 			});
 		}
 
-		ClientModel.prototype.updateModel = function(model, myself) {
+		ClientModel.prototype.updateModel = function(error, model) {
 			console.log(model);
 			myself.bank = model.bank;
 			myself.deck = model.deck;
+			myself.chat = model.chat;
 
 			//TODO finish the map class
-			myself.map.update(model.map);
-			//myself.turnTracker.update(model.turnTracker);
+			// myself.map.update(model.map);
+			// myself.turnTracker.update(model.turnTracker);
 
 			var playersList = {};
 			for (p in model.players) {
@@ -79,6 +83,17 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			myself.clientPlayer = myself.players[0];
 			console.log(myself.players);
 
+			console.log('notifying observers');
+			for (o in myself.observers) {
+				if (myself.observers[o].update){
+					myself.observers[o].update(myself);
+				}
+			}
+
+		}
+
+		ClientModel.prototype.addObserver = function (controller) {
+			this.observers.push(controller);
 		}
 
 		/**
@@ -171,9 +186,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.buyDevCard = function () {
 			var myself = this;
 			if (canBuyDevCard()) {
-				this.clientProxy.buyDevCard(function () {
-					myself.updateModel;
-				});
+				this.clientProxy.buyDevCard(this.updateModel);
 			}
 		}
 
@@ -211,9 +224,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 			// Success!
 			// var myself = this;
-			// this.clientProxy.yearOfPlenty(resource1, resource2, function () {
-			// 		myself.updateModel;
-			// });
+			// this.clientProxy.yearOfPlenty(resource1, resource2, this.updateModel);
 			return true;
 		}
 
@@ -261,9 +272,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 			// Success!
 			var myself = this;
-			this.clientProxy.roadBuilding(hex1, edge1, hex2, edge2, function () {
-					myself.updateModel;
-				});
+			this.clientProxy.roadBuilding(hex1, edge1, hex2, edge2, this.updateModel);
 		}
 
 		/**
@@ -301,10 +310,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 
 			// Success!
-			var myself = this;
-			this.clientProxy.soldier(victimID, robberSpot, function () {
-					myself.updateModel;
-				});
+			this.clientProxy.soldier(victimID, robberSpot, this.updateModel);
 		}
 
 		/**
@@ -333,11 +339,9 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 			
 			// Success!
-			var myself = this;
-			this.clientProxy.monopoly(function () {
-					myself.updateModel;
-					return "player successfully played monopoly card"
-				});
+			//TODO put in the resource
+			resource = "";
+			this.clientProxy.monopoly(resource, this.updateModel);
 
 		}
 
@@ -367,10 +371,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 
 			// Success!
-			var myself = this;
-			this.clientProxy.monument(function () {
-					myself.updateModel;
-				});
+			this.clientProxy.monument(this.updateModel);
 		}
 
 		/**
@@ -382,13 +383,13 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @param ResourceList offer, pos numbers are traded away, negative numbers are received
 		    @param PlayerIndex receiver, The recipient of the trade
 		*/
-		ClientModel.prototype.canOfferTrade = function (offer, receiver) {
+		ClientModel.prototype.canOfferTrade = function (receiver, offer) {
 
 		}
 
-		ClientModel.prototype.offerTrade = function (offer, receiver) {
+		ClientModel.prototype.offerTrade = function (receiver, offer) {
 			if (canOfferTrade()) {
-				this.clientProxy.offerTrade(offer, receiver);
+				this.clientProxy.offerTrade(offer, receiver, this.updateModel);
 			}
 		}
 
@@ -409,10 +410,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 		ClientModel.prototype.acceptTrade = function () {
 			if (canAcceptTrade()) {
-				var myself = this;
-				this.clientProxy.acceptTrade(function () {
-					myself.updateModel;
-				});
+				this.clientProxy.acceptTrade(this.updateModel);
 			}
 		}
 
@@ -451,10 +449,16 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 			if (canDiscardCards()) {
 				var myself = this;
-				this.clientProxy.discardCards(discardCards, function () {
-					myself.updateModel;
-				});
+				this.clientProxy.discardCards(discardCards, this.updateModel);
 			}
+		}
+
+		ClientModel.prototype.canSendChat = function () {
+
+		}
+		//	ClientProxy.prototype.sendChat = function(content, callback) {
+		ClientModel.prototype.sendChat = function(lineContents) {
+			this.clientProxy.sendChat(lineContents, this.updateModel)
 		}
         
 		return ClientModel;

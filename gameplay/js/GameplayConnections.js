@@ -236,6 +236,7 @@ catan.client = (function Client_NameSpace(){
 
                     var controller = controllers[name];
                     // implement adding listeners here
+                    model.addObserver(controller);
                 }
             }())
 		};

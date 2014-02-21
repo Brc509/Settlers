@@ -19,7 +19,6 @@ catan.models.Map = (function mapNameSpace(){
 		{
 			this.hexGrid = hexgrid.HexGrid.getRegular(radius, CatanHex);
 			// TODO Decompose the robber into a separate class
-			this.robber = {};
 		}
 		
 		Map.prototype.update = function(mapModel) {
@@ -29,54 +28,75 @@ catan.models.Map = (function mapNameSpace(){
 			var localHexGrid = this.hexGrid;
 			var modelHexes = modelHexGrid.hexes;
 			var localHexes = localHexGrid.hexes;
+			
 			// Update the hexes line by line
 			for (line in modelHexes) {
+			
 				var modelLine = modelHexes[line];
 				var localLine = localHexes[line];
+				
 				// Update each hex in the line
 				for (hex in modelLine) {
+				
 					var modelHex = modelLine[hex];
-					var localHex = localLine[hex];
-					// Update the land type (if defined)
-					if (modelHex.landtype) {
-						localHex.landtype = modelHex.landtype;
+					
+					// Create the new hex
+					var localHex = new CatanHex(modelHex.location);
+					
+					// Update its land type
+					if (modelHex.isLand) {
+						if (modelHex.landtype) {
+							localHex.setType(modelHex.landtype.toLowerCase());
+						} else {
+							localHex.setType('desert');
+						}
+					} else {
+						localHex.setType('water');
 					}
-					// Update is land
-					localHex.isLand = modelHex.isLand;
-					var modelLocation = modelHex.location;
-					var localLocation = localHex.location;
-					// Update the hex location
-					localLocation.x = modelLocation.x;
-					localLocation.y = modelLocation.y;
+					
 					var modelVertexes = modelHex.vertexes;
 					var localVertexes = localHex.vertexes;
-					// Update the vertexes
-					for (vertex in modelVertexes) {
-						var modelVertex = modelVertexes[vertex];
-						var localVertex = localVertexes[vertex];
-						// Update the worth
-						localVertex.worth = modelVertex.value.worth;
-						// Update the ownerID
-						localVertex.ownerID = modelVertex.value.ownerID;
-					}
-					var modelEdges = modelHex.edges;
-					var localEdges = localHex.edges;
-					// Update the edges
-					for (edge in modelEdges) {
-						var modelEdge = modelEdges[edge];
-						var localEdge = localEdges[edge];
-						// Update the ownerID
-						localEdge.ownerID = modelEdge.value.ownerID;
-					}
+					
+					// // Update the vertexes
+					// for (vertex in modelVertexes) {
+					
+						// var modelVertex = modelVertexes[vertex];
+						// var localVertex = localVertexes[vertex];
+						
+						// // Update the worth
+						// localVertex.worth = modelVertex.value.worth;
+						
+						// // Update the ownerID
+						// localVertex.ownerID = modelVertex.value.ownerID;
+					// }
+					
+					// var modelEdges = modelHex.edges;
+					// var localEdges = localHex.edges;
+					
+					// // Update the edges
+					// for (edge in modelEdges) {
+					
+						// var modelEdge = modelEdges[edge];
+						// var localEdge = localEdges[edge];
+						
+						// // Update the ownerID
+						// localEdge.ownerID = modelEdge.value.ownerID;
+					// }
+					
+					// Assign the new hex to the model
+					localLine[hex] = localHex;
 				}
 			}
-			// Update the offsets
-			localHexGrid.offsets = modelHexGrid.offsets;
-			// Update the radius
-			localHexGrid.radius = modelHexGrid.radius;
-			// Update the origin
-			localHexGrid.x0 = modelHexGrid.x0;
-			localHexGrid.y0 = modelHexGrid.y0;
+			
+			// // Update the offsets
+			// localHexGrid.offsets = modelHexGrid.offsets;
+			
+			// // Update the radius
+			// localHexGrid.radius = modelHexGrid.radius;
+			
+			// // Update the origin
+			// localHexGrid.x0 = modelHexGrid.x0;
+			// localHexGrid.y0 = modelHexGrid.y0;
 			
 			// TODO UPDATE THE NUMBERS
 			
@@ -84,13 +104,17 @@ catan.models.Map = (function mapNameSpace(){
 			
 			// UPDATE THE ROBBER (IF DEFINED)
 			if (mapModel.robber) {
-				this.robber.x = mapModel.robber.x;
-				this.robber.y = mapModel.robber.y;
+				var mapRobber = mapModel.robber;
+				this.robberLocation = new catan.models.hexgrid.HexLocation(mapRobber.x, mapRobber.y);
 			}
 		};
 		
 		Map.prototype.getHexes = function() {
 			return this.hexGrid.hexes;
+		};
+		
+		Map.prototype.getRobberLocation = function() {
+			return this.robberLocation;
 		};
 		
 		return Map;
@@ -205,9 +229,18 @@ catan.models.Map = (function mapNameSpace(){
 	
 		core.forceClassInherit(CatanHex, hexgrid.BasicHex);
 		
-		function CatanHex(location){		  
+		function CatanHex(location, type){		  
 			hexgrid.BasicHex.call(this,location,CatanEdge,CatanVertex);
-		} 
+			this.type = type;
+		}
+		
+		CatanHex.prototype.getType = function() {
+			return this.type;
+		};
+		
+		CatanHex.prototype.setType = function(type) {
+			this.type = type;
+		};
 		
 		return CatanHex;
 		

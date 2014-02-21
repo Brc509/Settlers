@@ -119,13 +119,16 @@ catan.map.Controller = (function catan_controller_namespace() {
 		@param clientModel the ClientModel that has been updated
 		*/
 		MapController.prototype.update = function(clientModel) {
+			var view = this.getView();
 			var map = clientModel.map;
 			var hexes = map.getHexes();
 			for (n in hexes) {
 				var line = hexes[n];
 				for (n in line) {
 					var hex = line[n];
-					console.log('Updating hex (' + hex.location.x + ', ' + hex.location.y + ')');
+					console.log('Updating hex (' + hex.getLocation().x + ',' + hex.getLocation().y + ') ' + hex.getType());
+					view.addHex(hex.getLocation(), hex.getType());
+					view.placeRobber(map.getRobberLocation());
 				}
 			}
 			// TODO

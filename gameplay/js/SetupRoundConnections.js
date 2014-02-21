@@ -141,6 +141,7 @@ catan.client = (function Client_NameSpace(){
                 for( name in controllers){
                     var controller = controllers[name];
                     // Add your Observer here
+					model.addObserver(controller);
                 }
             }())
 		};

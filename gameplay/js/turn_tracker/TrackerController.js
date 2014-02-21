@@ -25,6 +25,11 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 	
 		function TurnTrackerController(view, clientModel){
 			Controller.call(this,view,clientModel);
+
+			var player = this.getCurrentPlayer();
+			view.setClientColor(player.color);
+			view.initializePlayer(player);
+			// this.endTurn();
             
             // TODO: This constructor should configure its view by calling view.setClientColor and view.initializePlayer
             // NOTE: The view.updateViewState and view.updatePlayer will not work if called from here.  Instead, these
@@ -39,6 +44,16 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 		 * @return void
 		 */
 		TurnTrackerController.prototype.endTurn = function(){
+			this.ClientModel.finishTurn();
+		}
+
+
+		TurnTrackerController.prototype.getCurrentPlayer = function(){
+				var curTurn = this.ClientModel.turnTracker.currentTurn;
+				
+					return this.ClientModel.players[curTurn];
+			
+		
 		}
 		
 		return TurnTrackerController;

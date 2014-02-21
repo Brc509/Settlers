@@ -67,6 +67,8 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			myself.bank = model.bank;
 			myself.deck = model.deck;
 			myself.chat = model.chat;
+			myself.turnTracker = model.turnTracker;
+			// myself.playerID = model.turnTracker.currentTurn;
 
 			//TODO finish the map class
 			myself.map.update(model.map);
@@ -462,6 +464,14 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		//	ClientProxy.prototype.sendChat = function(content, callback) {
 		ClientModel.prototype.sendChat = function(lineContents) {
 			this.clientProxy.sendChat(lineContents, this.updateModel)
+		}
+
+		ClientModel.prototype.rollNumber = function(value) {
+			this.clientProxy.rollNumber(value, this.updateModel);
+		}
+
+		ClientModel.prototype.finishTurn = function(){
+			this.clientProxy.finishTurn(this.updateModel);
 		}
         
 		return ClientModel;

@@ -89,6 +89,10 @@ catan.models.Map = (function mapNameSpace(){
 			}
 		};
 		
+		Map.prototype.getHexes = function() {
+			return this.hexGrid.hexes;
+		};
+		
 		return Map;
 		
 	}());

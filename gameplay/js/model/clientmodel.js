@@ -83,14 +83,17 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			myself.clientPlayer = myself.players[0];
 			console.log(myself.players);
 
+			myself.notifyObservers();
+		}
+		
+		ClientModel.prototype.notifyObservers = function() {
 			console.log('notifying observers');
 			for (o in myself.observers) {
 				if (myself.observers[o].update){
 					myself.observers[o].update(myself);
 				}
 			}
-
-		}
+		};
 
 		ClientModel.prototype.addObserver = function (controller) {
 			this.observers.push(controller);

@@ -144,6 +144,7 @@ catan.client = (function Client_NameSpace(){
 					model.addObserver(controller);
                 }
             }())
+			model.notifyObservers();
 		};
 		
 		CatanGame.getPlayable = function(proxy){

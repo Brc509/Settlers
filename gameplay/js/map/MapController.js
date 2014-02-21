@@ -111,6 +111,25 @@ catan.map.Controller = (function catan_controller_namespace() {
 		*/
 		MapController.prototype.onDrop = function (loc, type) {
 		};
+		
+		/**
+		Updates the view when the model is changed
+		
+		@method update
+		@param clientModel the ClientModel that has been updated
+		*/
+		MapController.prototype.update = function(clientModel) {
+			var map = clientModel.map;
+			var hexes = map.getHexes();
+			for (n in hexes) {
+				var line = hexes[n];
+				for (n in line) {
+					var hex = line[n];
+					console.log('Updating hex (' + hex.location.x + ', ' + hex.location.y + ')');
+				}
+			}
+			// TODO
+		};
         
 		return MapController;
 	} ());

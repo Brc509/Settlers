@@ -172,7 +172,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    </pre>
 		    @method buyDevCard
 		*/
-		ClientModel.prototype.canbuyDevCard = function () {
+		ClientModel.prototype.canBuyDevCard = function () {
 
 			var deckCardCount = 0;
 			for (card in this.deck) {
@@ -190,7 +190,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.buyDevCard = function () {
 			var myself = this;
-			if (canBuyDevCard()) {
+			if (this.canBuyDevCard()) {
 				this.clientProxy.buyDevCard(this.updateModel);
 			}
 		}

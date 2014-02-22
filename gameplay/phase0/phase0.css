@@ -1,0 +1,70 @@
+.bad {
+	color: rgb(192, 64, 64);
+	font-style: italic;
+	font-weight: bold;
+}
+
+.good {
+	color: rgb(64, 192, 64);
+	font-style: italic;
+	font-weight: bold;
+}
+
+.hint {
+	color: rgb(192, 192, 192);
+	font-style: italic;
+}
+
+.pageTitle {
+	font-size: 40pt;
+	font-weight: bold;
+}
+
+.sectionContent {
+	margin: auto auto auto 20px;
+}
+
+.sectionTitle {
+	font-size: 24pt;
+	font-weight: bold;
+}
+
+body {
+	font-family: sans-serif;
+	font-size: 16pt;
+	margin: 20px 10%;
+}
+
+button {
+	font-size: 16pt;
+	font-weight: bold;
+}
+
+input.text {
+	font-size: 16pt;
+	width: 300px;
+}
+
+select {
+	font-size: 16pt;
+	width: 300px;
+}
+
+textarea {
+	color: rgb(128, 128, 128);
+	font-size: 16pt;
+}
+
+#arguments {
+	margin: auto auto auto 40px;
+}
+
+#response {
+	font-size: 16pt;
+	width: 100%;
+}
+
+#template {
+	font-size: 16pt;
+	width: 600px;
+}

@@ -9,20 +9,30 @@ catan.models = catan.models || {};
 	@namespace models
 */
 
-catan.models.Map = (function mapNameSpace(){
+catan.models.Map = (function mapNameSpace() {
 
 	var hexgrid = catan.models.hexgrid;
 	
-	var Map = (function Map_Class(){
+	var HexLocation = hexgrid.HexLocation;
+	var EdgeLocation = hexgrid.EdgeLocation;
+	var VertexLocation = hexgrid.VertexLocation;
 	
-		function Map(radius)
-		{
-			this.hexGrid = hexgrid.HexGrid.getRegular(radius, CatanHex);
+	var Map = (function Map_Class() {
+	
+		function Map(radius) {
+			this.hexGrid = hexgrid.HexGrid.getRegular(radius, Hex);
+			this.ports = initPorts();
+		}
+		
+		function initPorts() {
+			var ports = {};
+			for (n = 0; n < 9; n++) {
+				ports[n] = new Port();
+			}
+			return ports;
 		}
 		
 		Map.prototype.update = function(mapModel) {
-		
-			var HexLocation = catan.models.hexgrid.HexLocation;
 		
 			// UPDATE THE HEXGRID
 			
@@ -59,7 +69,12 @@ catan.models.Map = (function mapNameSpace(){
 			}
 			
 			// UPDATE THE PORTS
-			// TODO
+			
+			var modelPorts = mapModel.ports;
+			for (portNum in modelPorts) {
+				var modelPort = modelPorts[portNum];
+				this.ports[portNum].set(modelPort);
+			}
 			
 			// UPDATE THE ROBBER
 			
@@ -77,6 +92,10 @@ catan.models.Map = (function mapNameSpace(){
 			return this.tokens;
 		};
 		
+		Map.prototype.getPorts = function() {
+			return this.ports;
+		};
+		
 		Map.prototype.getRobber = function() {
 			return this.robber;
 		};
@@ -89,7 +108,7 @@ catan.models.Map = (function mapNameSpace(){
 	This class represents a Hex. You may add any methods that you need (e.g., to get the resource/hex type, etc.)
 	
 	In order to work with the hexgrid, this class must extend hexgrid.BasicHex (already done in the code). You also need to implement
-	a CatanVertex and CatanEdge classes (stubs are provided in this file).	Look at their documentation to see what needs to be done there.
+	a Vertex and Edge classes (stubs are provided in this file).	Look at their documentation to see what needs to be done there.
 	
 	The hexgrid will be passed an instance of this class to use as a model, and will pull the constructor from that instance. 
 	(The core.forceInherit sets the constructor, in case you are curious how that works)
@@ -98,18 +117,18 @@ catan.models.Map = (function mapNameSpace(){
 	@param {HexLocation} location The HexLocation of this hex
 	@extends hexgrid.BasicHex
 	
-	@class CatanHex
+	@class Hex
 	*/
-	var CatanHex = (function CatanHex_Class(){
+	var Hex = (function Hex_Class() {
 	
-		core.forceClassInherit(CatanHex, hexgrid.BasicHex);
+		core.forceClassInherit(Hex, hexgrid.BasicHex);
 		
-		function CatanHex(location) {
-			hexgrid.BasicHex.call(this,location,CatanEdge,CatanVertex);
+		function Hex(location) {
+			hexgrid.BasicHex.call(this,location,Edge,Vertex);
 		}
 		
 		// Set the hex to match a hex from the model JSON
-		CatanHex.prototype.set = function(modelHex) {
+		Hex.prototype.set = function(modelHex) {
 		
 			// Set the hex type
 			if (modelHex.isLand) {
@@ -135,11 +154,11 @@ catan.models.Map = (function mapNameSpace(){
 			}
 		};
 		
-		CatanHex.prototype.getType = function() {
+		Hex.prototype.getType = function() {
 			return this.type;
 		};
 		
-		return CatanHex;
+		return Hex;
 		
 	}());
 	
@@ -152,26 +171,26 @@ catan.models.Map = (function mapNameSpace(){
 	Besides the 'isOccupied' method, you may add any other methods that you need.
 	@constructor
 	@extends hexgrid.BaseContainer
-	@class CatanEdge
+	@class Edge
 	*/
-	var CatanEdge = (function CatanEdge_Class(){
+	var Edge = (function Edge_Class() {
 	
-		core.forceClassInherit(CatanEdge, hexgrid.BaseContainer);
+		core.forceClassInherit(Edge, hexgrid.BaseContainer);
 		
-		function CatanEdge() {
+		function Edge() {
 			this.ownerID = -1;
 		}
 		
 		// Set the edge to match an edge from the model JSON
-		CatanEdge.prototype.set = function(modelEdge) {
+		Edge.prototype.set = function(modelEdge) {
 			this.ownerID = modelEdge.value.ownerID;
 		};
 		
-		CatanEdge.prototype.getOwnerID = function(){
+		Edge.prototype.getOwnerID = function() {
 			return this.ownerID;
 		};
 		
-		CatanEdge.prototype.isOccupied = function(){
+		Edge.prototype.isOccupied = function() {
 			if (this.ownerID == -1) {
 				return false;
 			} else {
@@ -179,7 +198,7 @@ catan.models.Map = (function mapNameSpace(){
 			}
 		};
 		
-		return CatanEdge;
+		return Edge;
 		
 	}());
 	
@@ -192,32 +211,32 @@ catan.models.Map = (function mapNameSpace(){
 	Besides the 'isOccupied' method, you may add any other methods that you need.
 	@constructor
 	@extends hexgrid.BaseContainer
-	@class CatanVertex
+	@class Vertex
 	*/
-	var CatanVertex = (function CatanVertex_Class(){
+	var Vertex = (function Vertex_Class() {
 	
-		core.forceClassInherit(CatanVertex, hexgrid.BaseContainer);
+		core.forceClassInherit(Vertex, hexgrid.BaseContainer);
 		
-		function CatanVertex() {
+		function Vertex() {
 			this.worth = 0;
 			this.ownerID = -1;
 		}
 		
 		// Set the vertex to match a vertex from the model JSON
-		CatanVertex.prototype.set = function(modelVertex) {
+		Vertex.prototype.set = function(modelVertex) {
 			this.worth = modelVertex.value.worth;
 			this.ownerID = modelVertex.value.ownerID;
 		};
 		
-		CatanVertex.prototype.getWorth = function() {
+		Vertex.prototype.getWorth = function() {
 			return this.worth;
 		};
 		
-		CatanVertex.prototype.getOwnerID = function() {
+		Vertex.prototype.getOwnerID = function() {
 			return this.ownerID;
 		};
 		
-		CatanVertex.prototype.isOccupied = function() { 
+		Vertex.prototype.isOccupied = function() { 
 			if (this.ownerID == -1) {
 				return false;
 			} else {
@@ -225,7 +244,54 @@ catan.models.Map = (function mapNameSpace(){
 			}
 		};
 		
-		return CatanVertex;
+		return Vertex;
+		
+	}());
+	
+	var Port = (function Port_Class() {
+	
+		function Port() {
+		}
+		
+		Port.prototype.set = function(modelPort) {
+		
+			// Set the location
+			var loc = modelPort.location;
+			this.location = new EdgeLocation(loc.x, loc.y, modelPort.orientation);
+			
+			// Set the valid vertexes
+			var vv0 = modelPort.validVertex1;
+			var vv1 = modelPort.validVertex2;
+			this.validVertexes = {};
+			this.validVertexes[0] = new VertexLocation(vv0.x, vv0.y, vv0.direction);
+			this.validVertexes[1] = new VertexLocation(vv1.x, vv1.y, vv1.direction);
+			
+			// Set the ratio
+			this.ratio = modelPort.ratio;
+			
+			// Set the input resource (if defined)
+			if (modelPort.inputResource) {
+				this.inputResource = modelPort.inputResource.toLowerCase();
+			}
+		};
+		
+		Port.prototype.getLocation = function() {
+			return this.location;
+		};
+		
+		Port.prototype.getValidVertexes = function() {
+			return this.validVertexes;
+		};
+		
+		Port.prototype.getRatio = function() {
+			return this.ratio;
+		};
+		
+		Port.prototype.getInputResource = function() {
+			return this.inputResource;
+		};
+		
+		return Port;
 		
 	}());
 	

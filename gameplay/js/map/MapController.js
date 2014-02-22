@@ -124,8 +124,10 @@ catan.map.Controller = (function catan_controller_namespace() {
 			var map = clientModel.map;
 			
 			// Lookup tables
-			var edLookup = ["NW","N","NE","SE","S","SW"]; // From hexgrid.js
-			var vdLookup = ["W","NW","NE","E","SE","SW"]; // From hexgrid.js
+			var edLookup = ["NW","N","NE","SE","S","SW"]; 			// From hexgrid.js
+			var EdgeDirection = core.numberEnumeration(edLookup);	// From hexgrid.js
+			var vdLookup = ["W","NW","NE","E","SE","SW"]; 			// From hexgrid.js
+			var VertexDirection = core.numberEnumeration(vdLookup);	// From hexgrid.js
 			var colorLookup = {};
 			for (playerNum in clientModel.players) {
 				colorLookup[playerNum] = clientModel.players[playerNum].color;
@@ -158,7 +160,18 @@ catan.map.Controller = (function catan_controller_namespace() {
 			}
 			
 			// Update the ports
-			// TODO
+			var ports = map.getPorts();
+			for (portNum in ports) {
+				var port = ports[portNum];
+				var loc = port.getLocation();
+				var portLoc = new catan.map.View.PortLoc(loc.x, loc.y, EdgeDirection[loc.direction]);
+				var type = port.getInputResource();
+				if (!type) {
+					type = 'three';
+				}
+				console.log('MapController.update(): Port: (' + portLoc.x + ',' + portLoc.y + ',' + portLoc.rotation + ') ' + type);
+				view.addPort(portLoc, type, true);
+			}
 			
 			// Update the robber
 			var robber = map.getRobber();

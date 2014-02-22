@@ -28,8 +28,7 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 
 			var player = this.getCurrentPlayer();
 			view.setClientColor(player.color);
-			view.initializePlayer(player);
-			// this.endTurn();
+			view.initializePlayer(player.playerID, player.name, player.color);			// this.endTurn();
             
             // TODO: This constructor should configure its view by calling view.setClientColor and view.initializePlayer
             // NOTE: The view.updateViewState and view.updatePlayer will not work if called from here.  Instead, these
@@ -54,6 +53,14 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 					return this.ClientModel.players[curTurn];
 			
 		
+		}
+
+		TurnTrackerController.prototype.update = function(){
+			console.log("updating shiz");
+			if(this.ClientModel.turnTracker.status == "Playing"){
+				this.View.updateStateView(true, "End Turn");
+			}
+
 		}
 		
 		return TurnTrackerController;

@@ -119,19 +119,99 @@ catan.map.Controller = (function catan_controller_namespace() {
 		@param clientModel the ClientModel that has been updated
 		*/
 		MapController.prototype.update = function(clientModel) {
+		
 			var view = this.getView();
 			var map = clientModel.map;
+			
+			// Lookup tables
+			var edLookup = ["NW","N","NE","SE","S","SW"]; // From hexgrid.js
+			var vdLookup = ["W","NW","NE","E","SE","SW"]; // From hexgrid.js
+			var colorLookup = {};
+			for (playerNum in clientModel.players) {
+				colorLookup[playerNum] = clientModel.players[playerNum].color;
+			}
+			
+			// Update the hexes
 			var hexes = map.getHexes();
-			for (n in hexes) {
-				var line = hexes[n];
-				for (n in line) {
-					var hex = line[n];
-					console.log('Updating hex (' + hex.getLocation().x + ',' + hex.getLocation().y + ') ' + hex.getType());
-					view.addHex(hex.getLocation(), hex.getType());
-					view.placeRobber(map.getRobberLocation());
+			for (lineNum in hexes) {
+				var line = hexes[lineNum];
+				for (hexNum in line) {
+					var hex = line[hexNum];
+					var loc = hex.getLocation();
+					var type = hex.getType();
+					console.log('MapController.update(): Hex: (' + loc.x + ',' + loc.y + ') ' + type);
+					view.addHex(loc, type, true);
 				}
 			}
+			
+			// Update the tokens
+			var tokens = map.getTokens();
+			var nums = [2, 3, 4, 5, 6, 8, 9, 10, 11, 12];
+			for (numNum in nums) {
+				var n = nums[numNum];
+				var nTokens = tokens[n];
+				for (k in nTokens) {
+					var tokenLoc = nTokens[k];
+					console.log('MapController.update(): Token: (' + tokenLoc.x + ',' + tokenLoc.y + ') ' + n);
+					view.addNumber(tokenLoc, n, true);
+				}
+			}
+			
+			// Update the ports
 			// TODO
+			
+			// Update the robber
+			var robber = map.getRobber();
+			console.log('MapController.update(): Robber: (' + robber.x + ',' + robber.y + ')');
+			view.placeRobber(robber, true);
+			
+			// Update the settlements, cities, and roads (iterate through all hexes)
+			for (lineNum in hexes) {
+				var line = hexes[lineNum];
+				for (hexNum in line) {
+					var hex = line[hexNum];
+					// Update the roads (edges)
+					var edges = hex.getEdges();
+					for (edgeNum in edges) {
+						var edge = edges[edgeNum];
+						// Pursue only occupied edges
+						if (edge.isOccupied()) {
+							var loc = edge.getLocation();
+							var dir = edLookup[loc.direction];
+							if (dir === "SW" || dir === "S" ||dir === "SE") { // Assertion from EdgeLoc(x, y, dir) in MapView.js
+								var edgeLoc = new catan.map.View.EdgeLoc(loc.x, loc.y, dir);
+								var color = colorLookup[edge.getOwnerID()];
+								console.log('MapController.update(): Road: (' + edgeLoc.x + ',' + edgeLoc.y + ',' + edgeLoc.dir + ') ' + edge.getOwnerID() + ' ' + color);
+								view.placeRoad(edgeLoc, color, true);
+							}
+						}
+					}
+					// Update the settlements and cities (vertexes)
+					var vertexes = hex.getVertexes();
+					for (vertexNum in vertexes) {
+						var vertex = vertexes[vertexNum];
+						// Pursue only occupied vertexes
+						if (vertex.isOccupied()) {
+							var loc = vertex.getLocation();
+							var dir = vdLookup[loc.direction];
+							if (dir === "W" || dir === "E") { // Assertion from VertexLoc(x, y, dir) in MapView.js
+								var vertexLoc = new catan.map.View.VertexLoc(loc.x, loc.y, dir);
+								var color = colorLookup[vertex.getOwnerID()];
+								// If the vertex worth is 1, it's a settlement
+								if (vertex.getWorth() == 1) {
+									console.log('MapController.update(): Settlement: (' + vertexLoc.x + ',' + vertexLoc.y + ',' + vertexLoc.dir + ') ' + vertex.getOwnerID() + ' ' + color);
+									view.placeSettlement(vertexLoc, color, true);
+								// If the vertex worth is 2, it's a city
+								} else if (vertex.getWorth() == 2) {
+									console.log('MapController.update(): City: (' + vertexLoc.x + ',' + vertexLoc.y + ',' + vertexLoc.dir + ') ' + vertex.getOwnerID() + ' ' + color);
+									view.placeCity(vertexLoc, color, true);
+								}
+							}
+						}
+					}
+				}
+			}
+			view.drawPieces();
 		};
         
 		return MapController;

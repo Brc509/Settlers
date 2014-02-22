@@ -18,94 +18,54 @@ catan.models.Map = (function mapNameSpace(){
 		function Map(radius)
 		{
 			this.hexGrid = hexgrid.HexGrid.getRegular(radius, CatanHex);
-			// TODO Decompose the robber into a separate class
 		}
 		
 		Map.prototype.update = function(mapModel) {
 		
+			var HexLocation = catan.models.hexgrid.HexLocation;
+		
 			// UPDATE THE HEXGRID
-			var modelHexGrid = mapModel.hexGrid;
-			var localHexGrid = this.hexGrid;
-			var modelHexes = modelHexGrid.hexes;
-			var localHexes = localHexGrid.hexes;
 			
+			var modelHexes = mapModel.hexGrid.hexes;
+			var localHexes = this.hexGrid.hexes;
 			// Update the hexes line by line
-			for (line in modelHexes) {
+			for (lineNum in modelHexes) {
 			
-				var modelLine = modelHexes[line];
-				var localLine = localHexes[line];
-				
+				var modelLine = modelHexes[lineNum];
+				var localLine = localHexes[lineNum];
 				// Update each hex in the line
-				for (hex in modelLine) {
-				
-					var modelHex = modelLine[hex];
-					
-					// Create the new hex
-					var localHex = new CatanHex(modelHex.location);
-					
-					// Update its land type
-					if (modelHex.isLand) {
-						if (modelHex.landtype) {
-							localHex.setType(modelHex.landtype.toLowerCase());
-						} else {
-							localHex.setType('desert');
-						}
-					} else {
-						localHex.setType('water');
-					}
-					
-					var modelVertexes = modelHex.vertexes;
-					var localVertexes = localHex.vertexes;
-					
-					// // Update the vertexes
-					// for (vertex in modelVertexes) {
-					
-						// var modelVertex = modelVertexes[vertex];
-						// var localVertex = localVertexes[vertex];
-						
-						// // Update the worth
-						// localVertex.worth = modelVertex.value.worth;
-						
-						// // Update the ownerID
-						// localVertex.ownerID = modelVertex.value.ownerID;
-					// }
-					
-					// var modelEdges = modelHex.edges;
-					// var localEdges = localHex.edges;
-					
-					// // Update the edges
-					// for (edge in modelEdges) {
-					
-						// var modelEdge = modelEdges[edge];
-						// var localEdge = localEdges[edge];
-						
-						// // Update the ownerID
-						// localEdge.ownerID = modelEdge.value.ownerID;
-					// }
-					
-					// Assign the new hex to the model
-					localLine[hex] = localHex;
+				for (hexNum in modelLine) {
+					var modelHex = modelLine[hexNum];
+					localLine[hexNum].set(modelHex);
 				}
 			}
 			
-			// // Update the offsets
-			// localHexGrid.offsets = modelHexGrid.offsets;
+			// UPDATE THE TOKENS
 			
-			// // Update the radius
-			// localHexGrid.radius = modelHexGrid.radius;
+			this.tokens = {};
+			var nums = [2, 3, 4, 5, 6, 8, 9, 10, 11, 12];
+			// Update the token location(s) corresponding to each valid number
+			for (num in nums) {
+				var n = nums[num];
+				// Clear existing token location(s) for this number
+				this.tokens[n] = {};
+				var localNTokens = this.tokens[n];
+				var modelNTokens = mapModel.numbers[n];
+				// Recreate the token location(s) for this number
+				for (k in modelNTokens) {
+					var tokenLoc = modelNTokens[k];
+					localNTokens[k] = new HexLocation(tokenLoc.x, tokenLoc.y);
+				}
+			}
 			
-			// // Update the origin
-			// localHexGrid.x0 = modelHexGrid.x0;
-			// localHexGrid.y0 = modelHexGrid.y0;
+			// UPDATE THE PORTS
+			// TODO
 			
-			// TODO UPDATE THE NUMBERS
+			// UPDATE THE ROBBER
 			
-			// TODO UPDATE THE PORTS
-			
-			// UPDATE THE ROBBER (IF DEFINED)
-			if (mapModel.robber) {
-				var mapRobber = mapModel.robber;
-				this.robberLocation = new catan.models.hexgrid.HexLocation(mapRobber.x, mapRobber.y);
+			var mapRobber = mapModel.robber;
+			if (mapRobber) {
+				this.robber = new HexLocation(mapRobber.x, mapRobber.y);
 			}
 		};
 		
@@ -113,11 +73,73 @@ catan.models.Map = (function mapNameSpace(){
 			return this.hexGrid.hexes;
 		};
 		
-		Map.prototype.getRobberLocation = function() {
-			return this.robberLocation;
+		Map.prototype.getTokens = function() {
+			return this.tokens;
+		};
+		
+		Map.prototype.getRobber = function() {
+			return this.robber;
 		};
 		
 		return Map;
+		
+	}());
+	
+	/**
+	This class represents a Hex. You may add any methods that you need (e.g., to get the resource/hex type, etc.)
+	
+	In order to work with the hexgrid, this class must extend hexgrid.BasicHex (already done in the code). You also need to implement
+	a CatanVertex and CatanEdge classes (stubs are provided in this file).	Look at their documentation to see what needs to be done there.
+	
+	The hexgrid will be passed an instance of this class to use as a model, and will pull the constructor from that instance. 
+	(The core.forceInherit sets the constructor, in case you are curious how that works)
+	
+	@constructor
+	@param {HexLocation} location The HexLocation of this hex
+	@extends hexgrid.BasicHex
+	
+	@class CatanHex
+	*/
+	var CatanHex = (function CatanHex_Class(){
+	
+		core.forceClassInherit(CatanHex, hexgrid.BasicHex);
+		
+		function CatanHex(location) {
+			hexgrid.BasicHex.call(this,location,CatanEdge,CatanVertex);
+		}
+		
+		// Set the hex to match a hex from the model JSON
+		CatanHex.prototype.set = function(modelHex) {
+		
+			// Set the hex type
+			if (modelHex.isLand) {
+				if (modelHex.landtype) {
+					this.type = modelHex.landtype.toLowerCase();
+				} else {
+					this.type = 'desert';
+				}
+			} else {
+				this.type = 'water';
+			}
+			
+			// Set the edges
+			var edges = {};
+			for (n = 0; n < 6; n++) {
+				this.edges[n].set(modelHex.edges[n]);
+			}
+			
+			// Set the vertexes
+			var vertexes = {};
+			for (n = 0; n < 6; n++) {
+				this.vertexes[n].set(modelHex.vertexes[n]);
+			}
+		};
+		
+		CatanHex.prototype.getType = function() {
+			return this.type;
+		};
+		
+		return CatanHex;
 		
 	}());
 	
@@ -136,26 +158,26 @@ catan.models.Map = (function mapNameSpace(){
 	
 		core.forceClassInherit(CatanEdge, hexgrid.BaseContainer);
 		
-		function CatanEdge(){
+		function CatanEdge() {
 			this.ownerID = -1;
 		}
 		
-		CatanEdge.prototype.setOwner = function(ownerID){
-			this.ownerID = ownerID;
-		}
+		// Set the edge to match an edge from the model JSON
+		CatanEdge.prototype.set = function(modelEdge) {
+			this.ownerID = modelEdge.value.ownerID;
+		};
 		
-		CatanEdge.prototype.getOwner = function(){
+		CatanEdge.prototype.getOwnerID = function(){
 			return this.ownerID;
-		}
+		};
 		
-		// once you override this, put in some documentation
 		CatanEdge.prototype.isOccupied = function(){
 			if (this.ownerID == -1) {
 				return false;
 			} else {
 				return true;
 			}
-		}
+		};
 		
 		return CatanEdge;
 		
@@ -176,73 +198,34 @@ catan.models.Map = (function mapNameSpace(){
 	
 		core.forceClassInherit(CatanVertex, hexgrid.BaseContainer);
 		
-		function CatanVertex(){
+		function CatanVertex() {
 			this.worth = 0;
 			this.ownerID = -1;
 		}
 		
-		CatanVertex.prototype.setWorth = function(worth){
-			this.worth = worth;
-		}
+		// Set the vertex to match a vertex from the model JSON
+		CatanVertex.prototype.set = function(modelVertex) {
+			this.worth = modelVertex.value.worth;
+			this.ownerID = modelVertex.value.ownerID;
+		};
 		
-		CatanVertex.prototype.getWorth = function(){
+		CatanVertex.prototype.getWorth = function() {
 			return this.worth;
-		}
+		};
 		
-		CatanVertex.prototype.setOwner = function(ownerID){
-			this.ownerID = ownerID;
-		}
-		
-		CatanVertex.prototype.getOwner = function(){
+		CatanVertex.prototype.getOwnerID = function() {
 			return this.ownerID;
-		}
+		};
 		
-		// once you override this, put in some documentation
-		CatanVertex.prototype.isOccupied = function(){ 
+		CatanVertex.prototype.isOccupied = function() { 
 			if (this.ownerID == -1) {
 				return false;
 			} else {
 				return true;
 			}
-		}
+		};
 		
 		return CatanVertex;
-		
-	}());
-	
-	/**
-	This class represents a Hex. You may add any methods that you need (e.g., to get the resource/hex type, etc.)
-	
-	In order to work with the hexgrid, this class must extend hexgrid.BasicHex (already done in the code). You also need to implement
-	a CatanVertex and CatanEdge classes (stubs are provided in this file).	Look at their documentation to see what needs to be done there.
-	
-	The hexgrid will be passed an instance of this class to use as a model, and will pull the constructor from that instance. 
-	(The core.forceInherit sets the constructor, in case you are curious how that works)
-	
-	@constructor
-	@param {hexgrid.HexLocation} location - the location of this hex. It's used to generate locations for the vertexes and edges.
-	@extends hexgrid.BasicHex
-	
-	@class CatanHex
-	*/
-	var CatanHex = (function CatanHex_Class(){
-	
-		core.forceClassInherit(CatanHex, hexgrid.BasicHex);
-		
-		function CatanHex(location, type){		  
-			hexgrid.BasicHex.call(this,location,CatanEdge,CatanVertex);
-			this.type = type;
-		}
-		
-		CatanHex.prototype.getType = function() {
-			return this.type;
-		};
-		
-		CatanHex.prototype.setType = function(type) {
-			this.type = type;
-		};
-		
-		return CatanHex;
 		
 	}());
 	

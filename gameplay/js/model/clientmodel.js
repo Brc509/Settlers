@@ -165,6 +165,11 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			//TODO: Implement
 		}
 
+		ClientModel.prototype.listResources = function() {
+
+			return this.clientPlayer.resources;
+		}
+
 		/**
 		    <pre>
 		        PRE: You have the necessary resources (1 ore, sheep, and wheat)
@@ -190,10 +195,12 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @method buyDevCard
 		*/
 		ClientModel.prototype.buyDevCard = function () {
-			var myself = this;
+
 			if (this.canBuyDevCard()) {
 				this.clientProxy.buyDevCard(this.updateModel);
+				return true;
 			}
+			return false;
 		}
 
 		/**
@@ -277,7 +284,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			// TODO: check if the road locations are valid (something should be implemented within Map)
 
 			// Success!
-			var myself = this;
 			this.clientProxy.roadBuilding(hex1, edge1, hex2, edge2, this.updateModel);
 		}
 
@@ -330,7 +336,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    </pre>
 		    @method monopoly
 		*/
-		ClientModel.prototype.monopoly = function () {
+		ClientModel.prototype.monopoly = function (resource) {
 			
 			// All of the potentially failed pre-conditions
 			if (this.turnTracker.currentTurn != this.playerID || this.turnTracker.status != "Playing")
@@ -345,10 +351,8 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 			
 			// Success!
-			//TODO put in the resource
-			resource = "";
 			this.clientProxy.monopoly(resource, this.updateModel);
-
+			return true;
 		}
 
 		/**
@@ -394,6 +398,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		}
 
 		ClientModel.prototype.offerTrade = function (receiver, offer) {
+			
 			if (canOfferTrade()) {
 				this.clientProxy.offerTrade(offer, receiver, this.updateModel);
 			}

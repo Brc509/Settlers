@@ -53,7 +53,7 @@ catan.devCards.Controller = (function(){
 		 */
 		DevCardController.prototype.useYearOfPlenty = function(resource1, resource2){
 
-
+			this.ClientModel.yearOfPlenty(resource1, resource2);
 		}
         
 		/**
@@ -64,7 +64,7 @@ catan.devCards.Controller = (function(){
 		 */
 		DevCardController.prototype.useMonopoly= function(resource){
 
-
+			this.ClientModel.monopoly(resource);
 		}
         
 		/**
@@ -74,7 +74,7 @@ catan.devCards.Controller = (function(){
 		 */
 		DevCardController.prototype.useMonument = function(){
 
-
+			this.ClientModel.monument();
 		}
         
 		/**
@@ -84,7 +84,7 @@ catan.devCards.Controller = (function(){
 		 */
 		DevCardController.prototype.useSoldier= function(){
 
-
+			// TODO: this.ClientModel.soldier();
 		}
         
 		/**
@@ -94,7 +94,7 @@ catan.devCards.Controller = (function(){
 		 */
 		DevCardController.prototype.useRoadBuild = function(resource){
 
-
+			// TODO: this.ClientModel.roadBuild();
 		}
 
 		return DevCardController;

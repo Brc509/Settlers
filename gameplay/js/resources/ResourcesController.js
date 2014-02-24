@@ -37,6 +37,17 @@ catan.resources.Controller = (function resources_namespace() {
 		function ResourceBarController(view,clientModel,actions){
 			this.setActions(actions);
 			Controller.call(this,view,clientModel);
+
+			console.log("TEST");
+			console.log(catan.definitions.ResourceTypes);
+			console.log(clientModel.listResources());
+			var types = catan.definitions.ResourceTypes;
+			var resources = clientModel.listResources();
+			for (type in types) {
+				
+				console.log(types[type] + " - " + resources[types[type]]);
+				view.updateAmount(types[type], resources[types[type]]);
+			}
 		};
 
 		core.forceClassInherit(ResourceBarController,Controller);

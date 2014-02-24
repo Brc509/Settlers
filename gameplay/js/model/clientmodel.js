@@ -67,6 +67,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			myself.bank = model.bank;
 			myself.deck = model.deck;
 			myself.chat = model.chat;
+			myself.log = model.log;
 			myself.turnTracker = model.turnTracker;
 			// myself.playerID = model.turnTracker.currentTurn;
 

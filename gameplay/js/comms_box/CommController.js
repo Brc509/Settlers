@@ -48,6 +48,19 @@ catan.comm.Controller = (function () {
 		**/
 		function LogController(logView,model){
 			BaseCommController.call(this,logView,model);
+			logView.resetLines(model.log.lines);
+			
+			this.logView = logView;
+			this.model = model;
+		}
+		
+		/**
+		Called by the model whenever the model is updated
+		@method update
+		@param {ClientModel} model The newest version of the model
+		**/
+		LogController.prototype.update = function (model){
+			this.logView.resetLines(model.log.lines);
 		}
         
 		return LogController;

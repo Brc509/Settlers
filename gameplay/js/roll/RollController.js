@@ -62,7 +62,7 @@ catan.roll.Controller = (function roll_namespace(){
 
 			value = numba1 + numba2;
 
-			if(value == 1){
+			if(value == 1 || value == 0){
 				value = 2;
 			}
 

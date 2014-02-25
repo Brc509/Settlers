@@ -22,8 +22,15 @@ catan.setup.Controller = (function(){
 	var SetupRoundController = (function (){
 		
 		var SetupRoundController = function (clientModel, mapController){
-			this.mapController = mapController;
 
+			if(clientModel.turnTracker.status != "FirstRound" ||
+				clientModel.turnTracker.status != "SecondRound"){
+
+					window.location = "/catan.html";
+
+			}
+
+			this.mapController = mapController;
 			Controller.call(this,undefined,clientModel);
 
 		};

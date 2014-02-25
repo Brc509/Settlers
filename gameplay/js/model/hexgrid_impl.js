@@ -88,6 +88,10 @@ catan.models.Map = (function mapNameSpace() {
 			return this.hexGrid.hexes;
 		};
 		
+		Map.prototype.getHexGrid = function() {
+			return this.hexGrid;
+		};
+		
 		Map.prototype.getTokens = function() {
 			return this.tokens;
 		};
@@ -132,12 +136,14 @@ catan.models.Map = (function mapNameSpace() {
 		
 			// Set the hex type
 			if (modelHex.isLand) {
+				this.isLand = true;
 				if (modelHex.landtype) {
 					this.type = modelHex.landtype.toLowerCase();
 				} else {
 					this.type = 'desert';
 				}
 			} else {
+				this.isLand = false;
 				this.type = 'water';
 			}
 			
@@ -152,6 +158,10 @@ catan.models.Map = (function mapNameSpace() {
 			for (n = 0; n < 6; n++) {
 				this.vertexes[n].set(modelHex.vertexes[n]);
 			}
+		};
+		
+		Hex.prototype.getIsLand = function() {
+			return this.isLand;
 		};
 		
 		Hex.prototype.getType = function() {
@@ -269,9 +279,10 @@ catan.models.Map = (function mapNameSpace() {
 			// Set the ratio
 			this.ratio = modelPort.ratio;
 			
-			// Set the input resource (if defined)
-			if (modelPort.inputResource) {
-				this.inputResource = modelPort.inputResource.toLowerCase();
+			// Set the input resource
+			this.inputResource = modelPort.inputResource
+			if (this.inputResource) {
+				this.inputResource = this.inputResource.toLowerCase();
 			}
 		};
 		

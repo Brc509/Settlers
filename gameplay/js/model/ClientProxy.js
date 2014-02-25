@@ -5,6 +5,7 @@ var catan = catan || {};
 catan.models = catan.models || {};
 
 catan.models.ClientProxy = (function() {
+
 	/**
 		The ClientProxy class is an intermediary between the server and the client.
 		<pre>
@@ -20,7 +21,6 @@ catan.models.ClientProxy = (function() {
 		@constructor
 	*/
 	function ClientProxy(clientModel) {
-		this.playerIndex = clientModel.playerIndex;
 		this.modelVersion = null;
 		this.clientModel = clientModel;
 		this.movesCommand = new catan.models.MovesCommand();
@@ -64,7 +64,7 @@ catan.models.ClientProxy = (function() {
 		// Create the data for the command
 		var data = {};
 		data.type = 'acceptTrade';
-		data.playerIndex = this.playerIndex;
+		data.playerIndex = this.clientModel.playerIndex;
 		data.willAccept = willAccept;
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/acceptTrade';
@@ -87,7 +87,7 @@ catan.models.ClientProxy = (function() {
 		// Create the data for the command
 		var data = {};
 		data.type = 'buildCity';
-		data.playerIndex = this.playerIndex;
+		data.playerIndex = this.clientModel.playerIndex;
 		data.vertexLocation = {};
 		data.vertexLocation.x = hex.x;
 		data.vertexLocation.y = hex.y;
@@ -114,7 +114,7 @@ catan.models.ClientProxy = (function() {
 		// Create the data for the command
 		var data = {};
 		data.type = 'buildRoad';
-		data.playerIndex = this.playerIndex;
+		data.playerIndex = this.clientModel.playerIndex;
 		data.roadLocation = {};
 		data.roadLocation.x = hex.x;
 		data.roadLocation.y = hex.y;
@@ -141,7 +141,7 @@ catan.models.ClientProxy = (function() {
 		// Create the data for the command
 		var data = {};
 		data.type = 'buildSettlement';
-		data.playerIndex = this.playerIndex;
+		data.playerIndex = this.clientModel.playerIndex;
 		data.vertexLocation = {};
 		data.vertexLocation.x = hex.x;
 		data.vertexLocation.y = hex.y;
@@ -165,7 +165,7 @@ catan.models.ClientProxy = (function() {
 		// Create the data for the command
 		var data = {};
 		data.type = 'buyDevCard';
-		data.playerIndex = this.playerIndex;
+		data.playerIndex = this.clientModel.playerIndex;
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/buyDevCard';
 		this.movesCommand.data 	= data;
@@ -186,7 +186,7 @@ catan.models.ClientProxy = (function() {
 		// Create the data for the command
 		var data = {};
 		data.type = 'discardCards';
-		data.playerIndex = this.playerIndex;
+		data.playerIndex = this.clientModel.playerIndex;
 		data.discardedCards = discardedCards;
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/discardCards';
@@ -206,7 +206,7 @@ catan.models.ClientProxy = (function() {
 		// Create the data for the command
 		var data = {};
 		data.type = 'finishTurn';
-		data.playerIndex = this.playerIndex;
+		data.playerIndex = this.clientModel.playerIndex;
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/finishTurn';
 		this.movesCommand.data 	= data;
@@ -230,7 +230,7 @@ catan.models.ClientProxy = (function() {
 		// Create the data for the command
 		var data = {};
 		data.type = 'maritimeTrade';
-		data.playerIndex = this.playerIndex;
+		data.playerIndex = this.clientModel.playerIndex;
 		data.ratio = ratio;
 		data.inputResource = inputResource;
 		data.outputResource = outputResource;
@@ -254,7 +254,7 @@ catan.models.ClientProxy = (function() {
 		// Create the data for the command
 		var data = {};
 		data.type = 'Monopoly';
-		data.playerIndex = this.playerIndex;
+		data.playerIndex = this.clientModel.playerIndex;
 		data.resource = resource;
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/Monopoly';
@@ -274,7 +274,7 @@ catan.models.ClientProxy = (function() {
 		// Create the data for the command
 		var data = {};
 		data.type = 'Monument';
-		data.playerIndex = this.playerIndex;
+		data.playerIndex = this.clientModel.playerIndex;
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/Monument';
 		this.movesCommand.data 	= data;
@@ -296,7 +296,7 @@ catan.models.ClientProxy = (function() {
 		// Create the data for the command
 		var data = {};
 		data.type = 'offerTrade';
-		data.playerIndex = this.playerIndex;
+		data.playerIndex = this.clientModel.playerIndex;
 		data.receiver = receiver;
 		data.offer = offer;
 		// Create and execute the command
@@ -322,7 +322,7 @@ catan.models.ClientProxy = (function() {
 		// Create the data for the command
 		var data = {};
 		data.type = 'Road_Building';
-		data.playerIndex = this.playerIndex;
+		data.playerIndex = this.clientModel.playerIndex;
 		data.spot1 = {};
 		data.spot1.x = hex1.x;
 		data.spot1.y = hex1.y;
@@ -353,7 +353,7 @@ catan.models.ClientProxy = (function() {
 		// Create the data for the command
 		var data = {};
 		data.type = 'robPlayer';
-		data.playerIndex = this.playerIndex;
+		data.playerIndex = this.clientModel.playerIndex;
 		data.victimIndex = victimIndex;
 		data.robberSpot = robberSpot;
 		// Create and execute the command
@@ -376,7 +376,7 @@ catan.models.ClientProxy = (function() {
 		// Create the data for the command
 		var data = {};
 		data.type = 'rollNumber';
-		data.playerIndex = this.playerIndex;
+		data.playerIndex = this.clientModel.playerIndex;
 		data.number = number;
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/rollNumber';
@@ -394,7 +394,7 @@ catan.models.ClientProxy = (function() {
 		// Create the data for the command
 		var data = {};
 		data.type = 'sendChat';
-		data.playerIndex = this.playerIndex;
+		data.playerIndex = this.clientModel.playerIndex;
 		data.content = content;
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/sendChat';
@@ -418,7 +418,7 @@ catan.models.ClientProxy = (function() {
 		// Create the data for the command
 		var data = {};
 		data.type = 'Soldier';
-		data.playerIndex = this.playerIndex;
+		data.playerIndex = this.clientModel.playerIndex;
 		data.victimIndex = victimIndex;
 		data.robberSpot = robberSpot;
 		// Create and execute the command
@@ -442,7 +442,7 @@ catan.models.ClientProxy = (function() {
 		// Create the data for the command
 		var data = {};
 		data.type = 'Year_of_Plenty';
-		data.playerIndex = this.playerIndex;
+		data.playerIndex = this.clientModel.playerIndex;
 		data.resource1 = resource1;
 		data.resource2 = resource2;
 		// Create and execute the command

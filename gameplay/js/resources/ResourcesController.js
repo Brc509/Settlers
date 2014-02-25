@@ -38,12 +38,29 @@ catan.resources.Controller = (function resources_namespace() {
 			this.setActions(actions);
 			Controller.call(this,view,clientModel);
 
-			this.updateView(view, clientModel);
+			this.view = view;
+			this.clientModel = clientModel;
 		};
 
 		core.forceClassInherit(ResourceBarController,Controller);
         
 		ResourceBarController.prototype.constructor = ResourceBarController;
+
+		/**
+		 *  Initialize the values for the resource bar
+		 */
+		ResourceBarController.prototype.init = function() {
+
+			// Update the view
+			this.updateNumbers();
+			this.setEnabled();
+		}
+
+		ResourceBarController.prototype.update = function(clientModel) {
+
+			this.clientModel = clientModel;
+			this.init();
+		}
         
 		core.defineProperty(ResourceBarController.prototype, "Actions");
 
@@ -62,23 +79,45 @@ catan.resources.Controller = (function resources_namespace() {
 			this.getActions()[ROAD]();
 		}
 
-		ResourceBarController.prototype.updateView = function(view, clientModel) {
+		/**
+		*	Update the number fields on the resource side-bar
+		*/
+		ResourceBarController.prototype.updateNumbers = function() {
 
 			var types = catan.definitions.ResourceTypes;
-			var resources = clientModel.clientPlayer.resources;
-			var p = clientModel.clientPlayer;
+			var resources = this.clientModel.clientPlayer.resources;
+			var p = this.clientModel.clientPlayer;
 
-			view.setController(this);
+			for (t in types)
+				this.view.updateAmount(types[t], resources[types[t]]);
 
-			for (t in types) {
-				
-				console.log(types[t] + " - " + resources[types[t]]);
-				view.updateAmount(types[t], resources[types[t]]);
+			this.view.updateAmount("Roads", p.roads);
+			this.view.updateAmount("Settlements", p.settlements);
+			this.view.updateAmount("Cities", p.cities);
+			this.view.updateAmount("Soldiers", p.soldiers);
+		}
+
+		/**
+		 *   Update the resource view with whichever fields can be enabled
+		 */
+		ResourceBarController.prototype.setEnabled = function() {
+
+			var p = this.clientModel.clientPlayer;
+			if (this.clientModel.playerIndex == this.clientModel.turnTracker.currentTurn
+				&& !p.playedDevCard) {
+
+				this.view.setActionEnabled("Roads", p.canAffordRoad());
+				this.view.setActionEnabled("Settlements", p.canAffordSettlement());
+				this.view.setActionEnabled("Cities", p.canAffordCity());
+				this.view.setActionEnabled("BuyCard", p.canAffordDevCard());
 			}
-			view.updateAmount("Roads", p.roads);
-			view.updateAmount("Settlements", p.settlements);
-			view.updateAmount("Cities", p.cities);
-			view.updateAmount("Soldiers", p.soldiers);
+			else {
+
+				this.view.setActionEnabled("Roads", false);
+				this.view.setActionEnabled("Settlements", false);
+				this.view.setActionEnabled("Cities", false);
+				this.view.setActionEnabled("BuyCard", false);
+			}
 		}
         
 		/**

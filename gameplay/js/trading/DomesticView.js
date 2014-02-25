@@ -207,7 +207,7 @@ catan.trade.domestic.View = (function(){
 					label: players[index].name,
 					color: players[index].color,
 					action: core.makeAnonymousAction(ctrl, ctrl.setPlayerToTradeWith, 
-														[players[index].index])
+														[index]) //[players[index].index])
 				});
 			}
 			return options;

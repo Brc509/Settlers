@@ -32,10 +32,7 @@ catan.roll.Controller = (function roll_namespace(){
 			Controller.call(this,view,clientModel);
 			this.rollInterval = false;
 			this.showRollResult = false;
-
 			// view.showModal();
-
-			
 	};
         
 		/**
@@ -56,21 +53,17 @@ catan.roll.Controller = (function roll_namespace(){
 		**/
 		RollController.prototype.rollDice = function(){
 
+			window.clearInterval(timeout);
 			
-			var numba1=Math.floor(Math.random()*7)
-			var numba2=Math.floor(Math.random()*7)
+			var numba1=Math.floor((Math.random()*6) + 1);
+            var numba2=Math.floor((Math.random()*6) + 1);
 
 			value = numba1 + numba2;
 
-			if(value == 1){
-				value = 2;
-			}
-
 			this.View.closeModal();
 			this.showRollResult = true;
-			this.rollResultView.amountDisplay.textContent = "You rolled a " + value;
+			this.rollResultView.amountDisplay.textContent = "You rolled " + value;
 			this.rollResultView.showModal();
-
 		};
 
 		RollController.prototype.update = function(){
@@ -79,11 +72,45 @@ catan.roll.Controller = (function roll_namespace(){
 			if(this.ClientModel.turnTracker.currentTurn == currPlayerIndex){
 				if(this.ClientModel.turnTracker.status == "Rolling"){
 					this.View.showModal();
+					myself = this;
+					var str = myself.View.MessageElem.innerText;
+					console.log(str.length);
+					
+					this.View.MessageElem.innerText = "Rolling automatically in... ";
+
+					this.View.MessageElem.innerText += "5";
+					timeout = setTimeout(function(){
+							str = str.substring(0, str.length - 1);
+							str += "4";
+							myself.View.MessageElem.innerText = str;
+						timeout = setTimeout(function(){
+							str = str.substring(0, str.length - 1);
+							str += "3";
+							myself.View.MessageElem.innerText = str;
+							timeout = setTimeout(function(){
+								str = str.substring(0, str.length - 1);
+								str += "2";
+								myself.View.MessageElem.innerText = str;
+									timeout = setTimeout(function(){
+									str = str.substring(0, str.length - 1);
+									str += "1";
+									myself.View.MessageElem.innerText = str;
+										timeout = setTimeout(function(){
+											str = str.substring(0, str.length - 1);
+											myself.View.MessageElem.innerText = str;
+											myself.rollDice();},1000);},1000);},1000);},1000);},1000);
+					
+					
+					
+					
+					
+					
+					
+
+
+					// this.rollDice();
 				}
 			}
-			
-			console.log("hi");
-
 		}
 		return RollController;
 	}());

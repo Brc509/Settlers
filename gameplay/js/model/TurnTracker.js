@@ -24,10 +24,7 @@ The Turn Tracker Class
 */
     var TurnTracker = (function TurnTrackerClass() {
 
-        function TurnTracker(playerId) {
-
-            this.playerId = playerId;
-        }
+        function TurnTracker() {}
 
         /**
             <pre>
@@ -41,8 +38,6 @@ The Turn Tracker Class
 
             this.currentTurn = newTurnTracker.currentTurn;
             this.status = newTurnTracker.status;
-            if (this.currentTurn == this.playerId)
-                this.isCurrentTurn = true;
         }
 
         /**
@@ -58,34 +53,6 @@ The Turn Tracker Class
         TurnTracker.prototype.statusEquals = function(queryStatus) {
 
             if (this.status == queryStatus)
-                return true;
-            return false;
-        }
-
-        /**
-            <pre>
-                PRE: update() has already been called, and "this.isCurrentTurn" has been defined
-                POST: Correctly returns whether or not this.currentTurn == this.playerId
-            </pre>
-            @method isMyTurn
-            @return {boolean} 
-        */
-        TurnTracker.prototype.isMyTurn = function() {
-
-            return isCurrentTurn;
-        }
-
-        /**
-            <pre>
-                PRE: playerIs is a valid integer ID number
-                POST: Correctly returns if it is currently this player's turn
-            </pre>
-            @method isTurn
-            @param {integer} playerId The ID of the player to check 
-        */
-        TurnTracker.prototype.isTurn = function(playerId) {
-
-            if (this.playerId == playerId)
                 return true;
             return false;
         }

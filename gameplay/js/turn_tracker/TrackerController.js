@@ -28,7 +28,12 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 
 			var player = this.getCurrentPlayer();
 			this.View.setClientColor(player.color);
-			this.View.initializePlayer(this.ClientModel.turnTracker.currentTurn, player.name, player.color);
+
+			for(p in clientModel.players){
+				var numba = parseInt(p);
+				this.View.initializePlayer(numba, clientModel.players[p].name, clientModel.players[p].color);
+			}
+		
 
             // TODO: This constructor should configure its view by calling view.setClientColor and view.initializePlayer
             // NOTE: The view.updateViewState and view.updatePlayer will not work if called from here.  Instead, these
@@ -62,13 +67,15 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 		}
 
 		TurnTrackerController.prototype.update = function(){
-			// console.log("updating shiz");
 			var player = this.getCurrentPlayer();
-			
 			var currPlayerIndex = this.ClientModel.playerIndex;
-			if(this.ClientModel.turnTracker.currentTurn == currPlayerIndex){
+			
+			this.updatePlayers();
 
-				if(this.ClientModel.turnTracker.status == "Playing" || this.ClientModel.turnTracker.status == "Robbing"){
+			if(this.ClientModel.turnTracker.currentTurn == parseInt(currPlayerIndex)){
+
+				if(this.ClientModel.turnTracker.status == "Playing" || this.ClientModel.turnTracker.status == "Robbing"
+					||  this.ClientModel.turnTracker.status == "Discarding"){
 					this.View.updateStateView(true, "End Turn");
 				}else{
 
@@ -77,7 +84,31 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 			}else{
 				this.View.updateStateView(false, "Not your turn");
 			}
+
 		}
+
+		TurnTrackerController.prototype.updatePlayers = function(){
+
+			var object;
+			var currPlayerIndex = this.ClientModel.playerIndex;
+
+			for(p in this.ClientModel.players){
+
+				object = new Object();
+				object.playerIndex = parseInt(p);
+				if(this.ClientModel.turnTracker.currentTurn == parseInt(p)){
+					object.highlight = true;
+				}else{
+					object.highlight = false;
+				}
+				object.score = this.ClientModel.players[p].victoryPoints;
+				object.army = this.ClientModel.players[p].largestArmy;
+				object.road = this.ClientModel.players[p].longestRoad;
+				this.View.updatePlayer(object);
+
+			}
+		}
+
 		
 		return TurnTrackerController;
 	} ());

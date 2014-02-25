@@ -31,16 +31,18 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 			Controller.call(this,view,clientModel);
 			this.waitingView = waitingView;
 			this.acceptView = acceptView;
+			this.trader = "";
 			
 			this.clientModel = clientModel;
 			this.view = view;
-			var legalTraders = new Array();
+			this.legalTraders = new Array();
 			for(var i in this.clientModel.players)
 			{
 				if(this.clientModel.players[i].playerID != this.clientModel.playerID)
-					legalTraders.push(this.clientModel.players[i]);
+					this.legalTraders.push(this.clientModel.players[i]);
 			}
-			this.view.setPlayers(legalTraders);
+			this.view.setPlayers(this.legalTraders);
+			//console.log(this.view);
 		};
         
 		DomesticController.prototype = core.inherit(Controller.prototype);
@@ -78,6 +80,11 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 		 * @return void
 		 */
 		DomesticController.prototype.setPlayerToTradeWith = function(playerNumber){
+			if(playerNumber != -1)
+			{
+				this.trader = this.legalTraders[playerNumber];
+				console.log(trader.name);
+			}				
 		};
         
 		/**
@@ -104,6 +111,8 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 		  * @return void
 		  */
 		DomesticController.prototype.sendTradeOffer = function(){
+			if(this.trader != "")
+				this.acceptView.showModal();
 		};
         
         
@@ -116,6 +125,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
         * @return void
 		*/
 		DomesticController.prototype.acceptTrade = function(willAccept){
+			this.acceptView.closeModal();
 		};
             
 		return DomesticController;

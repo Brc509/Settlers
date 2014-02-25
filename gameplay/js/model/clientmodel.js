@@ -63,35 +63,40 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		}
 
 		ClientModel.prototype.updateModel = function(error, model) {
-			console.log(model);
-			myself.bank = model.bank;
-			myself.deck = model.deck;
-			myself.chat = model.chat;
-			myself.log = model.log;
-			myself.turnTracker = model.turnTracker;
-			myself.map.update(model.map);
-			
-			var playersList = {};
-			for (p in model.players) {
-				var temp = new catan.models.Player();
-				temp.update(model.players[p]);
+			if (error) {
+				console.log('Error Info: ', model);
+				alert ('clientProxy returned error');
+			} else {
+				console.log(model);
+				myself.bank = model.bank;
+				myself.deck = model.deck;
+				myself.chat = model.chat;
+				myself.log = model.log;
+				myself.turnTracker = model.turnTracker;
+				myself.map.update(model.map);
+				
+				var playersList = {};
+				for (p in model.players) {
+					var temp = new catan.models.Player();
+					temp.update(model.players[p]);
 
-				playersList[p] = temp;
-			}
-			myself.players = playersList;
-			
-			// Find the index of the controlling player
-			for (n in myself.players) {
-				var player = myself.players[n];
-				if (player.playerID == myself.playerID) {
-					myself.playerIndex = n;
+					playersList[p] = temp;
 				}
-			}
-			
-			myself.clientPlayer = myself.players[myself.playerIndex];
-			console.log(myself.players);
+				myself.players = playersList;
+				
+				// Find the index of the controlling player
+				for (n in myself.players) {
+					var player = myself.players[n];
+					if (player.playerID == myself.playerID) {
+						myself.playerIndex = parseInt(n);
+					}
+				}
+				
+				myself.clientPlayer = myself.players[myself.playerIndex];
+				console.log(myself.players);
 
-			myself.notifyObservers();
+				myself.notifyObservers();
+			}
 		}
 		
 		ClientModel.prototype.notifyObservers = function() {

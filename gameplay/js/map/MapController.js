@@ -45,11 +45,6 @@ catan.map.Controller = (function catan_controller_namespace() {
 			catan.core.BaseController.call(this,view,model);
 			this.setModalView(modalView);
 			this.setRobView(robView);
-			this.canAfford = {
-				'city': model.canAffordCity,
-				'road': model.canAffordRoad,
-				'settlement': model.canAffordSettlement
-			}
 		}
         
         /**
@@ -58,6 +53,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 		 @method robPlayer
 		*/
 		MapController.prototype.robPlayer = function(orderID){
+			// TODO
 		}
         
         /**
@@ -66,7 +62,12 @@ catan.map.Controller = (function catan_controller_namespace() {
 		 * @method doSoldierAction
 		 * @return void
 		**/		
-		MapController.prototype.doSoldierAction = function(){    
+		MapController.prototype.doSoldierAction = function(){
+			var playerIndex = this.getClientModel().playerIndex;
+			var color = this.colorLookupPlayerIndex[playerIndex];
+			this.getModalView().showModal('robber');
+			this.getView().startDrop('robber', color);
+			// TODO
 		}
         
 		/**
@@ -76,6 +77,9 @@ catan.map.Controller = (function catan_controller_namespace() {
 		 * @return void
 		**/	
 		MapController.prototype.startDoubleRoadBuilding = function(){
+			this.roadBuilding = true;
+			this.roadBuildingNumBuilt = 1;
+			this.startMove('road', true, false);
 		}
 		
         
@@ -88,15 +92,37 @@ catan.map.Controller = (function catan_controller_namespace() {
 		 * @return void
 		**/	
 		MapController.prototype.startMove = function (pieceType,free,disconnected){
+			if (!this.roadBuilding) {
+				this.startDoubleRoadBuilding();
+			} else {
+			pieceType = pieceType.toLowerCase();
+			this.free = free;
+			this.disconnected = disconnected;
+			var canAfford = false;
+			var cp = this.getClientModel().clientPlayer;
+			switch (pieceType) {
+				case 'city':
+					canAfford = cp.canAffordCity();
+					break;
+				case 'road':
+					canAfford = cp.canAffordRoad();
+					break;
+				case 'settlement':
+					canAfford = cp.canAffordSettlement();
+					break;
+				default:
+					throw Error('MapController.startMove(): Invalid placeable type specified.');
+			}
 			var playerIndex = this.getClientModel().playerIndex;
 			var color = this.colorLookupPlayerIndex[playerIndex];
-			this.getView().startDrop(pieceType.toLowerCase(), color);
-			if (free || this.canAfford[pieceType]) {
-				this.disconnected = disconnected;
+			if (free || canAfford) {
 				this.getModalView().showModal(pieceType);
+				this.getView().startDrop(pieceType.toLowerCase(), color);
 			} else {
 				alert("You can't afford that!");
 				this.getModalView().showModal(pieceType);
+				this.getView().startDrop(pieceType.toLowerCase(), color);
+			}
 			}
 		};
         
@@ -121,6 +147,10 @@ catan.map.Controller = (function catan_controller_namespace() {
 		 @return {boolean} Whether or not the given piece can be placed at the current location.
 		*/
 		MapController.prototype.onDrag = function (loc, type) {
+			type = type.type.toLowerCase();
+			if (type == 'robber') {
+				loc = new HexLocation(loc.x, loc.y);
+			}
 			// Do new calculations iff the location has changed
 			if (!this.lastDragLoc || !loc.equals(this.lastDragLoc)) {
 				console.log('MapController.onDrag(): New location');
@@ -128,7 +158,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 				this.isDragLocValid = false;
 				// Continue iff the location is part of a valid hex
 				if (this.getClientModel().map.getHexGrid().getHex(loc)) {
-					switch (type.type.toLowerCase()) {
+					switch (type) {
 						case 'city':
 							this.isDragLocValid = isValidCityLoc.call(this, loc);
 							break;
@@ -151,7 +181,15 @@ catan.map.Controller = (function catan_controller_namespace() {
 		
 		var isValidCityLoc = function(loc) {
 			var isValid = false;
-			// TODO
+			var vertexLoc = new VertexLocation(new HexLocation(loc.x, loc.y), VertexDirection[loc.dir]);
+			var hex = this.getClientModel().map.getHexGrid().getHex(vertexLoc);
+			if (hex) {
+				var vertex = hex.getVertex(vertexLoc.direction);
+				// City is valid iff the player has a settlement at the location
+				if (vertex.getOwnerID() == this.getClientModel().playerIndex && vertex.getWorth() == 1) {
+					isValid = true;
+				}
+			}
 			return isValid;
 		};
 		
@@ -176,15 +214,21 @@ catan.map.Controller = (function catan_controller_namespace() {
 							}
 						}
 					// Otherwise, allow player to place road according to normal rules
-					} else {
+					} else if (!collidesWithRoadBuilding.call(this, edgeLoc)) {
 						var connectedEdgeLocs = edgeLoc.getConnectedEdges();
 						for (n in connectedEdgeLocs) {
 							var connectedEdgeLoc = connectedEdgeLocs[n];
-							if (!(connectedEdgeLoc.equals(edgeLoc) && connectedEdgeLoc.direction == edgeLoc.direction)) {
-								var connectedEdge = hg.getHex(connectedEdgeLoc).getEdge(connectedEdgeLoc.direction);
-								if (connectedEdge.getOwnerID() == this.getClientModel().playerIndex) {
+							if (!edgeLocsEqual(connectedEdgeLoc, edgeLoc)) {
+								if (this.roadBuildingLoc1) {
+									// TODO Check to see if connectedEdgeLoc is in the equivalence group of this.roadBuildingLoc1. If it is, isValid = true.
 									isValid = true;
 									break;
+								} else {
+									var connectedEdge = hg.getHex(connectedEdgeLoc).getEdge(connectedEdgeLoc.direction);
+									if (connectedEdge.getOwnerID() == this.getClientModel().playerIndex) {
+										isValid = true;
+										break;
+									}
 								}
 							}
 						}
@@ -194,12 +238,22 @@ catan.map.Controller = (function catan_controller_namespace() {
 			return isValid;
 		};
 		
+		var edgeLocsEqual = function(edgeLoc1, edgeLoc2) {
+			return edgeLoc1.equals(edgeLoc2) && edgeLoc1.direction == edgeLoc2.direction;
+		};
+		
+		var collidesWithRoadBuilding = function(edgeLoc) {
+			// TODO Check equality with all members of this.roadBuildingLoc1's equivalence group, not just this.roadBuildingLoc1.
+			return this.roadBuildingLoc1 && edgeLocsEqual(edgeLoc, this.roadBuildingLoc1);
+		};
+		
 		var isValidRobberLoc = function(loc) {
 			var isValid = false;
 			var map = this.getClientModel().map;
 			var hex = map.getHexGrid().getHex(loc);
-			// Continue iff the target hex is land and not the robber's current location
-			if (hex.getIsLand() && !loc.equals(map.getRobber())) {
+			var hexLoc = new HexLocation(loc.x, loc.y);
+			// Robber is valid iff the target hex is land and not the robber's current location
+			if (hex.getIsLand() && !hexLoc.equals(map.getRobber())) {
 				isValid = true;
 			}
 			return isValid;
@@ -212,26 +266,39 @@ catan.map.Controller = (function catan_controller_namespace() {
 			var vertex = hg.getHex(vertexLoc).getVertex(vertexLoc.direction);
 			// Continue iff the target vertex is unoccupied
 			if (!vertex.isOccupied()) {
+				var bordersLand = false;
 				var properlySpaced = true;
 				var equivGroup = vertexLoc.getEquivalenceGroup();
-				// Check adjacent vertices
+				// Check adjacent hexes/vertices for land bordering and proper spacing
 				for (n in equivGroup) {
 					var vertexLocToCheck = equivGroup[n].rotateAboutHexCW();
 					var hexToCheck = hg.getHex(vertexLocToCheck);
-					var vertexToCheck = hexToCheck.getVertex(vertexLocToCheck.direction);
-					if (vertexToCheck.isOccupied()) {
-						properlySpaced = false;
-						break;
+					if (hexToCheck) {
+						if (hexToCheck.getIsLand()) {
+							bordersLand = true;
+						}
+						var vertexToCheck = hexToCheck.getVertex(vertexLocToCheck.direction);
+						if (vertexToCheck.isOccupied()) {
+							properlySpaced = false;
+							break;
+						}
 					}
 				}
-				if (properlySpaced) {
+				if (bordersLand && properlySpaced) {
 					// If in setup phase, allow player to place settlement without connection to own roads
 					if (this.disconnected) {
 						isValid = true;
-					// Otherwise, enforce the standard rules
+					// Otherwise, enforce road adjacency
 					} else {
-						isValid = true;
-						// TODO
+						var connectedEdgeLocs = vertexLoc.getConnectedEdges();
+						for (n in connectedEdgeLocs) {
+							var connectedEdgeLoc = connectedEdgeLocs[n];
+							var connectedEdge = hg.getHex(connectedEdgeLoc).getEdge(connectedEdgeLoc.direction);
+							if (connectedEdge.getOwnerID() == this.getClientModel().playerIndex) {
+								isValid = true;
+								break;
+							}
+						}
 					}
 				}
 			}
@@ -251,20 +318,39 @@ catan.map.Controller = (function catan_controller_namespace() {
 			switch (type.type.toLowerCase()) {
 				case 'city':
 					// Place the city
+					var vertexLoc = new VertexLocation(new HexLocation(loc.x, loc.y), VertexDirection[loc.dir]);
+					this.getClientModel().clientProxy.buildCity(vertexLoc, this.free, this.getClientModel().updateModel);
 					break;
 				case 'road':
-					// Place the road
+					if (this.roadBuilding) {
+						if (this.roadBuildingNumBuilt == 2) {
+							this.roadBuilding = false;
+							var roadBuildingLoc2 = new EdgeLocation(new HexLocation(loc.x, loc.y), EdgeDirection[loc.dir]);
+							// Execute the road building
+							this.getClientModel().clientProxy.roadBuilding(this.roadBuildingLoc1, roadBuildingLoc2, this.getClientModel().updateModel);
+						} else {
+							this.roadBuildingLoc1 = new EdgeLocation(new HexLocation(loc.x, loc.y), EdgeDirection[loc.dir]);
+							this.roadBuildingNumBuilt++;
+							setTimeout(function() {this.startMove('road', true, false)}.bind(this), 0);
+						}
+					} else {
+						// Place the road
+						var edgeLoc = new EdgeLocation(new HexLocation(loc.x, loc.y), EdgeDirection[loc.dir]);
+						this.getClientModel().clientProxy.buildRoad(edgeLoc, this.free, this.getClientModel().updateModel);
+					}
 					break;
 				case 'robber':
-					// Place the robber
+					// Trigger the rob view?
+					// TODO
 					break;
 				case 'settlement':
+					var vertexLoc = new VertexLocation(new HexLocation(loc.x, loc.y), VertexDirection[loc.dir]);
 					// If in setup phase, determine valid locations for next road
 					if (this.disconnected) {
-						var vertexLoc = new VertexLocation(new HexLocation(loc.x, loc.y), VertexDirection[loc.dir]);
 						this.validEdgeLocsForNextRoad = vertexLoc.getConnectedEdges();
 					}
 					// Place the settlement
+					this.getClientModel().clientProxy.buildSettlement(vertexLoc, this.free, this.getClientModel().updateModel);
 					break;
 				default:
 					throw Error('MapController.onDrop(): Invalid placeable type specified.');

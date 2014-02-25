@@ -6,6 +6,12 @@ catan.models = catan.models || {};
 
 catan.models.ClientProxy = (function() {
 
+	// Lookup tables
+	var edLookup = ["NW","N","NE","SE","S","SW"]; 			// From hexgrid.js
+	var EdgeDirection = core.numberEnumeration(edLookup);	// From hexgrid.js
+	var vdLookup = ["W","NW","NE","E","SE","SW"]; 			// From hexgrid.js
+	var VertexDirection = core.numberEnumeration(vdLookup);	// From hexgrid.js
+	
 	/**
 		The ClientProxy class is an intermediary between the server and the client.
 		<pre>
@@ -79,19 +85,16 @@ catan.models.ClientProxy = (function() {
 		</pre>
 		
 		@method buildCity
-		@param {HexLocation} hex The hex to build the city on
-		@param {Vertex} vertex The vertex of the hex to build the city on
+		@param {VertexLocation} vertexLocation The vertex location to build the city on
 		@param {boolean} free Whether or not the city is built for free
 	*/
-	ClientProxy.prototype.buildCity = function(hex, vertex, free, callback) {
+	ClientProxy.prototype.buildCity = function(vertexLocation, free, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'buildCity';
 		data.playerIndex = this.clientModel.playerIndex;
-		data.vertexLocation = {};
-		data.vertexLocation.x = hex.x;
-		data.vertexLocation.y = hex.y;
-		data.vertexLocation.direction = vertex.direction;
+		data.vertexLocation = vertexLocation;
+		data.vertexLocation.direction = vdLookup[vertexLocation.direction];
 		data.free = free;
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/buildCity';
@@ -106,19 +109,16 @@ catan.models.ClientProxy = (function() {
 		</pre>
 		
 		@method buildRoad
-		@param {HexLocation} hex The hex to build the road on
-		@param {Edge} edge The edge of the hex to build the road on
+		@param {EdgeLocation} edgeLocation The edge location to build the road on
 		@param {boolean} free Whether or not the road is built for free
 	*/
-	ClientProxy.prototype.buildRoad = function(hex, edge, free, callback) {
+	ClientProxy.prototype.buildRoad = function(edgeLocation, free, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'buildRoad';
 		data.playerIndex = this.clientModel.playerIndex;
-		data.roadLocation = {};
-		data.roadLocation.x = hex.x;
-		data.roadLocation.y = hex.y;
-		data.roadLocation.direction = edge.direction;
+		data.roadLocation = edgeLocation;
+		data.roadLocation.direction = edLookup[edgeLocation.direction];
 		data.free = free;
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/buildRoad';
@@ -133,19 +133,16 @@ catan.models.ClientProxy = (function() {
 		</pre>
 		
 		@method buildSettlement
-		@param {HexLocation} hex The hex to build the settlement on
-		@param {Vertex} vertex The vertex of the hex to build the settlement on
+		@param {VertexLocation} vertexLocation The vertex location to build the settlement on
 		@param {boolean} free Whether or not the settlement is built for free
 	*/
-	ClientProxy.prototype.buildSettlement = function(hex, vertex, free, callback) {
+	ClientProxy.prototype.buildSettlement = function(vertexLocation, free, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'buildSettlement';
 		data.playerIndex = this.clientModel.playerIndex;
-		data.vertexLocation = {};
-		data.vertexLocation.x = hex.x;
-		data.vertexLocation.y = hex.y;
-		data.vertexLocation.direction = vertex.direction;
+		data.vertexLocation = vertexLocation;
+		data.vertexLocation.direction = vdLookup[vertexLocation.direction];
 		data.free = free;
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/buildSettlement';
@@ -161,7 +158,7 @@ catan.models.ClientProxy = (function() {
 		
 		@method buyDevCard
 	*/
-	ClientProxy.prototype.buyDevCard = function() {
+	ClientProxy.prototype.buyDevCard = function(callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'buyDevCard';
@@ -313,24 +310,18 @@ catan.models.ClientProxy = (function() {
 		</pre>
 		
 		@method roadBuilding
-		@param {HexLocation} hex1 The hex to build the first road on
-		@param {Edge} edge1 The edge of the first hex to build the first road on
-		@param {HexLocation} hex2 The hex to build the second road on
-		@param {Edge} edge2 The edge of the second hex to build the second road on
+		@param {EdgeLocation} edgeLocation1 The edge location to build the first road on
+		@param {EdgeLocation} edgeLocation2 The edge location to build the second road on
 	*/
-	ClientProxy.prototype.roadBuilding = function(hex1, edge1, hex2, edge2, callback) {
+	ClientProxy.prototype.roadBuilding = function(edgeLocation1, edgeLocation2, callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'Road_Building';
 		data.playerIndex = this.clientModel.playerIndex;
-		data.spot1 = {};
-		data.spot1.x = hex1.x;
-		data.spot1.y = hex1.y;
-		data.spot1.direction = edge1.direction;
-		data.spot2 = {};
-		data.spot2.x = hex2.x;
-		data.spot2.y = hex2.y;
-		data.spot2.direction = edge2.direction;
+		data.spot1 = edgeLocation1;
+		data.spot1.direction = edLookup[edgeLocation1.direction];
+		data.spot2 = edgeLocation2;
+		data.spot2.direction = edLookup[edgeLocation2.direction];
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/Road_Building';
 		this.movesCommand.data 	= data;
@@ -355,7 +346,7 @@ catan.models.ClientProxy = (function() {
 		data.type = 'robPlayer';
 		data.playerIndex = this.clientModel.playerIndex;
 		data.victimIndex = victimIndex;
-		data.robberSpot = robberSpot;
+		data.location = robberSpot;
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/robPlayer';
 		this.movesCommand.data 	= data;
@@ -420,7 +411,7 @@ catan.models.ClientProxy = (function() {
 		data.type = 'Soldier';
 		data.playerIndex = this.clientModel.playerIndex;
 		data.victimIndex = victimIndex;
-		data.robberSpot = robberSpot;
+		data.location = robberSpot;
 		// Create and execute the command
 		this.movesCommand.url 	= '/moves/Soldier';
 		this.movesCommand.data 	= data;

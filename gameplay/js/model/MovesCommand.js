@@ -39,8 +39,8 @@ catan.models.MovesCommand = (function() {
 		jQuery.post(this.url, JSON.stringify(this.data), function (data) {
 			callback(false, data);
 		})
-		.fail (function () {
-			alert('error');
+		.fail (function (data) {
+			callback(true, data);
 		});
 	};
 	

@@ -464,9 +464,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 		}
 
-		ClientModel.prototype.canSendChat = function () {
-
-		}
 		//	ClientProxy.prototype.sendChat = function(content, callback) {
 		ClientModel.prototype.sendChat = function(lineContents) {
 			this.clientProxy.sendChat(lineContents, this.updateModel)

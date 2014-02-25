@@ -23,11 +23,30 @@ catan.setup.Controller = (function(){
 		
 		var SetupRoundController = function (clientModel, mapController){
 			this.mapController = mapController;
-			
+
 			Controller.call(this,undefined,clientModel);
+
 		};
         
 		core.forceClassInherit(SetupRoundController,Controller);
+	
+	SetupRoundController.prototype.update = function(){	
+
+		var status = this.mapController.ClientModel.turnTracker.status;
+		if(status == "FirstRound" || status == "SecondRound"){
+
+			var currPlayerIndex = this.mapController.ClientModel.playerIndex;
+			if(this.mapController.ClientModel.turnTracker.currentTurn == currPlayerIndex){
+				this.mapController.startMove("settlement", true, true);
+				this.mapController.startMove("road", true, true);		
+				this.mapController.ClientModel.finishTurn();		
+			}
+		}else{
+
+			//redirect to catan.html
+			window.location = "/catan.html";
+		}
+	}
         
 		return SetupRoundController;
 	}());

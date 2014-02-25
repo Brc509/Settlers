@@ -27,9 +27,9 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 			Controller.call(this,view,clientModel);
 
 			var player = this.getCurrentPlayer();
-			view.setClientColor(player.color);
-			view.initializePlayer(player.playerID, player.name, player.color);			// this.endTurn();
-            
+			this.View.setClientColor(player.color);
+			this.View.initializePlayer(this.ClientModel.turnTracker.currentTurn, player.name, player.color);
+
             // TODO: This constructor should configure its view by calling view.setClientColor and view.initializePlayer
             // NOTE: The view.updateViewState and view.updatePlayer will not work if called from here.  Instead, these
             //          methods should be called later each time the client model is updated from the server.
@@ -48,19 +48,35 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 
 
 		TurnTrackerController.prototype.getCurrentPlayer = function(){
-				var curTurn = this.ClientModel.turnTracker.currentTurn;
 				
-					return this.ClientModel.players[curTurn];
+				var curTurn = this.ClientModel.turnTracker.currentTurn;
+				var currPlayerIndex = this.ClientModel.playerID;
+				for(p in this.ClientModel.players){
+					var player = this.ClientModel.players[p];
+					if(player.playerID == currPlayerIndex){
+						return this.ClientModel.players[p];
+					}
+				}
 			
 		
 		}
 
 		TurnTrackerController.prototype.update = function(){
-			console.log("updating shiz");
-			if(this.ClientModel.turnTracker.status == "Playing"){
-				this.View.updateStateView(true, "End Turn");
-			}
+			// console.log("updating shiz");
+			var player = this.getCurrentPlayer();
+			
+			var currPlayerIndex = this.ClientModel.playerIndex;
+			if(this.ClientModel.turnTracker.currentTurn == currPlayerIndex){
 
+				if(this.ClientModel.turnTracker.status == "Playing" || this.ClientModel.turnTracker.status == "Robbing"){
+					this.View.updateStateView(true, "End Turn");
+				}else{
+
+				}
+			
+			}else{
+				this.View.updateStateView(false, "Not your turn");
+			}
 		}
 		
 		return TurnTrackerController;

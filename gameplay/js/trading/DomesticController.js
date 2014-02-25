@@ -31,6 +31,16 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 			Controller.call(this,view,clientModel);
 			this.waitingView = waitingView;
 			this.acceptView = acceptView;
+			
+			this.clientModel = clientModel;
+			this.view = view;
+			var legalTraders = new Array();
+			for(var i in this.clientModel.players)
+			{
+				if(this.clientModel.players[i].playerID != this.clientModel.playerID)
+					legalTraders.push(this.clientModel.players[i]);
+			}
+			this.view.setPlayers(legalTraders);
 		};
         
 		DomesticController.prototype = core.inherit(Controller.prototype);

@@ -165,6 +165,14 @@ catan.models.Player  = (function clientModelNameSpace(){
             return (hasBrick && hasOre && hasSheep && hasWheat && hasWood);
         }
 
+        /**
+         *  Returns true if the player has any dev cards in EITHER list
+         */
+        Player.prototype.hasAnyDevCards = function() {
+
+            return (this.oldDevCards.hasAnyCard() && this.newDevCards.hasAnyCard());
+        }
+
         return Player;
     }());
 

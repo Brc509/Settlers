@@ -31,7 +31,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			this.clientProxy 	= new catan.models.ClientProxy(this);
 			this.map 			= new catan.models.Map(4);
 			this.players 		= new Array();
-			this.turnTracker 	= new catan.models.TurnTracker(playerID);
+			this.turnTracker 	= new catan.models.TurnTracker();
 			this.bank			= {};
 			this.deck 			= {};
 			this.chat 			= {};
@@ -216,7 +216,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.yearOfPlenty = function (resource1, resource2) {
 
 			// All of the potentially failed pre-conditions
-			if (this.turnTracker.currentTurn != this.playerID || this.turnTracker.status != "Playing")
+			if (this.turnTracker.currentTurn != this.playerIndex || this.turnTracker.status != "Playing")
 			{
 				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
 				return false;
@@ -234,9 +234,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 
 			// Success!
-			// var myself = this;
-			// this.clientProxy.yearOfPlenty(resource1, resource2, this.updateModel);
-			return true;
+			this.clientProxy.yearOfPlenty(resource1, resource2, this.updateModel);
 		}
 
 		/**
@@ -263,7 +261,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.roadBuilding = function (hex1, edge1, hex2, edge2) {
 
 			// All of the potentially failed pre-conditions
-			if (this.turnTracker.currentTurn != this.playerID || this.turnTracker.status != "Playing")
+			if (this.turnTracker.currentTurn != this.playerIndex || this.turnTracker.status != "Playing")
 			{
 				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
 				return;
@@ -304,7 +302,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.soldier = function (robberSpot, victimID) {
 
 			// All of the potentially failed pre-conditions
-			if (this.turnTracker.currentTurn != this.playerID || this.turnTracker.status != "Playing")
+			if (this.turnTracker.currentTurn != this.playerIndex || this.turnTracker.status != "Playing")
 			{
 				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
 				return "ERROR: It's not current players turn or their status is not playing";
@@ -335,10 +333,10 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    </pre>
 		    @method monopoly
 		*/
-		ClientModel.prototype.monopoly = function () {
+		ClientModel.prototype.monopoly = function (resource) {
 			
 			// All of the potentially failed pre-conditions
-			if (this.turnTracker.currentTurn != this.playerID || this.turnTracker.status != "Playing")
+			if (this.turnTracker.currentTurn != this.playerIndex || this.turnTracker.status != "Playing")
 			{
 				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
 				return "ERROR: Isn't player's turn -OR- isn't \"Playing\"";
@@ -350,8 +348,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 			
 			// Success!
-			//TODO put in the resource
-			resource = "";
 			this.clientProxy.monopoly(resource, this.updateModel);
 
 		}
@@ -369,7 +365,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.monument = function () {
 
 			// All of the potentially failed pre-conditions
-			if (!this.turnTracker.isMyTurn() || !this.turnTracker.statusEquals("Playing"))
+			if (this.turnTracker.currentTurn != this.playerIndex || this.turnTracker.status != "Playing")
 			{
 				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
 				return;
@@ -438,14 +434,13 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.canDiscardCards = function (discardedCards) {
 
-			if (this.turnTracker.currentTurn == this.playerID && this.turnTracker.status == "Discarding"
+			if (this.turnTracker.currentTurn == this.playerIndex && this.turnTracker.status == "Discarding"
 				&& this.clientPlayer.resources.getCardCount() > 7
 				&& this.clientPlayer.hasResources(discardedCards)) {
 
 				return true;
 			}
 			else { return false; }
-
 		}
 
 		/**

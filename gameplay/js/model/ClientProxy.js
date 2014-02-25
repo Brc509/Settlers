@@ -161,7 +161,7 @@ catan.models.ClientProxy = (function() {
 		
 		@method buyDevCard
 	*/
-	ClientProxy.prototype.buyDevCard = function() {
+	ClientProxy.prototype.buyDevCard = function(callback) {
 		// Create the data for the command
 		var data = {};
 		data.type = 'buyDevCard';

@@ -67,6 +67,7 @@ catan.client = (function Client_NameSpace(){
 			var view = new Views.Resources();
 			var controller = new Controllers.Resources(view,model,buildMoves);
 			view.setController(controller);
+			controller.init();
 			
 			views.resources = view;
 			controllers.resources = controller;
@@ -166,6 +167,7 @@ catan.client = (function Client_NameSpace(){
 			var mapC = controllers.map;
 			views.buyDevCard.setController(controllers.devCard);
 			views.useDevCard.setController(controllers.devCard);
+			controllers.devCard.init();
 		}
 		ViewIniter.discard = function initDiscard (views,controllers, clientModel){
 			var discardView = new Views.Discard();

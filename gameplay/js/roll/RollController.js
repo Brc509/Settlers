@@ -32,10 +32,7 @@ catan.roll.Controller = (function roll_namespace(){
 			Controller.call(this,view,clientModel);
 			this.rollInterval = false;
 			this.showRollResult = false;
-
 			// view.showModal();
-
-			
 	};
         
 		/**
@@ -58,20 +55,15 @@ catan.roll.Controller = (function roll_namespace(){
 
 			window.clearInterval(timeout);
 			
-			var numba1=Math.floor(Math.random()*7)
-			var numba2=Math.floor(Math.random()*7)
+			var numba1=Math.floor((Math.random()*6) + 1);
+            var numba2=Math.floor((Math.random()*6) + 1);
 
 			value = numba1 + numba2;
 
-			if(value == 1 || value == 0){
-				value = 2;
-			}
-
 			this.View.closeModal();
 			this.showRollResult = true;
-			this.rollResultView.amountDisplay.textContent = "You rolled a " + value;
+			this.rollResultView.amountDisplay.textContent = "You rolled " + value;
 			this.rollResultView.showModal();
-
 		};
 
 		RollController.prototype.update = function(){
@@ -119,9 +111,6 @@ catan.roll.Controller = (function roll_namespace(){
 					// this.rollDice();
 				}
 			}
-			
-			console.log("hi");
-
 		}
 		return RollController;
 	}());

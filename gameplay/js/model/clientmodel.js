@@ -27,8 +27,8 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		function ClientModel(playerID){
 			myself = this;
 
-			this.playerID 		= playerID;
-			this.clientProxy 	= new catan.models.ClientProxy(playerID, this);
+			this.playerID 		= JSON.parse(decodeURIComponent(Cookies.get('catan.user'))).playerID; // Get the player ID from the cookie
+			this.clientProxy 	= new catan.models.ClientProxy(this);
 			this.map 			= new catan.models.Map(4);
 			this.players 		= new Array();
 			this.turnTracker 	= new catan.models.TurnTracker(playerID);
@@ -69,12 +69,8 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			myself.chat = model.chat;
 			myself.log = model.log;
 			myself.turnTracker = model.turnTracker;
-			// myself.playerID = model.turnTracker.currentTurn;
-
-			//TODO finish the map class
 			myself.map.update(model.map);
-			// myself.turnTracker.update(model.turnTracker);
-
+			
 			var playersList = {};
 			for (p in model.players) {
 				var temp = new catan.models.Player();
@@ -83,7 +79,16 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 				playersList[p] = temp;
 			}
 			myself.players = playersList;
-			myself.clientPlayer = myself.players[0];
+			
+			// Find the index of the controlling player
+			for (n in myself.players) {
+				var player = myself.players[n];
+				if (player.playerID == myself.playerID) {
+					myself.playerIndex = n;
+				}
+			}
+			
+			myself.clientPlayer = myself.players[myself.playerIndex];
 			console.log(myself.players);
 
 			myself.notifyObservers();
@@ -165,11 +170,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			//TODO: Implement
 		}
 
-		ClientModel.prototype.listResources = function() {
-
-			return this.clientPlayer.resources;
-		}
-
 		/**
 		    <pre>
 		        PRE: You have the necessary resources (1 ore, sheep, and wheat)
@@ -195,12 +195,10 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @method buyDevCard
 		*/
 		ClientModel.prototype.buyDevCard = function () {
-
+			var myself = this;
 			if (this.canBuyDevCard()) {
 				this.clientProxy.buyDevCard(this.updateModel);
-				return true;
 			}
-			return false;
 		}
 
 		/**
@@ -284,6 +282,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			// TODO: check if the road locations are valid (something should be implemented within Map)
 
 			// Success!
+			var myself = this;
 			this.clientProxy.roadBuilding(hex1, edge1, hex2, edge2, this.updateModel);
 		}
 
@@ -336,7 +335,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    </pre>
 		    @method monopoly
 		*/
-		ClientModel.prototype.monopoly = function (resource) {
+		ClientModel.prototype.monopoly = function () {
 			
 			// All of the potentially failed pre-conditions
 			if (this.turnTracker.currentTurn != this.playerID || this.turnTracker.status != "Playing")
@@ -351,8 +350,10 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 			
 			// Success!
+			//TODO put in the resource
+			resource = "";
 			this.clientProxy.monopoly(resource, this.updateModel);
-			return true;
+
 		}
 
 		/**
@@ -398,7 +399,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		}
 
 		ClientModel.prototype.offerTrade = function (receiver, offer) {
-			
 			if (canOfferTrade()) {
 				this.clientProxy.offerTrade(offer, receiver, this.updateModel);
 			}

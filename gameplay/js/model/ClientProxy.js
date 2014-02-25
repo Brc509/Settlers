@@ -18,11 +18,9 @@ catan.models.ClientProxy = (function() {
 		
 		@class ClientProxy
 		@constructor
-		
-		@param {number} playerIndex The ID of the player who controls this client
 	*/
-	function ClientProxy(playerIndex, clientModel) {
-		this.playerIndex = playerIndex;
+	function ClientProxy(clientModel) {
+		this.playerIndex = clientModel.playerIndex;
 		this.modelVersion = null;
 		this.clientModel = clientModel;
 		this.movesCommand = new catan.models.MovesCommand();

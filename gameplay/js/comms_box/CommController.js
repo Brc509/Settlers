@@ -27,6 +27,18 @@ catan.comm.Controller = (function () {
 		
 		function BaseCommController(logView, model){
 			Controller.call(this,logView,model);
+			this.colors = new Array();
+			var players = model.players;
+			for (p in players) {
+				this.colors[players[p].name] = players[p].color;
+			}
+		}
+
+		BaseCommController.prototype.setLineColors =function (lines) {
+			for (l in lines) {
+				lines[l].className = this.colors[lines[l].source];
+			}
+			return lines;
 		}
 		
 		return BaseCommController;
@@ -48,10 +60,10 @@ catan.comm.Controller = (function () {
 		**/
 		function LogController(logView,model){
 			BaseCommController.call(this,logView,model);
-			logView.resetLines(model.log.lines);
-			
 			this.logView = logView;
 			this.model = model;
+			var lines = this.setLineColors(model.log.lines)
+			this.logView.resetLines(lines);
 		}
 		
 		/**
@@ -60,7 +72,8 @@ catan.comm.Controller = (function () {
 		@param {ClientModel} model The newest version of the model
 		**/
 		LogController.prototype.update = function (model){
-			this.logView.resetLines(model.log.lines);
+			var lines = this.setLineColors(model.log.lines)
+			this.logView.resetLines(lines);
 		}
         
 		return LogController;
@@ -86,7 +99,8 @@ catan.comm.Controller = (function () {
 			// console.log('chatView inside ChatController', chatView);
 			this.model = model;
 			this.chatView = chatView;
-			chatView.resetLines(model.chat.lines);
+			var lines = this.setLineColors(model.chat.lines);
+			chatView.resetLines(lines);
 		}
 
 		/**
@@ -95,7 +109,8 @@ catan.comm.Controller = (function () {
 		@param {ClientModel} model The newest version of the model
 		**/
 		ChatController.prototype.update = function (model){
-			this.chatView.resetLines(model.chat.lines);
+			var lines = this.setLineColors(model.chat.lines);
+			this.chatView.resetLines(lines);
 		}
         
 		/**

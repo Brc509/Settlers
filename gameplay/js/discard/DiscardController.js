@@ -46,6 +46,7 @@ catan.discard.Controller = (function discard_namespace(){
 		 @return void
 		 */	
 		DiscardController.prototype.discard = function(){
+			console.log('discard function');
 		}
         
 		/**
@@ -55,6 +56,7 @@ catan.discard.Controller = (function discard_namespace(){
 		 @return void
 		 */
 		DiscardController.prototype.increaseAmount = function(resource){
+			console.log('increaseAmount. resource', resource);
 		}
         
 		/**
@@ -64,6 +66,7 @@ catan.discard.Controller = (function discard_namespace(){
 		 @return void
 		 */
 		DiscardController.prototype.decreaseAmount = function(resource){
+			console.log('decreaseAmount. resource', resource);
 		}
 		
 		return DiscardController;

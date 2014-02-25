@@ -65,7 +65,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.updateModel = function(error, model) {
 			if (error) {
 				console.log('Error Info: ', model);
-				alert ('clientProxy returned error');
+				alert ('clientProxy returned error'); // TODO Change so that it shows useful information about the error
 			} else {
 				console.log(model);
 				myself.bank = model.bank;

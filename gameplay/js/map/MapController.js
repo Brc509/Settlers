@@ -92,9 +92,6 @@ catan.map.Controller = (function catan_controller_namespace() {
 		 * @return void
 		**/	
 		MapController.prototype.startMove = function (pieceType,free,disconnected){
-			if (!this.roadBuilding) {
-				this.startDoubleRoadBuilding();
-			} else {
 			pieceType = pieceType.toLowerCase();
 			this.free = free;
 			this.disconnected = disconnected;
@@ -122,7 +119,6 @@ catan.map.Controller = (function catan_controller_namespace() {
 				alert("You can't afford that!");
 				this.getModalView().showModal(pieceType);
 				this.getView().startDrop(pieceType.toLowerCase(), color);
-			}
 			}
 		};
         

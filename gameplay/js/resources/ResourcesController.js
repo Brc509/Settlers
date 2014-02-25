@@ -38,16 +38,7 @@ catan.resources.Controller = (function resources_namespace() {
 			this.setActions(actions);
 			Controller.call(this,view,clientModel);
 
-			console.log("TEST");
-			console.log(catan.definitions.ResourceTypes);
-			console.log(clientModel.listResources());
-			var types = catan.definitions.ResourceTypes;
-			var resources = clientModel.listResources();
-			for (type in types) {
-				
-				console.log(types[type] + " - " + resources[types[type]]);
-				view.updateAmount(types[type], resources[types[type]]);
-			}
+			this.updateView(view, clientModel);
 		};
 
 		core.forceClassInherit(ResourceBarController,Controller);
@@ -69,6 +60,25 @@ catan.resources.Controller = (function resources_namespace() {
 
             // This calls the "startMove" method on the Map Controller.
 			this.getActions()[ROAD]();
+		}
+
+		ResourceBarController.prototype.updateView = function(view, clientModel) {
+
+			var types = catan.definitions.ResourceTypes;
+			var resources = clientModel.clientPlayer.resources;
+			var p = clientModel.clientPlayer;
+
+			view.setController(this);
+
+			for (t in types) {
+				
+				console.log(types[t] + " - " + resources[types[t]]);
+				view.updateAmount(types[t], resources[types[t]]);
+			}
+			view.updateAmount("Roads", p.roads);
+			view.updateAmount("Settlements", p.settlements);
+			view.updateAmount("Cities", p.cities);
+			view.updateAmount("Soldiers", p.soldiers);
 		}
         
 		/**

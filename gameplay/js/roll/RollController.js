@@ -111,7 +111,7 @@ catan.roll.Controller = (function roll_namespace(){
 											myself.View.MessageElem.innerText = str;
 											myself.rollDice();},1000);},1000);},1000);},1000);},1000);
 
-				}else if(value == 7 && !this.ClientModel.isModalUp){
+				}else if(value == 7 && !this.ClientModel.isModalUp && this.ClientModel.turnTracker.status == "Robbing"){
 					this.ClientModel.isModalUp = true;
 					this.ClientModel.observers[2].getModalView().showModal("robber");
 					this.ClientModel.observers[2].getView().startDrop("robber");	

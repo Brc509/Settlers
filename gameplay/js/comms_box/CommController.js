@@ -72,6 +72,10 @@ catan.comm.Controller = (function () {
 		@param {ClientModel} model The newest version of the model
 		**/
 		LogController.prototype.update = function (model){
+			var players = model.players;
+			for (p in players) {
+				this.colors[players[p].name] = players[p].color;
+			}
 			var lines = this.setLineColors(model.log.lines)
 			this.logView.resetLines(lines);
 		}
@@ -109,6 +113,10 @@ catan.comm.Controller = (function () {
 		@param {ClientModel} model The newest version of the model
 		**/
 		ChatController.prototype.update = function (model){
+			var players = model.players;
+			for (p in players) {
+				this.colors[players[p].name] = players[p].color;
+			}
 			var lines = this.setLineColors(model.chat.lines);
 			this.chatView.resetLines(lines);
 		}

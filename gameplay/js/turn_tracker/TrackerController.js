@@ -72,7 +72,8 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 			
 			this.updatePlayers();
 
-
+			// var player = this.getCurrentPlayer();
+			// this.View.setClientColor(player.color);
 
 			if(this.ClientModel.turnTracker.currentTurn == parseInt(currPlayerIndex)){
 
@@ -95,7 +96,8 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 			var currPlayerIndex = this.ClientModel.playerIndex;
 
 			for(p in this.ClientModel.players){
-
+				
+				
 				object = new Object();
 				object.playerIndex = parseInt(p);
 				if(this.ClientModel.turnTracker.currentTurn == parseInt(p)){
@@ -106,7 +108,12 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 				object.score = this.ClientModel.players[p].victoryPoints;
 				object.army = this.ClientModel.players[p].largestArmy;
 				object.road = this.ClientModel.players[p].longestRoad;
+
+
 				this.View.updatePlayer(object);
+
+				var numba = parseInt(p);
+				this.View.initializePlayer(numba, this.ClientModel.players[p].name, this.ClientModel.players[p].color);
 
 			}
 		}

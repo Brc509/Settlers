@@ -199,12 +199,13 @@ catan.map.Controller = (function catan_controller_namespace() {
 			// Continue iff target edge borders a land hex
 			if (hex1 && hex2 && (hex1.getIsLand() || hex2.getIsLand())) {
 				var edge = hg.getHex(edgeLoc).getEdge(edgeLoc.direction);
+				// Consider only unoccupied edges
 				if (!edge.isOccupied()) {
 					// If in setup phase, only allow player to place road directly adjacent to previously placed settlement
 					if (this.disconnected) {
 						for (n in this.validEdgeLocsForNextRoad) {
-							var validEdgeLoc = this.validEdgeLocationsForNextRoad[n];
-							if (edgeLoc.equals(validEdgeLoc) && edgeLoc.direction == validEdgeLoc.direction) {
+							var validEdgeLoc = this.validEdgeLocsForNextRoad[n];
+							if (edgeLocsEquivalent(edgeLoc, validEdgeLoc)) {
 								isValid = true;
 								break;
 							}
@@ -212,13 +213,17 @@ catan.map.Controller = (function catan_controller_namespace() {
 					// Otherwise, allow player to place road according to normal rules
 					} else if (!collidesWithRoadBuilding.call(this, edgeLoc)) {
 						var connectedEdgeLocs = edgeLoc.getConnectedEdges();
+						// Consider all adjacent edges
 						for (n in connectedEdgeLocs) {
 							var connectedEdgeLoc = connectedEdgeLocs[n];
-							if (!edgeLocsEqual(connectedEdgeLoc, edgeLoc)) {
+							// Disregard the reflexive case
+							if (!edgeLocsEquivalent(connectedEdgeLoc, edgeLoc)) {
+								// If in the middle of road building, consider the first road as if it were part of the model
 								if (this.roadBuildingLoc1) {
-									// TODO Check to see if connectedEdgeLoc is in the equivalence group of this.roadBuildingLoc1. If it is, isValid = true.
-									isValid = true;
-									break;
+									if (edgeLocsEquivalent(connectedEdgeLoc, this.roadBuildingLoc1)) {
+										isValid = true;
+										break;
+									}
 								} else {
 									var connectedEdge = hg.getHex(connectedEdgeLoc).getEdge(connectedEdgeLoc.direction);
 									if (connectedEdge.getOwnerID() == this.getClientModel().playerIndex) {
@@ -238,9 +243,20 @@ catan.map.Controller = (function catan_controller_namespace() {
 			return edgeLoc1.equals(edgeLoc2) && edgeLoc1.direction == edgeLoc2.direction;
 		};
 		
+		var edgeLocsEquivalent = function(edgeLoc1, edgeLoc2) {
+			var equivalent = false;
+			var equivGroup = edgeLoc2.getEquivalenceGroup();
+			for (n in equivGroup) {
+				if (edgeLocsEqual(edgeLoc1, equivGroup[n])) {
+					equivalent = true;
+					break;
+				}
+			}
+			return equivalent;
+		};
+		
 		var collidesWithRoadBuilding = function(edgeLoc) {
-			// TODO Check equality with all members of this.roadBuildingLoc1's equivalence group, not just this.roadBuildingLoc1.
-			return this.roadBuildingLoc1 && edgeLocsEqual(edgeLoc, this.roadBuildingLoc1);
+			return this.roadBuildingLoc1 && edgeLocsEquivalent(edgeLoc, this.roadBuildingLoc1);
 		};
 		
 		var isValidRobberLoc = function(loc) {

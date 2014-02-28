@@ -43,6 +43,7 @@ catan.roll.Controller = (function roll_namespace(){
 		RollController.prototype.closeResult = function(){
 			this.showRollResult = false;
 			this.rollResultView.closeModal();
+
 			this.ClientModel.rollNumber(value);
 		}
 		
@@ -59,11 +60,13 @@ catan.roll.Controller = (function roll_namespace(){
             var numba2=Math.floor((Math.random()*6) + 1);
 
 			value = numba1 + numba2;
+			// value = 7;
 
 			this.View.closeModal();
 			this.showRollResult = true;
 			this.rollResultView.amountDisplay.textContent = "You rolled " + value;
 			this.rollResultView.showModal();
+
 		};
 
 		RollController.prototype.update = function(){
@@ -99,16 +102,7 @@ catan.roll.Controller = (function roll_namespace(){
 											str = str.substring(0, str.length - 1);
 											myself.View.MessageElem.innerText = str;
 											myself.rollDice();},1000);},1000);},1000);},1000);},1000);
-					
-					
-					
-					
-					
-					
-					
 
-
-					// this.rollDice();
 				}
 			}
 		}

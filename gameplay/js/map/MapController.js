@@ -334,9 +334,23 @@ catan.map.Controller = (function catan_controller_namespace() {
 					}
 					break;
 				case 'robber':
-					// TODO Build an array of target players and use this.getRobView().setPlayerInfo(Object[]); use [] if there are no victims
+					// TODO Build an array of target players and use this.getRobView().setPlayerInfo(Object[]); use [] if there are no victims. Players with no cards are not shown.
+					var cm = this.getClientModel();
+					var me = cm.clientPlayer;
+					var victims = {};
+					var hexLoc = new HexLocation(loc.x, loc.y);
+					var hex = cm.map.getHexGrid().getHex(hexLoc);
+					var vertexes = hex.getVertexes();
+					for (n in vertexes) {
+						var ownerID = vertexes[n].ownerID;
+						if (ownerID != -1 && ownerID != me.orderNumber) {
+							var numCards = cm.players[ownerID].getResourceCardCount();
+							console.log('Victim at vertex ' + n + ': Player ' + ownerID + ', ' + numCards + ' cards.');
+							victims[ownerID] = numCards;
+						}
+					}
 					this.getRobView().setPlayerInfo([]);
-					this.getRobView().showModal();
+					//this.getRobView().showModal();
 					break;
 				case 'settlement':
 					var vertexLoc = new VertexLocation(new HexLocation(loc.x, loc.y), VertexDirection[loc.dir]);

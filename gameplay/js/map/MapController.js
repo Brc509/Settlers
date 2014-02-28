@@ -334,12 +334,12 @@ catan.map.Controller = (function catan_controller_namespace() {
 					break;
 				case 'road':
 					if (this.roadBuilding) {
-						// If the second road building road was just placed, execute the road building command
+						// If the second road was just placed, send the road building command to the server
 						if (this.roadBuildingNumBuilt == 2) {
 							this.roadBuilding = false;
 							var roadBuildingLoc2 = new EdgeLocation(new HexLocation(loc.x, loc.y), EdgeDirection[loc.dir]);
 							this.getClientModel().clientProxy.roadBuilding(this.roadBuildingLoc1, roadBuildingLoc2, this.getClientModel().updateModel);
-						// If the first road building road was just placed, continue to the second
+						// If the first road was just placed, continue to the second
 						} else {
 							this.roadBuildingLoc1 = new EdgeLocation(new HexLocation(loc.x, loc.y), EdgeDirection[loc.dir]);
 							this.roadBuildingNumBuilt++;
@@ -352,8 +352,9 @@ catan.map.Controller = (function catan_controller_namespace() {
 					}
 					break;
 				case 'robber':
-					// Trigger the rob view?
-					// TODO
+					// TODO Build an array of target players and use this.getRobView().setPlayerInfo(Object[]); use [] if there are no victims
+					this.getRobView().setPlayerInfo([]);
+					this.getRobView().showModal();
 					break;
 				case 'settlement':
 					var vertexLoc = new VertexLocation(new HexLocation(loc.x, loc.y), VertexDirection[loc.dir]);
@@ -435,6 +436,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 			view.placeRobber(robber, true);
 			
 			// Update the settlements, cities, and roads (iterate through all hexes)
+			// TODO Use hexgrid.getEdges() and hexgrid.getVertexes() instead of a brute-force iteration through all hexes?
 			for (lineNum in hexes) {
 				var line = hexes[lineNum];
 				for (hexNum in line) {

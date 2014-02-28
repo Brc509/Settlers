@@ -58,6 +58,7 @@ catan.discard.Controller = (function discard_namespace(){
 			console.log('DiscardController. ready for some updating', model.turnTracker.status);
 			if (model.turnTracker.status == "Discarding" && !this.waiting) {
 				this.view.showModal();
+				this.clientModel.isModalUp = true;
 				this.minCards = Math.floor(model.clientPlayer.getResourceCardCount() / 2);
 				this.resources = this.clientModel.clientPlayer.resources;
 				this.updateView();
@@ -65,6 +66,7 @@ catan.discard.Controller = (function discard_namespace(){
 			if (model.turnTracker.status != "Discarding" && !this.waiting) {
 				this.waiting = false;
 				this.waitingView.closeModal();
+				this.clientModel.isModalUp = false;
 			}
 		}
 
@@ -104,6 +106,7 @@ catan.discard.Controller = (function discard_namespace(){
 			this.clientModel.discardCards(this.cards);
 			this.view.closeModal();
 			this.waitingView.showModal();
+			this.clientModel.isModalUp = true;
 			this.waiting = true;
 
 		}

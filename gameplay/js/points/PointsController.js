@@ -35,6 +35,17 @@ catan.points.Controller = (function VPController_Class(){
 	PointController.prototype.update = function(clientModel) {
 		//console.log('update in the PointController', clientModel);
 		this.view.setPoints(clientModel.clientPlayer.victoryPoints);
+		var players = clientModel.players;
+		if (clientModel.clientPlayer.victoryPoints > 9) {
+			this.gameFinishedView.setWinner(clientModel.clientPlayer.name, true);
+			this.gameFinishedView.showModal();
+		}
+		for (p in players) {
+			if (players[p].victoryPoints > 9) {
+				this.gameFinishedView.setWinner(players[p].name, false);
+				this.gameFinishedView.showModal();	
+			}
+		}
 	}
 	
 	return PointController;	

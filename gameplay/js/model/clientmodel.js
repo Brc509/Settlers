@@ -457,11 +457,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @param ResourceHand discardedCards, The cards being discarded
 		*/
 		ClientModel.prototype.discardCards = function (discardedCards) {
-
-			if (canDiscardCards()) {
-				var myself = this;
-				this.clientProxy.discardCards(discardCards, this.updateModel);
-			}
+			this.clientProxy.discardCards(discardedCards, this.updateModel);
 		}
 
 		//	ClientProxy.prototype.sendChat = function(content, callback) {

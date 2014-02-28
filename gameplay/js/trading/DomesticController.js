@@ -32,6 +32,14 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 			this.waitingView = waitingView;
 			this.acceptView = acceptView;
 			this.trader = "";
+			this.waitingView = waitingView;
+			this.woodAmt = 0;
+			this.brickAmt = 0;
+			this.wheatAmt = 0;
+			this.sheepAmt = 0;
+			this.oreAmt = 0;
+			this.setResources = new Array();
+			this.getResources = new Array();
 			
 			this.clientModel = clientModel;
 			this.view = view;
@@ -42,7 +50,10 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 					this.legalTraders.push(this.clientModel.players[i]);
 			}
 			this.view.setPlayers(this.legalTraders);
-			//console.log(this.view);
+			this.clientModel.addObserver(this);
+			
+			//console.log(this.clientModel.tradeOffer);
+			//console.log(this.clientModel);
 		};
         
 		DomesticController.prototype = core.inherit(Controller.prototype);
@@ -56,6 +67,19 @@ catan.trade.domestic.Controller= (function trade_namespace(){
         * @return void
         */
 		DomesticController.prototype.setResourceToSend = function(resource){
+		
+			if(this.getResources.length > 0)
+			{
+				var index = this.getResources.indexOf(resource);
+				if (index > -1)
+				{
+					this.getResources.splice(index, 1);
+				}
+			}	
+		
+			this.setResources.push(resource);
+			
+			console.log(this.setResources);
 		};
         
 		/**
@@ -64,6 +88,19 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 		 * @return void
 		 */
 		 DomesticController.prototype.setResourceToReceive = function(resource){
+		 
+			if(this.setResources.length > 0)
+			{
+				var index = this.setResources.indexOf(resource);
+				if (index > -1)
+				{
+					this.setResources.splice(index, 1);
+				}
+			}
+			
+			this.getResources.push(resource);
+			
+			console.log(this.getResources);
 		};
         
 		/**
@@ -72,6 +109,24 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 		  * @return void
 		  */
 		DomesticController.prototype.unsetResource = function(resource){
+		
+			if(this.getResources.length > 0)
+			{
+				var index = this.getResources.indexOf(resource);
+				if (index > -1)
+				{
+					this.getResources.splice(index, 1);
+				}
+			}
+			
+			if(this.setResources.length > 0)
+			{
+				var index = this.setResources.indexOf(resource);
+				if (index > -1)
+				{
+					this.setResources.splice(index, 1);
+				}
+			}
 		};
         
 		/**
@@ -80,11 +135,46 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 		 * @return void
 		 */
 		DomesticController.prototype.setPlayerToTradeWith = function(playerNumber){
+			//console.log(playerNumber);
 			if(playerNumber != -1)
 			{
 				this.trader = this.legalTraders[playerNumber];
-				console.log(trader.name);
-			}				
+				//console.log(this.trader.name);
+				this.view.setStateMessage("set the trade you want to make");
+				this.view.setTradeButtonEnabled(false);
+				this.view.setResourceSelectionEnabled(true);
+				
+				this.view.setResourceAmountChangeEnabled("wood", true, true);
+		 		this.view.setResourceAmountChangeEnabled("brick", true, true);
+		 		this.view.setResourceAmountChangeEnabled("sheep", true, true);
+		 		this.view.setResourceAmountChangeEnabled("wheat", true, true);
+		 		this.view.setResourceAmountChangeEnabled("ore", true, true);
+				
+				this.view.setResourceAmount("wood", this.woodAmt);
+				this.view.setResourceAmount("brick", this.brickAmt);
+				this.view.setResourceAmount("sheep", this.sheepAmt);
+				this.view.setResourceAmount("wheat", this.wheatAmt);
+				this.view.setResourceAmount("ore", this.oreAmt);
+			}
+			else
+			{
+				this.woodAmt = 0;
+				this.brickAmt = 0;
+				this.wheatAmt = 0;
+				this.sheepAmt = 0;
+				this.oreAmt = 0;
+			
+				this.view.setStateMessage("select a player");
+				this.view.setResourceSelectionEnabled(false);
+				this.view.setTradeButtonEnabled(false);
+
+		 		this.view.setResourceAmountChangeEnabled("wood", false, false);
+		 		this.view.setResourceAmountChangeEnabled("brick", false, false);
+		 		this.view.setResourceAmountChangeEnabled("sheep", false, false);
+		 		this.view.setResourceAmountChangeEnabled("wheat", false, false);
+		 		this.view.setResourceAmountChangeEnabled("ore", false, false);
+		 		this.view.clearTradeView();
+			}
 		};
         
 		/**
@@ -94,6 +184,61 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 		* @return void
 		*/
 		DomesticController.prototype.increaseResourceAmount = function(resource){
+			console.log(this.clientModel.players);
+			
+				if(resource == "wood")
+				{
+					if(this.woodAmt < this.clientModel.players[this.clientModel.playerID].resources.wood)
+					{
+						this.woodAmt++;
+						this.view.setResourceAmount("wood", this.woodAmt);
+					}
+				}
+				else if(resource == "brick")
+				{
+					if(this.brickAmt < this.clientModel.players[this.clientModel.playerID].resources.brick)
+					{
+						this.brickAmt++;
+						this.view.setResourceAmount("brick", this.brickAmt);
+					}
+				}
+				else if(resource == "sheep")
+				{
+					if(this.sheepAmt < this.clientModel.players[this.clientModel.playerID].resources.sheep)
+					{
+						this.sheepAmt++;
+						this.view.setResourceAmount("sheep", this.sheepAmt);
+					}
+				}
+				else if(resource == "wheat")
+				{
+					if(this.wheatAmt < this.clientModel.players[this.clientModel.playerID].resources.wheat)
+					{
+						this.wheatAmt++;
+						this.view.setResourceAmount("wheat", this.wheatAmt);
+					}
+				}
+				else if(resource == "ore")
+				{
+					if(this.oreAmt < this.clientModel.players[this.clientModel.playerID].resources.ore)
+					{
+						this.oreAmt++;
+						this.view.setResourceAmount("ore", this.oreAmt);
+					}
+				}
+
+				if(	this.woodAmt == 0 &&
+					this.brickAmt == 0 &&
+					this.wheatAmt == 0 &&
+					this.sheepAmt == 0 &&
+					this.oreAmt == 0)
+				{
+					this.view.setTradeButtonEnabled(false);
+				}
+				else
+				{
+					this.view.setTradeButtonEnabled(true);
+				}
 		};
         
 		/**
@@ -103,6 +248,60 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 		 * @return void
 		 */
 		DomesticController.prototype.decreaseResourceAmount = function(resource){
+		
+				if(resource == "wood")
+				{
+					if(this.woodAmt > 0)
+					{
+						this.woodAmt--;
+						this.view.setResourceAmount("wood", this.woodAmt);
+					}
+				}
+				else if(resource == "brick")
+				{
+					if(this.brickAmt > 0)
+					{
+						this.brickAmt--;
+						this.view.setResourceAmount("brick", this.brickAmt);
+					}
+				}
+				else if(resource == "sheep")
+				{
+					if(this.sheepAmt > 0)
+					{
+						this.sheepAmt--;
+						this.view.setResourceAmount("sheep", this.sheepAmt);
+					}
+				}
+				else if(resource == "wheat")
+				{
+					if(this.wheatAmt > 0)
+					{
+						this.wheatAmt--;
+						this.view.setResourceAmount("wheat", this.wheatAmt);
+					}
+				}
+				else if(resource == "ore")
+				{
+					if(this.oreAmt > 0)
+					{
+						this.oreAmt--;
+						this.view.setResourceAmount("ore", this.oreAmt);
+					}
+				}
+
+				if(	this.woodAmt == 0 &&
+					this.brickAmt == 0 &&
+					this.wheatAmt == 0 &&
+					this.sheepAmt == 0 &&
+					this.oreAmt == 0)
+				{
+					this.view.setTradeButtonEnabled(false);
+				}
+				else
+				{
+					this.view.setTradeButtonEnabled(true);
+				}				
 		};
         
 		/**
@@ -112,7 +311,25 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 		  */
 		DomesticController.prototype.sendTradeOffer = function(){
 			if(this.trader != "")
-				this.acceptView.showModal();
+			{
+				if(this.setResources.length > 0 && this.getResources.length > 0)
+				{
+					for(var i=0;i<this.setResources.length;i++)
+					{
+					
+					}
+					
+					for(var i=0;i<this.getResources.length;i++)
+					{
+					
+					}
+				
+				}
+			
+				this.waitingView.showModal();
+				
+				//send offer through the server here !!!!
+			}
 		};
         
         
@@ -125,8 +342,51 @@ catan.trade.domestic.Controller= (function trade_namespace(){
         * @return void
 		*/
 		DomesticController.prototype.acceptTrade = function(willAccept){
+		
+			// need to update sender and receiver of changes (if any) to their resource cards through the server
+			// receiver accepting or not determines if a change gets sent to the server.
+		
 			this.acceptView.closeModal();
 		};
+		
+		DomesticController.prototype.update = function(){
+		
+			console.log(this.clientModel);
+			
+			if(this.clientModel.turnTracker.currentTurn != this.clientModel.playerID)
+			{
+				this.view.setStateMessage("Guess What? NACHO TURN!!!");
+				this.view.setResourceSelectionEnabled(false);
+				this.view.setTradeButtonEnabled(false);
+				this.view.setPlayerSelectionEnabled(false);
+			}
+			else
+			{							
+				this.view.setPlayerSelectionEnabled(true);
+			
+				if(this.clientModel.tradeOffer != undefined)
+				{
+					if(this.clientModel.tradeOffer.receiver == this.clientModel.playerID)
+					{
+						// need to check client model for tradeOffer to parse and display to receiver
+						
+						//this.acceptView.addGiveResource('ore', this.oreAmt);
+						//this.acceptView.addGetResource('ore', 1);	
+						
+						this.acceptView.showModal();
+					}
+				}
+				else
+				{
+					this.waitingView.closeModal();
+				}
+				
+				this.view.setStateMessage("select a player");
+				this.view.setResourceSelectionEnabled(false);
+				this.view.setTradeButtonEnabled(false);
+				this.view.clearTradeView();
+			}
+		}
             
 		return DomesticController;
     }());

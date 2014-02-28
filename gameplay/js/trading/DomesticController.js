@@ -40,6 +40,11 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 			this.oreAmt = 0;
 			this.setResources = new Array();
 			this.getResources = new Array();
+			this.receivingWood = false;
+			this.receivingBrick = false;
+			this.receivingWheat = false;
+			this.receivingSheep = false;
+			this.receivingOre = false;
 			
 			this.clientModel = clientModel;
 			this.view = view;
@@ -51,9 +56,6 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 			}
 			this.view.setPlayers(this.legalTraders);
 			this.clientModel.addObserver(this);
-			
-			//console.log(this.clientModel.tradeOffer);
-			//console.log(this.clientModel);
 		};
         
 		DomesticController.prototype = core.inherit(Controller.prototype);
@@ -68,6 +70,22 @@ catan.trade.domestic.Controller= (function trade_namespace(){
         */
 		DomesticController.prototype.setResourceToSend = function(resource){
 		
+			if(resource == "wood"){this.receivingWood = false;this.woodAmt = 0;
+			this.view.setResourceAmount("wood", this.woodAmt);this.view.setResourceAmountChangeEnabled("wood", true, true);
+			this.view.setResourceAmount("wood", this.woodAmt);}
+			if(resource == "brick"){this.receivingBrick = false;this.brickAmt = 0;
+			this.view.setResourceAmount("brick", this.brickAmt);this.view.setResourceAmountChangeEnabled("brick", true, true);
+			this.view.setResourceAmount("brick", this.brickAmt);}
+			if(resource == "sheep"){this.receivingSheep = false;this.sheepAmt = 0;
+			this.view.setResourceAmount("sheep", this.sheepAmt);this.view.setResourceAmountChangeEnabled("sheep", true, true);
+			this.view.setResourceAmount("sheep", this.sheepAmt);}
+			if(resource == "wheat"){this.receivingWheat = false;this.wheatAmt = 0;
+			this.view.setResourceAmount("wheat", this.wheatAmt);this.view.setResourceAmountChangeEnabled("wheat", true, true);
+			this.view.setResourceAmount("wheat", this.wheatAmt);}
+			if(resource == "ore"){this.receivingOre = false;this.oreAmt = 0;
+			this.view.setResourceAmount("ore", this.oreAmt);this.view.setResourceAmountChangeEnabled("ore", true, true);
+			this.view.setResourceAmount("ore", this.oreAmt);}	
+		
 			if(this.getResources.length > 0)
 			{
 				var index = this.getResources.indexOf(resource);
@@ -77,9 +95,42 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 				}
 			}	
 		
+			////////////////////////////////////////////////////////////////////////////////////////
 			this.setResources.push(resource);
 			
-			console.log(this.setResources);
+				if(	this.woodAmt == 0 &&
+					this.brickAmt == 0 &&
+					this.wheatAmt == 0 &&
+					this.sheepAmt == 0 &&
+					this.oreAmt == 0)
+				{
+					this.view.setTradeButtonEnabled(false);
+				}
+				else
+				{
+					if(this.setResources.length > 0 && this.getResources.length > 0)
+					{
+						if(	(this.woodAmt > 0  && !this.receivingWood ||
+							this.brickAmt > 0 && !this.receivingBrick ||
+							this.wheatAmt > 0 && !this.receivingWheat ||
+							this.sheepAmt > 0 && !this.receivingSheep ||
+							this.oreAmt > 0 && !this.receivingOre) && 
+							(this.woodAmt > 0  && this.receivingWood ||
+							this.brickAmt > 0 && this.receivingBrick ||
+							this.wheatAmt > 0 && this.receivingWheat ||
+							this.sheepAmt > 0 && this.receivingSheep ||
+							this.oreAmt > 0 && this.receivingOre))
+						{
+							this.view.setTradeButtonEnabled(true);
+						}
+						else
+							this.view.setTradeButtonEnabled(false);
+					}
+					else
+						this.view.setTradeButtonEnabled(false);
+				}
+			
+			//console.log(this.setResources);
 		};
         
 		/**
@@ -88,6 +139,22 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 		 * @return void
 		 */
 		 DomesticController.prototype.setResourceToReceive = function(resource){
+		 
+			if(resource == "wood"){this.receivingWood = true;this.woodAmt = 0;
+			this.view.setResourceAmount("wood", this.woodAmt);this.view.setResourceAmountChangeEnabled("wood", true, true);
+			this.view.setResourceAmount("wood", this.woodAmt);}
+			if(resource == "brick"){this.receivingBrick = true;this.brickAmt = 0;
+			this.view.setResourceAmount("brick", this.brickAmt);this.view.setResourceAmountChangeEnabled("brick", true, true);
+			this.view.setResourceAmount("brick", this.brickAmt);}
+			if(resource == "sheep"){this.receivingSheep = true;this.sheepAmt = 0;
+			this.view.setResourceAmount("sheep", this.sheepAmt);this.view.setResourceAmountChangeEnabled("sheep", true, true);
+			this.view.setResourceAmount("sheep", this.sheepAmt);}
+			if(resource == "wheat"){this.receivingWheat = true;this.wheatAmt = 0;
+			this.view.setResourceAmount("wheat", this.wheatAmt);this.view.setResourceAmountChangeEnabled("wheat", true, true);
+			this.view.setResourceAmount("wheat", this.wheatAmt);}
+			if(resource == "ore"){this.receivingOre = true;this.oreAmt = 0;
+			this.view.setResourceAmount("ore", this.oreAmt);this.view.setResourceAmountChangeEnabled("ore", true, true);
+			this.view.setResourceAmount("ore", this.oreAmt);}		
 		 
 			if(this.setResources.length > 0)
 			{
@@ -98,9 +165,42 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 				}
 			}
 			
+			//////////////////////////////////////////////////////////////////////////////////////////////////
 			this.getResources.push(resource);
 			
-			console.log(this.getResources);
+				if(	this.woodAmt == 0 &&
+					this.brickAmt == 0 &&
+					this.wheatAmt == 0 &&
+					this.sheepAmt == 0 &&
+					this.oreAmt == 0)
+				{
+					this.view.setTradeButtonEnabled(false);
+				}
+				else
+				{
+					if(this.setResources.length > 0 && this.getResources.length > 0)
+					{
+						if(	(this.woodAmt > 0  && !this.receivingWood ||
+							this.brickAmt > 0 && !this.receivingBrick ||
+							this.wheatAmt > 0 && !this.receivingWheat ||
+							this.sheepAmt > 0 && !this.receivingSheep ||
+							this.oreAmt > 0 && !this.receivingOre) && 
+							(this.woodAmt > 0  && this.receivingWood ||
+							this.brickAmt > 0 && this.receivingBrick ||
+							this.wheatAmt > 0 && this.receivingWheat ||
+							this.sheepAmt > 0 && this.receivingSheep ||
+							this.oreAmt > 0 && this.receivingOre))
+						{
+							this.view.setTradeButtonEnabled(true);
+						}
+						else
+							this.view.setTradeButtonEnabled(false);
+					}
+					else
+						this.view.setTradeButtonEnabled(false);
+				}
+			
+			//console.log(this.getResources);
 		};
         
 		/**
@@ -109,6 +209,22 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 		  * @return void
 		  */
 		DomesticController.prototype.unsetResource = function(resource){
+		
+			if(resource == "wood"){this.receivingWood = false;this.woodAmt = 0;
+			this.view.setResourceAmount("wood", this.woodAmt);this.view.setResourceAmountChangeEnabled("wood", false, false);
+			this.view.setResourceAmount("wood", undefined);}
+			if(resource == "brick"){this.receivingBrick = false;this.brickAmt = 0;
+			this.view.setResourceAmount("brick", this.brickAmt);this.view.setResourceAmountChangeEnabled("brick", false, false);
+			this.view.setResourceAmount("brick", undefined);}
+			if(resource == "sheep"){this.receivingSheep = false;this.sheepAmt = 0;
+			this.view.setResourceAmount("sheep", this.sheepAmt);this.view.setResourceAmountChangeEnabled("sheep", false, false);
+			this.view.setResourceAmount("sheep", undefined);}
+			if(resource == "wheat"){this.receivingWheat = false;this.wheatAmt = 0;
+			this.view.setResourceAmount("wheat", this.wheatAmt);this.view.setResourceAmountChangeEnabled("wheat", false, false);
+			this.view.setResourceAmount("wheat", undefined);}
+			if(resource == "ore"){this.receivingOre = false;this.oreAmt = 0;
+			this.view.setResourceAmount("ore", this.oreAmt);this.view.setResourceAmountChangeEnabled("ore", false, false);
+			this.view.setResourceAmount("ore", undefined);}
 		
 			if(this.getResources.length > 0)
 			{
@@ -127,6 +243,38 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 					this.setResources.splice(index, 1);
 				}
 			}
+			
+				if(	this.woodAmt == 0 &&
+					this.brickAmt == 0 &&
+					this.wheatAmt == 0 &&
+					this.sheepAmt == 0 &&
+					this.oreAmt == 0)
+				{
+					this.view.setTradeButtonEnabled(false);
+				}
+				else
+				{
+					if(this.setResources.length > 0 && this.getResources.length > 0)
+					{
+						if(	(this.woodAmt > 0  && !this.receivingWood ||
+							this.brickAmt > 0 && !this.receivingBrick ||
+							this.wheatAmt > 0 && !this.receivingWheat ||
+							this.sheepAmt > 0 && !this.receivingSheep ||
+							this.oreAmt > 0 && !this.receivingOre) && 
+							(this.woodAmt > 0  && this.receivingWood ||
+							this.brickAmt > 0 && this.receivingBrick ||
+							this.wheatAmt > 0 && this.receivingWheat ||
+							this.sheepAmt > 0 && this.receivingSheep ||
+							this.oreAmt > 0 && this.receivingOre))
+						{
+							this.view.setTradeButtonEnabled(true);
+						}
+						else
+							this.view.setTradeButtonEnabled(false);
+					}
+					else
+						this.view.setTradeButtonEnabled(false);
+				}
 		};
         
 		/**
@@ -144,35 +292,36 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 				this.view.setTradeButtonEnabled(false);
 				this.view.setResourceSelectionEnabled(true);
 				
-				this.view.setResourceAmountChangeEnabled("wood", true, true);
-		 		this.view.setResourceAmountChangeEnabled("brick", true, true);
-		 		this.view.setResourceAmountChangeEnabled("sheep", true, true);
-		 		this.view.setResourceAmountChangeEnabled("wheat", true, true);
-		 		this.view.setResourceAmountChangeEnabled("ore", true, true);
+		 		this.view.setResourceAmountChangeEnabled("wood", false, false);
+		 		this.view.setResourceAmountChangeEnabled("brick", false, false);
+		 		this.view.setResourceAmountChangeEnabled("sheep", false, false);
+		 		this.view.setResourceAmountChangeEnabled("wheat", false, false);
+		 		this.view.setResourceAmountChangeEnabled("ore", false, false);
 				
-				this.view.setResourceAmount("wood", this.woodAmt);
-				this.view.setResourceAmount("brick", this.brickAmt);
-				this.view.setResourceAmount("sheep", this.sheepAmt);
-				this.view.setResourceAmount("wheat", this.wheatAmt);
-				this.view.setResourceAmount("ore", this.oreAmt);
+				this.view.setResourceAmount("wood", undefined);
+				this.view.setResourceAmount("brick", undefined);
+				this.view.setResourceAmount("sheep", undefined);
+				this.view.setResourceAmount("wheat", undefined);
+				this.view.setResourceAmount("ore", undefined);
 			}
 			else
-			{
-				this.woodAmt = 0;
-				this.brickAmt = 0;
-				this.wheatAmt = 0;
-				this.sheepAmt = 0;
-				this.oreAmt = 0;
-			
+			{			
 				this.view.setStateMessage("select a player");
-				this.view.setResourceSelectionEnabled(false);
 				this.view.setTradeButtonEnabled(false);
+				this.view.setResourceSelectionEnabled(false);
 
 		 		this.view.setResourceAmountChangeEnabled("wood", false, false);
 		 		this.view.setResourceAmountChangeEnabled("brick", false, false);
 		 		this.view.setResourceAmountChangeEnabled("sheep", false, false);
 		 		this.view.setResourceAmountChangeEnabled("wheat", false, false);
 		 		this.view.setResourceAmountChangeEnabled("ore", false, false);
+				
+				this.view.setResourceAmount("wood", undefined);
+				this.view.setResourceAmount("brick", undefined);
+				this.view.setResourceAmount("sheep", undefined);
+				this.view.setResourceAmount("wheat", undefined);
+				this.view.setResourceAmount("ore", undefined);
+				
 		 		this.view.clearTradeView();
 			}
 		};
@@ -188,7 +337,15 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 			
 				if(resource == "wood")
 				{
-					if(this.woodAmt < this.clientModel.players[this.clientModel.playerID].resources.wood)
+					if(!this.receivingWood)
+					{
+						if(this.woodAmt < this.clientModel.players[this.clientModel.playerID].resources.wood)
+						{
+							this.woodAmt++;
+							this.view.setResourceAmount("wood", this.woodAmt);
+						}
+					}
+					else
 					{
 						this.woodAmt++;
 						this.view.setResourceAmount("wood", this.woodAmt);
@@ -196,34 +353,66 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 				}
 				else if(resource == "brick")
 				{
-					if(this.brickAmt < this.clientModel.players[this.clientModel.playerID].resources.brick)
+					if(!this.receivingBrick)
 					{
-						this.brickAmt++;
-						this.view.setResourceAmount("brick", this.brickAmt);
+						if(this.brickAmt < this.clientModel.players[this.clientModel.playerID].resources.brick)
+						{
+							this.brickAmt++;
+							this.view.setResourceAmount("brick", this.brickAmt);
+						}
+					}
+					else
+					{
+							this.brickAmt++;
+							this.view.setResourceAmount("brick", this.brickAmt);
 					}
 				}
 				else if(resource == "sheep")
 				{
-					if(this.sheepAmt < this.clientModel.players[this.clientModel.playerID].resources.sheep)
+					if(!this.receivingSheep)
 					{
-						this.sheepAmt++;
-						this.view.setResourceAmount("sheep", this.sheepAmt);
+						if(this.sheepAmt < this.clientModel.players[this.clientModel.playerID].resources.sheep)
+						{
+							this.sheepAmt++;
+							this.view.setResourceAmount("sheep", this.sheepAmt);
+						}
+					}
+					else
+					{
+							this.sheepAmt++;
+							this.view.setResourceAmount("sheep", this.sheepAmt);
 					}
 				}
 				else if(resource == "wheat")
 				{
-					if(this.wheatAmt < this.clientModel.players[this.clientModel.playerID].resources.wheat)
+					if(!this.receivingWheat)
 					{
-						this.wheatAmt++;
-						this.view.setResourceAmount("wheat", this.wheatAmt);
+						if(this.wheatAmt < this.clientModel.players[this.clientModel.playerID].resources.wheat)
+						{
+							this.wheatAmt++;
+							this.view.setResourceAmount("wheat", this.wheatAmt);
+						}
+					}
+					else
+					{
+							this.wheatAmt++;
+							this.view.setResourceAmount("wheat", this.wheatAmt);
 					}
 				}
 				else if(resource == "ore")
 				{
-					if(this.oreAmt < this.clientModel.players[this.clientModel.playerID].resources.ore)
+					if(!this.receivingOre)
+					{				
+						if(this.oreAmt < this.clientModel.players[this.clientModel.playerID].resources.ore)
+						{
+							this.oreAmt++;
+							this.view.setResourceAmount("ore", this.oreAmt);
+						}
+					}
+					else
 					{
-						this.oreAmt++;
-						this.view.setResourceAmount("ore", this.oreAmt);
+							this.oreAmt++;
+							this.view.setResourceAmount("ore", this.oreAmt);
 					}
 				}
 
@@ -237,7 +426,26 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 				}
 				else
 				{
-					this.view.setTradeButtonEnabled(true);
+					if(this.setResources.length > 0 && this.getResources.length > 0)
+					{
+						if(	(this.woodAmt > 0  && !this.receivingWood ||
+							this.brickAmt > 0 && !this.receivingBrick ||
+							this.wheatAmt > 0 && !this.receivingWheat ||
+							this.sheepAmt > 0 && !this.receivingSheep ||
+							this.oreAmt > 0 && !this.receivingOre) && 
+							(this.woodAmt > 0  && this.receivingWood ||
+							this.brickAmt > 0 && this.receivingBrick ||
+							this.wheatAmt > 0 && this.receivingWheat ||
+							this.sheepAmt > 0 && this.receivingSheep ||
+							this.oreAmt > 0 && this.receivingOre))
+						{
+							this.view.setTradeButtonEnabled(true);
+						}
+						else
+							this.view.setTradeButtonEnabled(false);
+					}
+					else
+						this.view.setTradeButtonEnabled(false);
 				}
 		};
         
@@ -300,7 +508,26 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 				}
 				else
 				{
-					this.view.setTradeButtonEnabled(true);
+					if(this.setResources.length > 0 && this.getResources.length > 0)
+					{
+						if(	(this.woodAmt > 0  && !this.receivingWood ||
+							this.brickAmt > 0 && !this.receivingBrick ||
+							this.wheatAmt > 0 && !this.receivingWheat ||
+							this.sheepAmt > 0 && !this.receivingSheep ||
+							this.oreAmt > 0 && !this.receivingOre) && 
+							(this.woodAmt > 0  && this.receivingWood ||
+							this.brickAmt > 0 && this.receivingBrick ||
+							this.wheatAmt > 0 && this.receivingWheat ||
+							this.sheepAmt > 0 && this.receivingSheep ||
+							this.oreAmt > 0 && this.receivingOre))
+						{
+							this.view.setTradeButtonEnabled(true);
+						}
+						else
+							this.view.setTradeButtonEnabled(false);
+					}
+					else
+						this.view.setTradeButtonEnabled(false);
 				}				
 		};
         

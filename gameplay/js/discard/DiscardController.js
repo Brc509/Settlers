@@ -30,6 +30,15 @@ catan.discard.Controller = (function discard_namespace(){
             Controller.call(this,view,clientModel);
 			
             view.setController(this);
+            this.view = view;
+            this.clientModel = clientModel;
+            this.cards = {
+	            brick : 0,
+	            ore : 0,
+	            sheep : 0, 
+	            wheat : 0,
+	            wood : 0
+        	}
             
             waitingView.setController(this);
             this.setWaitingView(waitingView);
@@ -47,6 +56,8 @@ catan.discard.Controller = (function discard_namespace(){
 		 */	
 		DiscardController.prototype.discard = function(){
 			console.log('discard function');
+			clientModel.canDiscarCards(this.cards);
+			clientModel.discardCards(this.cards);
 		}
         
 		/**
@@ -57,6 +68,8 @@ catan.discard.Controller = (function discard_namespace(){
 		 */
 		DiscardController.prototype.increaseAmount = function(resource){
 			console.log('increaseAmount. resource', resource);
+			this.cards[resource] ++;
+			view.setResourceAmount(resource, this.cards[resource]);
 		}
         
 		/**
@@ -67,6 +80,9 @@ catan.discard.Controller = (function discard_namespace(){
 		 */
 		DiscardController.prototype.decreaseAmount = function(resource){
 			console.log('decreaseAmount. resource', resource);
+			if (this.cards[resource] > 0)
+				this.cards[resource] --;
+			view.setResourceAmount(resource, this.cards[resource]);
 		}
 		
 		return DiscardController;

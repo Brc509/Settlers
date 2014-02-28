@@ -66,6 +66,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 			var playerIndex = this.getClientModel().playerIndex;
 			var color = this.colorLookupPlayerIndex[playerIndex];
 			this.getModalView().showModal('robber');
+			this.getClientModel().isModalUp = true;
 			this.getView().startDrop('robber', color);
 		}
         
@@ -94,31 +95,11 @@ catan.map.Controller = (function catan_controller_namespace() {
 			pieceType = pieceType.toLowerCase();
 			this.free = free;
 			this.disconnected = disconnected;
-			var canAfford = false;
-			var cp = this.getClientModel().clientPlayer;
-			switch (pieceType) { // TODO I believe that checking affordability here may be irrelevant.
-				case 'city':
-					canAfford = cp.canAffordCity();
-					break;
-				case 'road':
-					canAfford = cp.canAffordRoad();
-					break;
-				case 'settlement':
-					canAfford = cp.canAffordSettlement();
-					break;
-				default:
-					throw Error('MapController.startMove(): Invalid placeable type specified.');
-			}
 			var playerIndex = this.getClientModel().playerIndex;
 			var color = this.colorLookupPlayerIndex[playerIndex];
-			if (free || canAfford) {
-				this.getModalView().showModal(pieceType);
-				this.getView().startDrop(pieceType.toLowerCase(), color);
-			} else {
-				alert("You can't afford that!");
-				this.getModalView().showModal(pieceType);
-				this.getView().startDrop(pieceType.toLowerCase(), color);
-			}
+			this.getModalView().showModal(pieceType);
+			this.getClientModel().isModalUp = true;
+			this.getView().startDrop(pieceType.toLowerCase(), color);
 		};
         
 		/**
@@ -326,6 +307,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 		*/
 		MapController.prototype.onDrop = function (loc, type) {
 			this.getModalView().closeModal();
+			this.getClientModel().isModalUp = false;
 			switch (type.type.toLowerCase()) {
 				case 'city':
 					// Place the city

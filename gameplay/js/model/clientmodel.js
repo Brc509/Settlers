@@ -50,14 +50,14 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
          * */
 		ClientModel.prototype.initFromServer = function(success){
             // TODO: 1) fetch the game state from the server, 2) update the client model, 3) call the "success" function.
-			this.clientProxy.gameModel(function (error, model) {
+			myself.clientProxy.gameModel(function (error, model) {
 				if (error) {
 					console.log('Error Info: ', model);
 					alert ('clientProxy returned error');
 				}
 				else {
 					myself.updateModel(error, model);
-					success();
+					if (success) success();
 				}
 			});
 		}

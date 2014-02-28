@@ -223,6 +223,7 @@ catan.client = (function Client_NameSpace(){
 		CatanGame.prototype.domLoaded = function domLoaded(){
 			this.getClientModel().initFromServer(
 				core.makeAnonymousAction(this,this.makeViewsAndControllers,undefined));
+			setInterval(this.getClientModel().initFromServer, 5000);
 		}	
 		
         // adds all the controllers as listeners to the client model

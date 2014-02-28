@@ -53,7 +53,9 @@ catan.map.Controller = (function catan_controller_namespace() {
 		 @method robPlayer
 		*/
 		MapController.prototype.robPlayer = function(orderID){
-			// TODO
+			this.getClientModel().clientProxy.robPlayer(orderID, this.robberSpot, this.getClientModel().updateModel);
+			this.getRobView().closeModal();
+			this.getClientModel().isModalUp = false;
 		}
         
         /**
@@ -110,6 +112,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 		 * */
 		MapController.prototype.cancelMove = function(){
 			this.getView().cancelDrop();
+			this.getClientModel().isModalUp = false;
 		}
 
 		/**
@@ -339,18 +342,31 @@ catan.map.Controller = (function catan_controller_namespace() {
 					var me = cm.clientPlayer;
 					var victims = {};
 					var hexLoc = new HexLocation(loc.x, loc.y);
+					this.robberSpot = hexLoc;
 					var hex = cm.map.getHexGrid().getHex(hexLoc);
 					var vertexes = hex.getVertexes();
 					for (n in vertexes) {
 						var ownerID = vertexes[n].ownerID;
 						if (ownerID != -1 && ownerID != me.orderNumber) {
 							var numCards = cm.players[ownerID].getResourceCardCount();
-							console.log('Victim at vertex ' + n + ': Player ' + ownerID + ', ' + numCards + ' cards.');
-							victims[ownerID] = numCards;
+							victims[ownerID] = true;
 						}
 					}
-					this.getRobView().setPlayerInfo([]);
-					//this.getRobView().showModal();
+					var playerInfo = [];
+					var victimIndex = 0;
+					for (victimID in victims) {
+						var victim = cm.players[victimID];
+						var pInfo = {};
+						pInfo.cards = victim.getResourceCardCount();
+						pInfo.color = this.colorLookupPlayerIndex[victimID];
+						pInfo.name = victim.name;
+						pInfo.playerNum = victimID;
+						playerInfo[victimIndex] = pInfo;
+						victimIndex++;
+					}
+					this.getRobView().setPlayerInfo(playerInfo);
+					this.getRobView().showModal();
+					this.getClientModel().isModalUp = true;
 					break;
 				case 'settlement':
 					var vertexLoc = new VertexLocation(new HexLocation(loc.x, loc.y), VertexDirection[loc.dir]);

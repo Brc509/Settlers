@@ -43,8 +43,6 @@ catan.roll.Controller = (function roll_namespace(){
 		RollController.prototype.closeResult = function(){
 			this.showRollResult = false;
 			this.rollResultView.closeModal();
-
-			this.ClientModel.rollNumber(value);
 		}
 		
 		/**
@@ -66,6 +64,7 @@ catan.roll.Controller = (function roll_namespace(){
 			this.showRollResult = true;
 			this.rollResultView.amountDisplay.textContent = "You rolled " + value;
 			this.rollResultView.showModal();
+			this.ClientModel.rollNumber(value);
 
 		};
 

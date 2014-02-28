@@ -36,6 +36,8 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			this.deck 			= {};
 			this.chat 			= {};
 			this.observers		= new Array();
+			this.isModalUp      = false;
+
 		}     
 		ClientModel.prototype.constructor = ClientModel; 
         

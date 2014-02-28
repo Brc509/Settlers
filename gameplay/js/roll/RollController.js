@@ -55,9 +55,8 @@ catan.roll.Controller = (function roll_namespace(){
 		 * @return void
 		**/
 		RollController.prototype.rollDice = function(){
-			
-			
 
+			clearTimeout(timeout);
 
 			this.View.closeModal();
 			this.ClientModel.isModalUp = false;
@@ -66,8 +65,8 @@ catan.roll.Controller = (function roll_namespace(){
 				var numba1=Math.floor((Math.random()*6) + 1);
             	var numba2=Math.floor((Math.random()*6) + 1);
 
-				// value = numba1 + numba2;
-				value = 7;
+				value = numba1 + numba2;
+				// value = 7;
 
 				this.rollResultView.amountDisplay.textContent = "You rolled " + value;
 
@@ -115,10 +114,10 @@ catan.roll.Controller = (function roll_namespace(){
 				}else if(value == 7 && !this.ClientModel.isModalUp){
 					this.ClientModel.isModalUp = true;
 					this.ClientModel.observers[2].getModalView().showModal("robber");
-					this.ClientModel.observers[2].getView().startDrop("robber");		
-			}
+					this.ClientModel.observers[2].getView().startDrop("robber");	
 			}
 		}
+	}
 		return RollController;
 	}());
 	

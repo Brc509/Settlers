@@ -72,11 +72,12 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 			
 			this.updatePlayers();
 
-	
+
 
 			if(this.ClientModel.turnTracker.currentTurn == parseInt(currPlayerIndex)){
 
-				if(this.ClientModel.turnTracker.status == "Playing" ||  this.ClientModel.turnTracker.status == "Discarding"){
+				if(this.ClientModel.turnTracker.status == "Playing" ||  this.ClientModel.turnTracker.status == "Discarding" || 
+					this.ClientModel.turnTracker.status == "Robbing"){
 					this.View.updateStateView(true, "End Turn");
 				}else{
 

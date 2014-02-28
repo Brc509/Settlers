@@ -91,6 +91,17 @@ catan.models.Player  = (function clientModelNameSpace(){
 
         /**
             <pre>
+                POST: You have to hate this game
+            </pre>
+            @method getResourceCardCount
+            @return {int} Number of total resources combined
+        */
+        Player.prototype.getResourceCardCount = function () {
+            return this.resources.getCardCount();
+        }
+
+        /**
+            <pre>
                 POST: Correctly returns if the player can afford to purchase a Road
             </pre>
             @method canAffordRoad

@@ -17,7 +17,7 @@ catan.models.ClientProxy = (function() {
 		<pre>
 		Domain:
 			playerIndex: The ID of the player who controls this client, number
-			modelVersion: The current version of the model
+			revision: The current version of the model
 			
 		Constructor Specification:
 			PRE: playerIndex is an integer
@@ -27,7 +27,6 @@ catan.models.ClientProxy = (function() {
 		@constructor
 	*/
 	function ClientProxy(clientModel) {
-		this.modelVersion = null;
 		this.clientModel = clientModel;
 		this.movesCommand = new catan.models.MovesCommand();
 	};
@@ -41,11 +40,10 @@ catan.models.ClientProxy = (function() {
 	*/
 	ClientProxy.prototype.gameModel = function(callback) {
 		// Append the version number to the URL
-		//var url = catan.models.GetCommand.prototype.GAME_MODEL_URL;
 		var url = '/game/model';
-		// if (this.modelVersion != null) {
-		// 	url += '?version=' + this.modelVersion;
-		// }
+		if (this.revision) {
+			url += '?version=' + this.revision;
+		}
 		// Create and execute the command
 		var command = new catan.models.GetCommand(this.clientModel);
 		command.execute(function(error, data) {
@@ -53,7 +51,7 @@ catan.models.ClientProxy = (function() {
 				callback(true, data);
 			} else {
 				if (data != null || data != true || data != 'true') { // It's not super clear which one the server returns if the model is up to date
-					this.modelVersion = data.version;
+					this.revision = data.revision;
 					callback(false, data);
 				}
 			}

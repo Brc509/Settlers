@@ -282,8 +282,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 				return;
 			}
 
-			// TODO: check if the road locations are valid (something should be implemented within Map)
-
 			// Success!
 			var myself = this;
 			this.clientProxy.roadBuilding(hex1, edge1, hex2, edge2, this.updateModel);
@@ -396,7 +394,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @param PlayerIndex receiver, The recipient of the trade
 		*/
 		ClientModel.prototype.canOfferTrade = function (receiver, offer) {
-
+			// TODO
 		}
 
 		ClientModel.prototype.offerTrade = function (receiver, offer) {
@@ -417,12 +415,12 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @param boolean willAccept, whether or not the player will accept the offer
 		*/
 		ClientModel.prototype.canAcceptTrade = function () {
-
+			// TODO
 		}
 
-		ClientModel.prototype.acceptTrade = function () {
+		ClientModel.prototype.acceptTrade = function (willAccept) {
 			if (canAcceptTrade()) {
-				this.clientProxy.acceptTrade(this.updateModel);
+				this.clientProxy.acceptTrade(willAccept, this.updateModel);
 			}
 		}
 

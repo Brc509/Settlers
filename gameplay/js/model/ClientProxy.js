@@ -29,7 +29,6 @@ catan.models.ClientProxy = (function() {
 	function ClientProxy(clientModel) {
 		this.clientModel = clientModel;
 		this.movesCommand = new catan.models.MovesCommand();
-		this.revision = '';
 	};
 	ClientProxy.prototype.constructor = ClientProxy;
 
@@ -41,7 +40,10 @@ catan.models.ClientProxy = (function() {
 	*/
 	ClientProxy.prototype.gameModel = function(callback) {
 		// Append the version number to the URL
-		var url = '/game/model?revision=' + this.revision;
+		var url = '/game/model';
+		if (this.revision) {
+			url += '?revision=' + this.revision;
+		}
 		// Create and execute the command
 		var myself = this;
 		var command = new catan.models.GetCommand(url);

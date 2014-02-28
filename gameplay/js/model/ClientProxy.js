@@ -42,16 +42,17 @@ catan.models.ClientProxy = (function() {
 		// Append the version number to the URL
 		var url = '/game/model';
 		if (this.revision) {
-			url += '?version=' + this.revision;
+			url += '?revision=' + this.revision;
 		}
 		// Create and execute the command
-		var command = new catan.models.GetCommand(this.clientModel);
+		var myself = this;
+		var command = new catan.models.GetCommand(url);
 		command.execute(function(error, data) {
 			if (error) {
 				callback(true, data);
 			} else {
-				if (data != null || data != true || data != 'true') { // It's not super clear which one the server returns if the model is up to date
-					this.revision = data.revision;
+				if (data != 'true') {
+					myself.revision = data.revision;
 					callback(false, data);
 				}
 			}

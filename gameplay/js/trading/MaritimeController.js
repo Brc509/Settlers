@@ -28,7 +28,14 @@ catan.trade.maritime.Controller = (function trade_namespace(){
 		*/
 		function MaritimeController(view,clientModel){
 			Controller.call(this,view,clientModel);
+			this.clientModel = clientModel;
 		};
+
+		MaritimeController.prototype.update = function(clientModel) {
+
+			this.clientModel = clientModel;
+
+		}
         
 		MaritimeController.prototype = core.inherit(Controller.prototype);
 
@@ -38,6 +45,8 @@ catan.trade.maritime.Controller = (function trade_namespace(){
 		 * @return void
 		 */
 		MaritimeController.prototype.unsetGiveValue = function(){
+
+			
 		};
         
 		/**
@@ -46,6 +55,8 @@ catan.trade.maritime.Controller = (function trade_namespace(){
 		 * @return void
 		 */
 		MaritimeController.prototype.unsetGetValue = function(){
+
+			
 		};
         
 		/**
@@ -55,6 +66,8 @@ catan.trade.maritime.Controller = (function trade_namespace(){
 		 * @return void
 		 */
 		MaritimeController.prototype.setGiveValue = function(resource){
+
+			
 		};
         
 		/**
@@ -64,6 +77,8 @@ catan.trade.maritime.Controller = (function trade_namespace(){
 		 * @return void
 		 */
 		MaritimeController.prototype.setGetValue = function(resource){
+
+			
 		};
         
         function capFirst(str){
@@ -75,6 +90,8 @@ catan.trade.maritime.Controller = (function trade_namespace(){
 		 * @return void
 		 */
 		MaritimeController.prototype.makeTrade= function(){
+
+			
 		}
 		
        return MaritimeController;

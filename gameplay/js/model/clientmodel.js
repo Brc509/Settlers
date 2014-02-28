@@ -67,7 +67,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 				console.log('Error Info: ', model);
 				alert ('clientProxy returned error'); // TODO Change so that it shows useful information about the error
 			} else {
-				console.log(model);
+				//console.log(model);
 				myself.bank = model.bank;
 				myself.deck = model.deck;
 				myself.chat = model.chat;
@@ -93,14 +93,14 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 				}
 				
 				myself.clientPlayer = myself.players[myself.playerIndex];
-				console.log(myself.players);
+				//console.log(myself.players);
 
 				myself.notifyObservers();
 			}
 		}
 		
 		ClientModel.prototype.notifyObservers = function() {
-			console.log('notifying observers');
+			//console.log('notifying observers');
 			for (o in myself.observers) {
 				if (myself.observers[o].update){
 					myself.observers[o].update(myself);

@@ -148,7 +148,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 			}
 			// Do new calculations iff the location has changed
 			if (!this.lastDragLoc || !loc.equals(this.lastDragLoc)) {
-				console.log('MapController.onDrag(): New location');
+				//console.log('MapController.onDrag(): New location');
 				this.lastDragLoc = loc;
 				this.isDragLocValid = false;
 				// Continue iff the location is part of a valid hex
@@ -398,7 +398,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 					var hex = line[hexNum];
 					var loc = hex.getLocation();
 					var type = hex.getType();
-					console.log('MapController.update(): Hex: (' + loc.x + ',' + loc.y + ') ' + type);
+					//console.log('MapController.update(): Hex: (' + loc.x + ',' + loc.y + ') ' + type);
 					view.addHex(loc, type, true);
 				}
 			}
@@ -411,7 +411,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 				var nTokens = tokens[n];
 				for (k in nTokens) {
 					var tokenLoc = nTokens[k];
-					console.log('MapController.update(): Token: (' + tokenLoc.x + ',' + tokenLoc.y + ') ' + n);
+					//console.log('MapController.update(): Token: (' + tokenLoc.x + ',' + tokenLoc.y + ') ' + n);
 					view.addNumber(tokenLoc, n, true);
 				}
 			}
@@ -426,13 +426,13 @@ catan.map.Controller = (function catan_controller_namespace() {
 				if (!type) {
 					type = 'three';
 				}
-				console.log('MapController.update(): Port: (' + portLoc.x + ',' + portLoc.y + ',' + portLoc.rotation + ') ' + type);
+				//console.log('MapController.update(): Port: (' + portLoc.x + ',' + portLoc.y + ',' + portLoc.rotation + ') ' + type);
 				view.addPort(portLoc, type, true);
 			}
 			
 			// Update the robber
 			var robber = map.getRobber();
-			console.log('MapController.update(): Robber: (' + robber.x + ',' + robber.y + ')');
+			//console.log('MapController.update(): Robber: (' + robber.x + ',' + robber.y + ')');
 			view.placeRobber(robber, true);
 			
 			// Update the settlements, cities, and roads (iterate through all hexes)
@@ -452,7 +452,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 							if (dir === "SW" || dir === "S" ||dir === "SE") { // Assertion from EdgeLoc(x, y, dir) in MapView.js
 								var edgeLoc = new catan.map.View.EdgeLoc(loc.x, loc.y, dir);
 								var color = this.colorLookupPlayerIndex[edge.getOwnerID()];
-								console.log('MapController.update(): Road: (' + edgeLoc.x + ',' + edgeLoc.y + ',' + edgeLoc.dir + ') ' + edge.getOwnerID() + ' ' + color);
+								//console.log('MapController.update(): Road: (' + edgeLoc.x + ',' + edgeLoc.y + ',' + edgeLoc.dir + ') ' + edge.getOwnerID() + ' ' + color);
 								view.placeRoad(edgeLoc, color, true);
 							}
 						}
@@ -470,11 +470,11 @@ catan.map.Controller = (function catan_controller_namespace() {
 								var color = this.colorLookupPlayerIndex[vertex.getOwnerID()];
 								// If the vertex worth is 1, it's a settlement
 								if (vertex.getWorth() == 1) {
-									console.log('MapController.update(): Settlement: (' + vertexLoc.x + ',' + vertexLoc.y + ',' + vertexLoc.dir + ') ' + vertex.getOwnerID() + ' ' + color);
+									//console.log('MapController.update(): Settlement: (' + vertexLoc.x + ',' + vertexLoc.y + ',' + vertexLoc.dir + ') ' + vertex.getOwnerID() + ' ' + color);
 									view.placeSettlement(vertexLoc, color, true);
 								// If the vertex worth is 2, it's a city
 								} else if (vertex.getWorth() == 2) {
-									console.log('MapController.update(): City: (' + vertexLoc.x + ',' + vertexLoc.y + ',' + vertexLoc.dir + ') ' + vertex.getOwnerID() + ' ' + color);
+									//console.log('MapController.update(): City: (' + vertexLoc.x + ',' + vertexLoc.y + ',' + vertexLoc.dir + ') ' + vertex.getOwnerID() + ' ' + color);
 									view.placeCity(vertexLoc, color, true);
 								}
 							}

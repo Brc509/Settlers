@@ -67,7 +67,6 @@ catan.map.Controller = (function catan_controller_namespace() {
 			var color = this.colorLookupPlayerIndex[playerIndex];
 			this.getModalView().showModal('robber');
 			this.getView().startDrop('robber', color);
-			// TODO
 		}
         
 		/**
@@ -97,7 +96,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 			this.disconnected = disconnected;
 			var canAfford = false;
 			var cp = this.getClientModel().clientPlayer;
-			switch (pieceType) {
+			switch (pieceType) { // TODO I believe that checking affordability here may be irrelevant.
 				case 'city':
 					canAfford = cp.canAffordCity();
 					break;
@@ -224,12 +223,12 @@ catan.map.Controller = (function catan_controller_namespace() {
 										isValid = true;
 										break;
 									}
-								} else {
-									var connectedEdge = hg.getHex(connectedEdgeLoc).getEdge(connectedEdgeLoc.direction);
-									if (connectedEdge.getOwnerID() == this.getClientModel().playerIndex) {
-										isValid = true;
-										break;
-									}
+								}
+								// Otherwise, check the owner of the adjacent edge
+								var connectedEdge = hg.getHex(connectedEdgeLoc).getEdge(connectedEdgeLoc.direction);
+								if (connectedEdge.getOwnerID() == this.getClientModel().playerIndex) {
+									isValid = true;
+									break;
 								}
 							}
 						}
@@ -335,15 +334,16 @@ catan.map.Controller = (function catan_controller_namespace() {
 					break;
 				case 'road':
 					if (this.roadBuilding) {
+						// If the second road building road was just placed, execute the road building command
 						if (this.roadBuildingNumBuilt == 2) {
 							this.roadBuilding = false;
 							var roadBuildingLoc2 = new EdgeLocation(new HexLocation(loc.x, loc.y), EdgeDirection[loc.dir]);
-							// Execute the road building
 							this.getClientModel().clientProxy.roadBuilding(this.roadBuildingLoc1, roadBuildingLoc2, this.getClientModel().updateModel);
+						// If the first road building road was just placed, continue to the second
 						} else {
 							this.roadBuildingLoc1 = new EdgeLocation(new HexLocation(loc.x, loc.y), EdgeDirection[loc.dir]);
 							this.roadBuildingNumBuilt++;
-							setTimeout(function() {this.startMove('road', true, false)}.bind(this), 0);
+							setTimeout(function() {this.startMove('road', true, false)}.bind(this), 0); // TODO Change this to this.getView().startDrop()?
 						}
 					} else {
 						// Place the road

@@ -88,6 +88,7 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 				this.View.updateStateView(false, "Not your turn");
 			}
 
+
 		}
 
 		TurnTrackerController.prototype.updatePlayers = function(){

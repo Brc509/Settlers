@@ -69,8 +69,8 @@ catan.roll.Controller = (function roll_namespace(){
 				var numba1=Math.floor((Math.random()*6) + 1);
             	var numba2=Math.floor((Math.random()*6) + 1);
 
-				// value = numba1 + numba2;
-				value = 7;
+				value = numba1 + numba2;
+				// value = 7;
 
 
 				this.rollResultView.amountDisplay.textContent = "You rolled " + value;

@@ -91,7 +91,7 @@ catan.client = (function Client_NameSpace(){
 				this.turnTrackerView,
 				this.mapView,
 				this.resourceView,
-				this.vpTrackerView,
+				//this.vpTrackerView,
 				this.logView,
 			]
 			var _views = views;

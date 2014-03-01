@@ -28,7 +28,7 @@ catan.setup.Controller = (function(){
 
 			Controller.call(this,undefined,clientModel);
 
-			if(status != "FirstRound" || status != "SecondRound"){
+			if(status != "FirstRound" && status != "SecondRound"){
 		
 				window.location = "/catan.html";
 

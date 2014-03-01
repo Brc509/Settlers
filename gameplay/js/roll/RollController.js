@@ -43,9 +43,13 @@ catan.roll.Controller = (function roll_namespace(){
 		RollController.prototype.closeResult = function(){
 			this.showRollResult = false;
 			this.rollResultView.closeModal();
-			this.ClientModel.rollNumber(value);
-
 			this.ClientModel.isModalUp = false;
+
+			if(this.ClientModel.turnTracker.status == "Robbing" && value == 7 && !this.ClientModel.isModalUp){
+				this.ClientModel.isModalUp = true;
+				this.ClientModel.observers[2].getModalView().showModal("robber");
+				this.ClientModel.observers[2].getView().startDrop("robber");
+			}
 	
 		}
 		
@@ -65,13 +69,16 @@ catan.roll.Controller = (function roll_namespace(){
 				var numba1=Math.floor((Math.random()*6) + 1);
             	var numba2=Math.floor((Math.random()*6) + 1);
 
-				value = numba1 + numba2;
-				// value = 7;
+				// value = numba1 + numba2;
+				value = 7;
+
 
 				this.rollResultView.amountDisplay.textContent = "You rolled " + value;
 
 				this.rollResultView.showModal();
 				this.ClientModel.isModalUp = true;
+				this.ClientModel.rollNumber(value);
+
 			}
 
 		};
@@ -111,7 +118,8 @@ catan.roll.Controller = (function roll_namespace(){
 											myself.View.MessageElem.innerText = str;
 											myself.rollDice();},1000);},1000);},1000);},1000);},1000);
 
-				}else if(value == 7 && !this.ClientModel.isModalUp && this.ClientModel.turnTracker.status == "Robbing"){
+				}else if((!this.ClientModel.isModalUp && this.ClientModel.turnTracker.status == "Robbing") || 
+					(!this.ClientModel.isModalUp && this.ClientModel.turnTracker.status == "Robbing" && value == 7)) {
 					this.ClientModel.isModalUp = true;
 					this.ClientModel.observers[2].getModalView().showModal("robber");
 					this.ClientModel.observers[2].getView().startDrop("robber");	

@@ -112,9 +112,6 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 
 				this.View.updatePlayer(object);
 
-				var numba = parseInt(p);
-				this.View.initializePlayer(numba, this.ClientModel.players[p].name, this.ClientModel.players[p].color);
-
 			}
 		}
 

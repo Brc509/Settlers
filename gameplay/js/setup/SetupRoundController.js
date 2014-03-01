@@ -41,26 +41,27 @@ catan.setup.Controller = (function(){
 	
 	SetupRoundController.prototype.update = function(){	
 
-		var status = this.mapController.ClientModel.turnTracker.status;
+		var cm = this.mapController.ClientModel;
+		var status = cm.turnTracker.status;
 		if(status == "FirstRound" || status == "SecondRound"){
 
-			var currPlayerIndex = this.mapController.ClientModel.playerIndex;
-			var players = this.mapController.ClientModel.players;
+			var currPlayerIndex = cm.playerIndex;
+			var players = cm.players;
 			var settlements = players[currPlayerIndex].settlements;
 			var roads = players[currPlayerIndex].roads;
-			if(this.mapController.ClientModel.turnTracker.currentTurn == currPlayerIndex){
+			if(cm.turnTracker.currentTurn == currPlayerIndex){
 
 				if(roads == 14 && settlements == 4 && status == "FirstRound"){
-					this.mapController.ClientModel.finishTurn();		
-				}else if(roads == 15 && settlements == 5 && status == "FirstRound"){
+					cm.finishTurn();		
+				}else if(roads == 15 && settlements == 5 && status == "FirstRound" && !cm.isModalUp){
 					this.mapController.startMove("settlement", true, true);		
-				}else if(roads == 15 && settlements == 4 && status == "FirstRound"){
+				}else if(roads == 15 && settlements == 4 && status == "FirstRound" && !cm.isModalUp){
 					this.mapController.startMove("road", true, true);		
 				}else if(roads == 13 && settlements == 3 && status == "SecondRound"){
-					this.mapController.ClientModel.finishTurn();		
-				}else if(roads == 14 && settlements == 4 && status == "SecondRound"){
+					cm.finishTurn();		
+				}else if(roads == 14 && settlements == 4 && status == "SecondRound" && !cm.isModalUp){
 					this.mapController.startMove("settlement", true, true);		
-				}else if(roads == 14 && settlements == 3 && status == "SecondRound"){
+				}else if(roads == 14 && settlements == 3 && status == "SecondRound" && !cm.isModalUp){
 					this.mapController.startMove("road", true, true);		
 				}		
 			}

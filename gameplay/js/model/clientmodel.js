@@ -55,7 +55,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			myself.clientProxy.gameModel(function (error, model) {
 				if (error) {
 					console.log('Error Info: ', model);
-					alert ('clientProxy returned error');
+					alert ('ERROR: ');
 				}
 				else {
 					myself.updateModel(error, model);
@@ -67,7 +67,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.updateModel = function(error, model) {
 			if (error) {
 				console.log('Error Info: ', model);
-				alert ('clientProxy returned error'); // TODO Change so that it shows useful information about the error
+				alert ('ERROR: ');
 			} else {
 				//console.log(model);
 				myself.bank = model.bank;

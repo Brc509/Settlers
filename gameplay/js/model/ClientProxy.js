@@ -12,6 +12,8 @@ catan.models.ClientProxy = (function() {
 	var vdLookup = ["W","NW","NE","E","SE","SW"]; 			// From hexgrid.js
 	var VertexDirection = core.numberEnumeration(vdLookup);	// From hexgrid.js
 	
+	var myself;
+	
 	/**
 		The ClientProxy class is an intermediary between the server and the client.
 		<pre>
@@ -30,6 +32,8 @@ catan.models.ClientProxy = (function() {
 		this.clientModel = clientModel;
 		this.movesCommand = new catan.models.MovesCommand();
 		this.revision = -1;
+		this.finishTurnCount = 0;
+		myself = this;
 	};
 	ClientProxy.prototype.constructor = ClientProxy;
 
@@ -46,7 +50,6 @@ catan.models.ClientProxy = (function() {
 			url += '?revision=' + this.revision;
 		}
 		// Create and execute the command
-		var myself = this;
 		var command = new catan.models.GetCommand(url);
 		command.execute(function(error, data) {
 			if (error) {
@@ -56,6 +59,8 @@ catan.models.ClientProxy = (function() {
 					console.log('ClientProxy.gameModel(): Received new model revision.');
 					myself.revision = data.revision;
 					callback(false, data);
+				} else {
+					console.log('ClientProxy.gameModel()');
 				}
 			}
 		});
@@ -201,14 +206,24 @@ catan.models.ClientProxy = (function() {
 		@method finishTurn
 	*/
 	ClientProxy.prototype.finishTurn = function(callback) {
-		// Create the data for the command
-		var data = {};
-		data.type = 'finishTurn';
-		data.playerIndex = this.clientModel.playerIndex;
-		// Create and execute the command
-		this.movesCommand.url 	= '/moves/finishTurn';
-		this.movesCommand.data 	= data;
-		this.movesCommand.execute(callback);
+		if (!this.doingFinishTurn) {
+			this.doingFinishTurn = true;
+			// Create the data for the command
+			var data = {};
+			data.type = 'finishTurn';
+			data.playerIndex = this.clientModel.playerIndex;
+			// Create and execute the command
+			this.movesCommand.url 	= '/moves/finishTurn';
+			this.movesCommand.data 	= data;
+			this.movesCommand.execute(function(error, data) {
+				callback(error, data);
+				myself.doingFinishTurn = false;
+			});
+			this.finishTurnCount++;
+			if (this.finishTurnCount == 2) {
+				console.log();
+			}
+		}
 	};
 	
 	/**

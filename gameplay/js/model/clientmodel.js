@@ -449,6 +449,14 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		}
 
 		/**
+			Trades resources between the client and the clientModel's bank
+		*/
+		ClientModel.prototype.maritimeTrade = function (ratio, input, output) {
+
+			this.clientProxy.maritimeTrade(ratio, input, output, this.updateModel);
+		}
+
+		/**
 		    <pre>
 		        POST: If player is last one to discard, client's model status is now "Robbing"
 		        POST: Player lost the resources that they discarded
@@ -471,6 +479,11 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 		ClientModel.prototype.finishTurn = function(){
 			this.clientProxy.finishTurn(this.updateModel);
+		}
+
+		ClientModel.prototype.isMyTurn = function() {
+
+			return (this.turnTracker.currentTurn == this.playerIndex);
 		}
         
 		return ClientModel;

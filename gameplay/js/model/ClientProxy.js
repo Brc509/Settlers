@@ -220,7 +220,7 @@ catan.models.ClientProxy = (function() {
 		</pre>
 		
 		@method maritimeTrade
-		@param {ResourceList} ratio The trade ratios expressed as integers (i.e. 3 = 3:1 ratio)
+		@param {integer} ratio The trade ratios expressed as integers (i.e. 3 = 3:1 ratio)
 		@param {string} inputResource The type of resource the owning player is giving
 		@param {string} outputResource The type of resource the owning player is receiving
 	*/

@@ -125,6 +125,26 @@ catan.models.ResourceList  = (function clientModelNameSpace(){
             return false;
         }
 
+        /*
+            Gets the number of resources corresponding to the string resource name
+        */
+        ResourceList.prototype.getResource = function(resource) {
+
+            if (resource == "brick")
+                return this.brick;
+            if (resource == "ore")
+                return this.ore;
+            if (resource == "sheep")
+                return this.sheep;
+            if (resource == "wheat")
+                return this.wheat;
+            if (resource == "wood")
+                return this.wood;
+
+            console.log("ERROR: Could not find resource in ResourceList.getResource");
+            return -1;
+        }
+
         return ResourceList;
     }());
 

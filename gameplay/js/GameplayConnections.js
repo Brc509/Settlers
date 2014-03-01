@@ -128,7 +128,8 @@ catan.client = (function Client_NameSpace(){
 			var marView = new Views.MarTrade();
 			var marController = new Controllers.MarTrade(marView, clientModel);
 			marView.setController(marController);
-			
+			marController.init();
+
 			views.marTrade = marView;
 			controllers.marTrade = marController;
 		}

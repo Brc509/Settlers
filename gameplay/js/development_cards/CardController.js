@@ -35,7 +35,6 @@ catan.devCards.Controller = (function(){
 			this.clientModel = clientModel;
 			this.view = view;
 
-
 			// Store the soldierAction and roadAction
 			this.soldierAction = soldierAction;
 			this.roadAction = roadAction;
@@ -64,8 +63,16 @@ catan.devCards.Controller = (function(){
 			cardTypes = catan.definitions.CardTypes;
 			cards = this.clientModel.clientPlayer.oldDevCards;
 
-			for (c in cardTypes)
-				this.view.setCardEnabled(cardTypes[c], (cards[cardTypes[c]] > 0));
+			if (this.clientModel.clientPlayer.playedDevCard) {
+
+				for (c in cardTypes)
+					this.view.setCardEnabled(cardTypes[c], false);
+			}
+			else {
+
+				for (c in cardTypes)
+					this.view.setCardEnabled(cardTypes[c], (cards[cardTypes[c]] > 0));
+			}
 		}
 
 		/**

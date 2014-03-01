@@ -48,7 +48,6 @@ catan.definitions.DisplayElement.ChooserElement = ( function(){
 			if(this.getDisplayElems()[index].textContent == NULL_VALUE)
 				buttons[index].click()
 		}
-		console.log(buttons);
 	}
                 
 	ChooserElement.prototype.buildView= function(){

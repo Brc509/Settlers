@@ -103,8 +103,7 @@ catan.resources.Controller = (function resources_namespace() {
 		ResourceBarController.prototype.setEnabled = function() {
 
 			var p = this.clientModel.clientPlayer;
-			if (this.clientModel.playerIndex == this.clientModel.turnTracker.currentTurn
-				&& !p.playedDevCard) {
+			if (this.clientModel.isMyTurn()) {
 
 				this.view.setActionEnabled("Roads", p.canAffordRoad());
 				this.view.setActionEnabled("Settlements", p.canAffordSettlement());

@@ -400,9 +400,9 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		}
 
 		ClientModel.prototype.offerTrade = function (receiver, offer) {
-			if (canOfferTrade()) {
-				this.clientProxy.offerTrade(offer, receiver, this.updateModel);
-			}
+			//if (canOfferTrade()) {
+				this.clientProxy.offerTrade(receiver, offer, this.updateModel);
+			//}
 		}
 
 		/**

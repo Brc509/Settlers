@@ -541,18 +541,35 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 			{
 				if(this.setResources.length > 0 && this.getResources.length > 0)
 				{
-					for(var i=0;i<this.setResources.length;i++)
-					{
-					
-					}
+					console.log(this.getResources);
 					
 					for(var i=0;i<this.getResources.length;i++)
 					{
-					
-					}
-				
+						if(this.getResources[i] == "brick" && this.receivingBrick)
+							this.brickAmt = this.brickAmt*(-1);
+						else if(this.getResources[i] == "wood" && this.receivingWood)
+							this.woodAmt = this.woodAmt*(-1);
+						else if(this.getResources[i] == "wheat" && this.receivingWheat)
+							this.wheatAmt = this.wheatAmt*(-1);
+						else if(this.getResources[i] == "sheep" && this.receivingSheep)
+							this.sheepAmt = this.sheepAmt*(-1);
+						else if(this.getResources[i] == "ore" && this.receivingOre)
+							this.oreAmt = this.oreAmt*(-1);
+					}			
 				}
+				
+				this.offer = {
+                "brick": this.brickAmt,
+                "ore": this.oreAmt,
+                "sheep": this.sheepAmt,
+                "wheat": this.wheatAmt,
+                "wood": this.woodAmt
+				};
+				
+				console.log(this.offer);
 			
+				this.clientModel.offerTrade(1, this.offer);
+				
 				this.waitingView.showModal();
 				
 				//send offer through the server here !!!!
@@ -586,13 +603,11 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 				this.view.setResourceSelectionEnabled(false);
 				this.view.setTradeButtonEnabled(false);
 				this.view.setPlayerSelectionEnabled(false);
-			}
-			else
-			{							
-				this.view.setPlayerSelectionEnabled(true);
-			
+				
 				if(this.clientModel.tradeOffer != undefined)
 				{
+					console.log(this.clientModel.tradeOffer);
+					
 					if(this.clientModel.tradeOffer.receiver == this.clientModel.playerID)
 					{
 						// need to check client model for tradeOffer to parse and display to receiver
@@ -603,11 +618,11 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 						this.acceptView.showModal();
 					}
 				}
-				else
-				{
-					this.waitingView.closeModal();
-				}
-				
+			}
+			else
+			{							
+				this.view.setPlayerSelectionEnabled(true);
+				//this.waitingView.closeModal();
 				this.view.setStateMessage("select a player");
 				this.view.setResourceSelectionEnabled(false);
 				this.view.setTradeButtonEnabled(false);

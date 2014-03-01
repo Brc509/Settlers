@@ -15,7 +15,7 @@ catan.points.Controller = (function VPController_Class(){
 
 	PointController.prototype = core.inherit(Controller.prototype);
 
-	core.defineProperty(PointController.prototype, "GameFinishedView");
+	core.defineProperty(PointController.prototype, "gameFinishedView");
 
 	/** 
 		@class PointController
@@ -39,11 +39,12 @@ catan.points.Controller = (function VPController_Class(){
 		if (clientModel.clientPlayer.victoryPoints > 9) {
 			this.gameFinishedView.setWinner(clientModel.clientPlayer.name, true);
 			this.gameFinishedView.showModal();
-		}
-		for (p in players) {
-			if (players[p].victoryPoints > 9) {
-				this.gameFinishedView.setWinner(players[p].name, false);
-				this.gameFinishedView.showModal();	
+		} else {
+			for (p in players) {
+				if (players[p].victoryPoints > 9) {
+					this.gameFinishedView.setWinner(players[p].name, false);
+					this.gameFinishedView.showModal();	
+				}
 			}
 		}
 	}

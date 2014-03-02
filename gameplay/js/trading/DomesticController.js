@@ -46,6 +46,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 			this.receivingSheep = false;
 			this.receivingOre = false;
 			this.trade;
+			this.receiverIndex;
 			
 			this.clientModel = clientModel;
 			this.view = view;
@@ -567,9 +568,19 @@ catan.trade.domestic.Controller= (function trade_namespace(){
                 "wood": this.woodAmt
 				};
 				
-				console.log(this.offer);
+				console.log(this.trader);
+				
+				this.receiverIndex = -1;
+				for(var i in this.clientModel.players)
+				{
+					if(this.clientModel.players[i].name == this.trader.name)
+						this.receiverIndex = i;
+						
+					console.log(this.clientModel.players[i].name);
+					console.log(this.trader);
+				}
 			
-				this.clientModel.offerTrade(1, this.offer);
+				this.clientModel.offerTrade(this.receiverIndex, this.offer);
 				
 				this.waitingView.showModal();
 				
@@ -588,8 +599,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 		*/
 		DomesticController.prototype.acceptTrade = function(willAccept){
 		
-			// need to update sender and receiver of changes (if any) to their resource cards through the server
-			// receiver accepting or not determines if a change gets sent to the server.
+			this.clientModel.acceptTrade(willAccept);
 		
 			this.acceptView.closeModal();
 		};
@@ -598,6 +608,9 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 		
 			this.trade = model.model.tradeOffer;
 			console.log(this.trade);
+			
+			if(typeof this.trade == "undefined")
+				this.waitingView.closeModal();
 			
 			if(this.clientModel.turnTracker.currentTurn != this.clientModel.playerID)
 			{
@@ -617,27 +630,69 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 						// need to check client model for tradeOffer to parse and display to receiver
 						console.log(this.trade.wood)
 						
-						if(this.trade.offer.wood > 0)
-							this.acceptView.addGiveResource('wood', this.trade.offer.wood);
-						if(this.trade.offer.wood < 0)
-							this.acceptView.addGetResource('wood', this.trade.offer.wood);
-						if(this.trade.offer.brick > 0)
-							this.acceptView.addGiveResource('brick', this.trade.offer.brick);
-						if(this.trade.offer.brick < 0)
-							this.acceptView.addGetResource('brick', this.trade.offer.brick);
-						if(this.trade.offer.sheep > 0)
-							this.acceptView.addGiveResource('sheep', this.trade.offer.sheep);
-						if(this.trade.offer.sheep < 0)
-							this.acceptView.addGetResource('sheep', this.trade.offer.sheep);
-						if(this.trade.offer.ore > 0)
-							this.acceptView.addGiveResource('ore', this.trade.offer.ore);
-						if(this.trade.offer.ore < 0)
-							this.acceptView.addGetResource('ore', this.trade.offer.ore);
-						if(this.trade.offer.wheat > 0)
-							this.acceptView.addGiveResource('wheat', this.trade.offer.wheat);
-						if(this.trade.offer.wheat < 0)
-							this.acceptView.addGetResource('wheat', this.trade.offer.wheat);							
+						this.acceptView.setPlayerName(this.clientModel.players[this.trade.sender].name);
 						
+						if(this.trade.offer.wood > 0)
+						{
+							this.acceptView.addGiveResource('wood', this.trade.offer.wood);
+						}
+						if(this.trade.offer.wood < 0)
+						{
+							if(this.trade.offer.wood*(-1) > this.clientModel.players[this.clientModel.playerID].resources.wood) 
+								this.acceptView.setAcceptEnabled(false);
+							else
+								this.acceptView.setAcceptEnabled(true);
+							this.acceptView.addGetResource('wood', this.trade.offer.wood);
+						}
+						if(this.trade.offer.brick > 0)
+						{
+							this.acceptView.addGiveResource('brick', this.trade.offer.brick);
+						}
+						if(this.trade.offer.brick < 0)
+						{
+							if(this.trade.offer.brick*(-1) > this.clientModel.players[this.clientModel.playerID].resources.brick) 
+								this.acceptView.setAcceptEnabled(false);
+							else
+								this.acceptView.setAcceptEnabled(true);
+							this.acceptView.addGetResource('brick', this.trade.offer.brick);
+						}
+						if(this.trade.offer.sheep > 0)
+						{
+							this.acceptView.addGiveResource('sheep', this.trade.offer.sheep);
+						}
+						if(this.trade.offer.sheep < 0)
+						{
+							if(this.trade.offer.sheep*(-1) > this.clientModel.players[this.clientModel.playerID].resources.sheep) 
+								this.acceptView.setAcceptEnabled(false);
+							else
+								this.acceptView.setAcceptEnabled(true);
+							this.acceptView.addGetResource('sheep', this.trade.offer.sheep);
+						}
+						if(this.trade.offer.ore > 0)
+						{
+							this.acceptView.addGiveResource('ore', this.trade.offer.ore);
+						}
+						if(this.trade.offer.ore < 0)
+						{
+							if(this.trade.offer.ore*(-1) > this.clientModel.players[this.clientModel.playerID].resources.ore) 
+								this.acceptView.setAcceptEnabled(false);
+							else
+								this.acceptView.setAcceptEnabled(true);
+							this.acceptView.addGetResource('ore', this.trade.offer.ore);
+						}
+						if(this.trade.offer.wheat > 0)
+						{
+							this.acceptView.addGiveResource('wheat', this.trade.offer.wheat);
+						}
+						if(this.trade.offer.wheat < 0)
+						{
+							if(this.trade.offer.wheat*(-1) > this.clientModel.players[this.clientModel.playerID].resources.wheat) 
+								this.acceptView.setAcceptEnabled(false);
+							else
+								this.acceptView.setAcceptEnabled(true);
+							this.acceptView.addGetResource('wheat', this.trade.offer.wheat);
+						}
+			
 						this.acceptView.showModal();
 					}
 				}

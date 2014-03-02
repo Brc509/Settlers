@@ -74,6 +74,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 				myself.deck = model.deck;
 				myself.chat = model.chat;
 				myself.log = model.log;
+				myself.model = model;
 				myself.turnTracker = model.turnTracker;
 				myself.map.update(model.map);
 				

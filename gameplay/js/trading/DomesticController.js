@@ -45,6 +45,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 			this.receivingWheat = false;
 			this.receivingSheep = false;
 			this.receivingOre = false;
+			this.trade;
 			
 			this.clientModel = clientModel;
 			this.view = view;
@@ -593,9 +594,10 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 			this.acceptView.closeModal();
 		};
 		
-		DomesticController.prototype.update = function(){
+		DomesticController.prototype.update = function(model){
 		
-			console.log(this.clientModel);
+			this.trade = model.model.tradeOffer;
+			console.log(this.trade);
 			
 			if(this.clientModel.turnTracker.currentTurn != this.clientModel.playerID)
 			{
@@ -604,16 +606,37 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 				this.view.setTradeButtonEnabled(false);
 				this.view.setPlayerSelectionEnabled(false);
 				
-				if(this.clientModel.tradeOffer != undefined)
+				console.log(typeof this.trade);
+				
+				if(typeof this.trade != "undefined")
 				{
-					console.log(this.clientModel.tradeOffer);
+					console.log(this.trade.offer);
 					
-					if(this.clientModel.tradeOffer.receiver == this.clientModel.playerID)
+					if(this.trade.receiver == this.clientModel.playerID)
 					{
 						// need to check client model for tradeOffer to parse and display to receiver
+						console.log(this.trade.wood)
 						
-						//this.acceptView.addGiveResource('ore', this.oreAmt);
-						//this.acceptView.addGetResource('ore', 1);	
+						if(this.trade.offer.wood > 0)
+							this.acceptView.addGiveResource('wood', this.trade.offer.wood);
+						if(this.trade.offer.wood < 0)
+							this.acceptView.addGetResource('wood', this.trade.offer.wood);
+						if(this.trade.offer.brick > 0)
+							this.acceptView.addGiveResource('brick', this.trade.offer.brick);
+						if(this.trade.offer.brick < 0)
+							this.acceptView.addGetResource('brick', this.trade.offer.brick);
+						if(this.trade.offer.sheep > 0)
+							this.acceptView.addGiveResource('sheep', this.trade.offer.sheep);
+						if(this.trade.offer.sheep < 0)
+							this.acceptView.addGetResource('sheep', this.trade.offer.sheep);
+						if(this.trade.offer.ore > 0)
+							this.acceptView.addGiveResource('ore', this.trade.offer.ore);
+						if(this.trade.offer.ore < 0)
+							this.acceptView.addGetResource('ore', this.trade.offer.ore);
+						if(this.trade.offer.wheat > 0)
+							this.acceptView.addGiveResource('wheat', this.trade.offer.wheat);
+						if(this.trade.offer.wheat < 0)
+							this.acceptView.addGetResource('wheat', this.trade.offer.wheat);							
 						
 						this.acceptView.showModal();
 					}

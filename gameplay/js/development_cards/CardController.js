@@ -108,6 +108,7 @@ catan.devCards.Controller = (function(){
 		DevCardController.prototype.useYearOfPlenty = function(resource1, resource2){
 
 			this.ClientModel.yearOfPlenty(resource1, resource2);
+			this.view.clearView();
 		}
         
 		/**
@@ -119,6 +120,7 @@ catan.devCards.Controller = (function(){
 		DevCardController.prototype.useMonopoly= function(resource){
 
 			this.ClientModel.monopoly(resource);
+			this.view.clearView();
 		}
         
 		/**
@@ -129,6 +131,7 @@ catan.devCards.Controller = (function(){
 		DevCardController.prototype.useMonument = function(){
 
 			this.ClientModel.monument();
+			this.view.clearView();
 		}
         
 		/**
@@ -139,6 +142,7 @@ catan.devCards.Controller = (function(){
 		DevCardController.prototype.useSoldier= function(){
 
 			this.soldierAction();
+			this.view.clearView();
 		}
         
 		/**
@@ -149,6 +153,7 @@ catan.devCards.Controller = (function(){
 		DevCardController.prototype.useRoadBuild = function(resource){
 
 			this.roadAction();
+			this.view.clearView();
 		}
 
 		return DevCardController;

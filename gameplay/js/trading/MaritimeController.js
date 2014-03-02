@@ -71,7 +71,7 @@ catan.trade.maritime.Controller = (function trade_namespace(){
 			ratios.wheat = 4;
 			ratios.wood = 4;
 
-/*
+			/*
 			var ports = this.clientModel.map.ports;
 			for (var i = 0; i < ports.length; i++) {
 

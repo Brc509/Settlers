@@ -50,7 +50,6 @@ catan.roll.Controller = (function roll_namespace(){
 				this.ClientModel.observers[2].getModalView().showModal("robber");
 				this.ClientModel.observers[2].getView().startDrop("robber");
 			}
-	
 		}
 		
 		/**

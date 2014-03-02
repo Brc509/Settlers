@@ -45,6 +45,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 			catan.core.BaseController.call(this,view,model);
 			this.setModalView(modalView);
 			this.setRobView(robView);
+			this.soldierPlayed = false;
 		}
         
         /**
@@ -53,7 +54,13 @@ catan.map.Controller = (function catan_controller_namespace() {
 		 @method robPlayer
 		*/
 		MapController.prototype.robPlayer = function(orderID){
-			this.getClientModel().clientProxy.robPlayer(orderID, this.robberSpot, this.getClientModel().updateModel);
+			if (this.soldierPlayed) {
+				this.getClientModel().soldier(this.robberSpot, orderID);
+				this.soldierPlayed = false;
+			}
+			else {
+				this.getClientModel().clientProxy.robPlayer(orderID, this.robberSpot, this.getClientModel().updateModel);
+			}
 			this.getRobView().closeModal();
 			this.getClientModel().isModalUp = false;
 		}
@@ -67,6 +74,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 		MapController.prototype.doSoldierAction = function(){
 			var playerIndex = this.getClientModel().playerIndex;
 			var color = this.colorLookupPlayerIndex[playerIndex];
+			this.soldierPlayed = true;
 			this.getModalView().showModal('robber');
 			this.getClientModel().isModalUp = true;
 			this.getView().startDrop('robber', color);

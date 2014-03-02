@@ -47,6 +47,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 			this.receivingOre = false;
 			this.trade;
 			this.receiverIndex;
+			this.myIndex;
 			
 			this.clientModel = clientModel;
 			
@@ -609,8 +610,15 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 			
 			if(typeof this.trade == "undefined")
 				this.waitingView.closeModal();
+				
+			this.myIndex = -1;
+			for(var i in this.clientModel.players)
+			{
+				if(this.clientModel.players[i].playerID == this.clientModel.playerID)
+					this.myIndex = i;
+			}
 			
-			if(this.clientModel.turnTracker.currentTurn != this.clientModel.playerID)
+			if(this.clientModel.turnTracker.currentTurn != this.myIndex)
 			{
 				this.view.setStateMessage("Guess What? NACHO TURN!!!");
 				this.view.setResourceSelectionEnabled(false);
@@ -628,9 +636,9 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 					{
 						if(this.clientModel.players[i].playerID == this.clientModel.playerID)
 							this.receiverIndex = i;
-							
-						console.log(this.clientModel.players[i].playerID);
-						console.log(this.clientModel.playerID);
+									
+						//console.log(this.clientModel.players[i].playerID);
+						//console.log(this.clientModel.playerID);
 					}
 					
 					console.log(this.receiverIndex);

@@ -51,7 +51,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 			
 			this.clientModel = clientModel;
 			
-			console.log(this.clientModel);
+			//console.log(this.clientModel);
 			
 			this.view = view;
 			this.legalTraders = new Array();
@@ -339,7 +339,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 		* @return void
 		*/
 		DomesticController.prototype.increaseResourceAmount = function(resource){
-			console.log(this.clientModel.players);
+			//console.log(this.clientModel.players);
 			
 				if(resource == "wood")
 				{
@@ -606,7 +606,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 		DomesticController.prototype.update = function(model){
 		
 			this.trade = model.model.tradeOffer;
-			console.log(this.clientModel);
+			//console.log(this.clientModel);
 			
 			if(typeof this.trade == "undefined")
 				this.waitingView.closeModal();
@@ -629,7 +629,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 				
 				if(typeof this.trade != "undefined")
 				{
-					console.log(this.trade.receiver);
+					//console.log(this.trade.receiver);
 					
 					this.receiverIndex = -1;
 					for(var i in this.clientModel.players)
@@ -641,7 +641,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 						//console.log(this.clientModel.playerID);
 					}
 					
-					console.log(this.receiverIndex);
+					//console.log(this.receiverIndex);
 					
 					if(this.trade.receiver == this.receiverIndex)
 					{

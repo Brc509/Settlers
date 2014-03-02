@@ -145,6 +145,41 @@ catan.models.ResourceList  = (function clientModelNameSpace(){
             return -1;
         }
 
+        /*
+            Sets "resource" resource's value to "value"
+        */
+        ResourceList.prototype.setResource = function(resource, value) {
+
+            if (resource == "brick")
+                this.brick = value;
+            if (resource == "ore")
+                this.ore = value;
+            if (resource == "sheep")
+                this.sheep = value;
+            if (resource == "wheat")
+                this.wheat = value;
+            if (resource == "wood")
+                this.wood = value;
+        }
+
+        /*
+            Sets all resources to 3 IF they're greater than 3
+            (Used for the ratio resource list in Maritime trading)
+        */
+        ResourceList.prototype.setRatioThree = function() {
+
+            if (this.brick > 3)
+                this.brick = 3;
+            if (this.ore > 3)
+                this.ore = 3;
+            if (this.sheep > 3)
+                this.sheep = 3;
+            if (this.wheat > 3)
+                this.wheat = 3;
+            if (this.wood > 3)
+                this.wood = 3;
+        }
+
         return ResourceList;
     }());
 

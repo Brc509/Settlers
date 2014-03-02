@@ -301,6 +301,14 @@ catan.models.Map = (function mapNameSpace() {
 		Port.prototype.getInputResource = function() {
 			return this.inputResource;
 		};
+
+		Port.prototype.getInput = function() {
+
+			if (this.inputResource)
+				return this.inputResource;
+			else
+				return "none";
+		}
 		
 		return Port;
 		

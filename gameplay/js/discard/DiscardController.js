@@ -55,7 +55,7 @@ catan.discard.Controller = (function discard_namespace(){
 		core.defineProperty(DiscardController.prototype,"waitingView");
 
 		DiscardController.prototype.update = function (model) {
-			console.log('DiscardController. ready for some updating', model.turnTracker.status);
+			//console.log('DiscardController. ready for some updating', model.turnTracker.status);
 			if (model.turnTracker.status == "Discarding" && !this.waiting) {
 				this.view.showModal();
 				this.clientModel.isModalUp = true;

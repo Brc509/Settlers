@@ -61,27 +61,50 @@ catan.trade.maritime.Controller = (function trade_namespace(){
 		MaritimeController.prototype.setResourceRatios = function() {
 
 			var ratios = new catan.models.ResourceList();
-			var resourcesTypes = ["brick", "ore", "sheep", "wheat", "wood"];
+			var directions = ["W", "NW", "NE", "E", "SE", "SW"];
 
-			// TODO: Get the actual values (4 is standard, 3 is if player is on a 3:1 location, 
-			// 		 2 is if player is on a tile for that specific resource)
 			ratios.brick = 4;
-			ratios.ore = 4;	
+			ratios.ore = 4;
 			ratios.sheep = 4;
 			ratios.wheat = 4;
 			ratios.wood = 4;
 
-			/*
-			var ports = this.clientModel.map.ports;
-			for (var i = 0; i < ports.length; i++) {
+			var hexes = this.clientModel.map.hexGrid.hexes;
 
-				var curPort = ports[i];
-				for (var j = 0; j < ports[i].validVertexes.length; j++) {
+			for (i in this.clientModel.map.ports) {
 
-					var curVertex = ports[i].validVertexes[j];
-					console.log(curVertex.direction);
+				var p = this.clientModel.map.ports[i];
+				var vv0 = p.validVertexes[0];
+				var vv1 = p.validVertexes[1];
+				var res = p.getInput();
+				var vvOwner0;
+				var vvOwner1;
+
+				for (var j = 0; j < hexes.length; j++) {
+
+					for (var k = 0; k < hexes[j].length; k++) {
+
+						var hex = hexes[j][k];
+						for (var l = 0; l < hex.vertexes.length; l++) {
+
+							var vLoc = hex.vertexes[l].location;
+							if (vLoc.x === vv0.x && vLoc.y === vv0.y && directions[vLoc.direction] === vv0.direction)
+								vvOwner0 = hex.vertexes[l].ownerID;
+							if (vLoc.x === vv1.x && vLoc.y === vv1.y && directions[vLoc.direction] === vv1.direction)
+								vvOwner1 = hex.vertexes[l].ownerID;
+						}
+					}
 				}
-			}*/
+			
+				// Means that the current player IS on this port
+				if (vvOwner0 === this.clientModel.playerIndex || vvOwner1 === this.clientModel.playerIndex) {
+
+					if (res === "none")
+						ratios.setRatioThree();
+					else
+						ratios.setResource(res, 2);
+				}
+			}
 
 			this.ratios = ratios;
 		}
@@ -92,11 +115,11 @@ catan.trade.maritime.Controller = (function trade_namespace(){
 		MaritimeController.prototype.listBankResources = function() {
 
             var ownedResources = [];
-            var resourceTypes = ["brick", "ore", "sheep", "wheat", "wood"];
-            for (r in resourceTypes) {
+			var types = catan.definitions.ResourceTypes;
+            for (t in types) {
 
-            	if (this.clientModel.bank[resourceTypes[r]] > 0)
-            		ownedResources.push(resourceTypes[r]);
+            	if (this.clientModel.bank[types[t]] > 0)
+            		ownedResources.push(types[t]);
             }
             this.getResourceList = ownedResources;
         }

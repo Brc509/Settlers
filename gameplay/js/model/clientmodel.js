@@ -422,9 +422,9 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		}
 
 		ClientModel.prototype.acceptTrade = function (willAccept) {
-			if (canAcceptTrade()) {
+			//if (canAcceptTrade()) {
 				this.clientProxy.acceptTrade(willAccept, this.updateModel);
-			}
+			//}
 		}
 
 		/**

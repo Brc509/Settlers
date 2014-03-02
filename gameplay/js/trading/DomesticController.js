@@ -31,7 +31,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 			Controller.call(this,view,clientModel);
 			this.waitingView = waitingView;
 			this.acceptView = acceptView;
-			this.trader = "";
+			this.trader;
 			this.waitingView = waitingView;
 			this.woodAmt = 0;
 			this.brickAmt = 0;
@@ -49,6 +49,9 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 			this.receiverIndex;
 			
 			this.clientModel = clientModel;
+			
+			console.log(this.clientModel);
+			
 			this.view = view;
 			this.legalTraders = new Array();
 			for(var i in this.clientModel.players)
@@ -543,7 +546,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 			{
 				if(this.setResources.length > 0 && this.getResources.length > 0)
 				{
-					console.log(this.getResources);
+					//console.log(this.getResources);
 					
 					for(var i=0;i<this.getResources.length;i++)
 					{
@@ -568,16 +571,11 @@ catan.trade.domestic.Controller= (function trade_namespace(){
                 "wood": this.woodAmt
 				};
 				
-				console.log(this.trader);
-				
 				this.receiverIndex = -1;
 				for(var i in this.clientModel.players)
 				{
 					if(this.clientModel.players[i].name == this.trader.name)
 						this.receiverIndex = i;
-						
-					console.log(this.clientModel.players[i].name);
-					console.log(this.trader);
 				}
 			
 				this.clientModel.offerTrade(this.receiverIndex, this.offer);
@@ -607,7 +605,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 		DomesticController.prototype.update = function(model){
 		
 			this.trade = model.model.tradeOffer;
-			console.log(this.trade);
+			console.log(this.clientModel);
 			
 			if(typeof this.trade == "undefined")
 				this.waitingView.closeModal();
@@ -619,16 +617,28 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 				this.view.setTradeButtonEnabled(false);
 				this.view.setPlayerSelectionEnabled(false);
 				
-				console.log(typeof this.trade);
+				//console.log(typeof this.trade);
 				
 				if(typeof this.trade != "undefined")
 				{
-					console.log(this.trade.offer);
+					console.log(this.trade.receiver);
 					
-					if(this.trade.receiver == this.clientModel.playerID)
+					this.receiverIndex = -1;
+					for(var i in this.clientModel.players)
+					{
+						if(this.clientModel.players[i].playerID == this.clientModel.playerID)
+							this.receiverIndex = i;
+							
+						console.log(this.clientModel.players[i].playerID);
+						console.log(this.clientModel.playerID);
+					}
+					
+					console.log(this.receiverIndex);
+					
+					if(this.trade.receiver == this.receiverIndex)
 					{
 						// need to check client model for tradeOffer to parse and display to receiver
-						console.log(this.trade.wood)
+						//console.log(this.trade.wood)
 						
 						this.acceptView.setPlayerName(this.clientModel.players[this.trade.sender].name);
 						
@@ -638,7 +648,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 						}
 						if(this.trade.offer.wood < 0)
 						{
-							if(this.trade.offer.wood*(-1) > this.clientModel.players[this.clientModel.playerID].resources.wood) 
+							if(this.trade.offer.wood*(-1) > this.clientModel.players[this.receiverIndex].resources.wood) 
 								this.acceptView.setAcceptEnabled(false);
 							else
 								this.acceptView.setAcceptEnabled(true);
@@ -650,7 +660,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 						}
 						if(this.trade.offer.brick < 0)
 						{
-							if(this.trade.offer.brick*(-1) > this.clientModel.players[this.clientModel.playerID].resources.brick) 
+							if(this.trade.offer.brick*(-1) > this.clientModel.players[this.receiverIndex].resources.brick) 
 								this.acceptView.setAcceptEnabled(false);
 							else
 								this.acceptView.setAcceptEnabled(true);
@@ -662,7 +672,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 						}
 						if(this.trade.offer.sheep < 0)
 						{
-							if(this.trade.offer.sheep*(-1) > this.clientModel.players[this.clientModel.playerID].resources.sheep) 
+							if(this.trade.offer.sheep*(-1) > this.clientModel.players[this.receiverIndex].resources.sheep) 
 								this.acceptView.setAcceptEnabled(false);
 							else
 								this.acceptView.setAcceptEnabled(true);
@@ -674,7 +684,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 						}
 						if(this.trade.offer.ore < 0)
 						{
-							if(this.trade.offer.ore*(-1) > this.clientModel.players[this.clientModel.playerID].resources.ore) 
+							if(this.trade.offer.ore*(-1) > this.clientModel.players[this.receiverIndex].resources.ore) 
 								this.acceptView.setAcceptEnabled(false);
 							else
 								this.acceptView.setAcceptEnabled(true);
@@ -686,7 +696,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 						}
 						if(this.trade.offer.wheat < 0)
 						{
-							if(this.trade.offer.wheat*(-1) > this.clientModel.players[this.clientModel.playerID].resources.wheat) 
+							if(this.trade.offer.wheat*(-1) > this.clientModel.players[this.receiverIndex].resources.wheat) 
 								this.acceptView.setAcceptEnabled(false);
 							else
 								this.acceptView.setAcceptEnabled(true);

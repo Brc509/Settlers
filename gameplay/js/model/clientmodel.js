@@ -54,8 +54,8 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
             // TODO: 1) fetch the game state from the server, 2) update the client model, 3) call the "success" function.
 			myself.clientProxy.gameModel(function (error, model) {
 				if (error) {
-					console.log('Error Info: ', model);
-					alert ('ERROR: ');
+					console.log('ERROR: ' + model.statusText);
+					alert ('ERROR: ' + model.statusText);
 				}
 				else {
 					myself.updateModel(error, model);
@@ -66,8 +66,8 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 		ClientModel.prototype.updateModel = function(error, model) {
 			if (error) {
-				console.log('Error Info: ', model);
-				alert ('ERROR: ');
+				console.log('ERROR: ' + model.statusText);
+				alert ('ERROR: ' + model.statusText);
 			} else {
 				//console.log(model);
 				myself.bank = model.bank;

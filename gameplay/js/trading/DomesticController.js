@@ -345,7 +345,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 				{
 					if(!this.receivingWood)
 					{
-						if(this.woodAmt < this.clientModel.players[this.clientModel.playerID].resources.wood)
+						if(this.woodAmt < this.clientModel.players[this.clientModel.playerIndex].resources.wood)
 						{
 							this.woodAmt++;
 							this.view.setResourceAmount("wood", this.woodAmt);
@@ -361,7 +361,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 				{
 					if(!this.receivingBrick)
 					{
-						if(this.brickAmt < this.clientModel.players[this.clientModel.playerID].resources.brick)
+						if(this.brickAmt < this.clientModel.players[this.clientModel.playerIndex].resources.brick)
 						{
 							this.brickAmt++;
 							this.view.setResourceAmount("brick", this.brickAmt);
@@ -377,7 +377,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 				{
 					if(!this.receivingSheep)
 					{
-						if(this.sheepAmt < this.clientModel.players[this.clientModel.playerID].resources.sheep)
+						if(this.sheepAmt < this.clientModel.players[this.clientModel.playerIndex].resources.sheep)
 						{
 							this.sheepAmt++;
 							this.view.setResourceAmount("sheep", this.sheepAmt);
@@ -393,7 +393,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 				{
 					if(!this.receivingWheat)
 					{
-						if(this.wheatAmt < this.clientModel.players[this.clientModel.playerID].resources.wheat)
+						if(this.wheatAmt < this.clientModel.players[this.clientModel.playerIndex].resources.wheat)
 						{
 							this.wheatAmt++;
 							this.view.setResourceAmount("wheat", this.wheatAmt);
@@ -409,7 +409,7 @@ catan.trade.domestic.Controller= (function trade_namespace(){
 				{
 					if(!this.receivingOre)
 					{				
-						if(this.oreAmt < this.clientModel.players[this.clientModel.playerID].resources.ore)
+						if(this.oreAmt < this.clientModel.players[this.clientModel.playerIndex].resources.ore)
 						{
 							this.oreAmt++;
 							this.view.setResourceAmount("ore", this.oreAmt);

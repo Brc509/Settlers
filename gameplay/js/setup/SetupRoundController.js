@@ -43,12 +43,14 @@ catan.setup.Controller = (function(){
 
 		var cm = this.mapController.ClientModel;
 		var status = cm.turnTracker.status;
+		
 		if(status == "FirstRound" || status == "SecondRound"){
 
 			var currPlayerIndex = cm.playerIndex;
 			var players = cm.players;
 			var settlements = players[currPlayerIndex].settlements;
 			var roads = players[currPlayerIndex].roads;
+
 			if(cm.turnTracker.currentTurn == currPlayerIndex){
 
 				if(roads == 14 && settlements == 4 && status == "FirstRound"){

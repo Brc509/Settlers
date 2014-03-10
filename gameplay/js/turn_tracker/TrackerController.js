@@ -56,10 +56,15 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 				
 				var curTurn = this.ClientModel.turnTracker.currentTurn;
 				var currPlayerIndex = this.ClientModel.playerID;
+
 				for(p in this.ClientModel.players){
+					
 					var player = this.ClientModel.players[p];
+					
 					if(player.playerID == currPlayerIndex){
+					
 						return this.ClientModel.players[p];
+					
 					}
 				}
 			
@@ -67,21 +72,17 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 		}
 
 		TurnTrackerController.prototype.update = function(){
+			
 			var player = this.getCurrentPlayer();
 			var currPlayerIndex = this.ClientModel.playerIndex;
+			var status = this.ClientModel.turnTracker.status;
 			
 			this.updatePlayers();
 
-			// var player = this.getCurrentPlayer();
-			// this.View.setClientColor(player.color);
-
 			if(this.ClientModel.turnTracker.currentTurn == parseInt(currPlayerIndex)){
 
-				if(this.ClientModel.turnTracker.status == "Playing" ||  this.ClientModel.turnTracker.status == "Discarding" || 
-					this.ClientModel.turnTracker.status == "Robbing"){
+				if(status == "Playing" ||  status == "Discarding" || status == "Robbing"){
 					this.View.updateStateView(true, "End Turn");
-				}else{
-
 				}
 			
 			}else{
@@ -95,9 +96,9 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 
 			var object;
 			var currPlayerIndex = this.ClientModel.playerIndex;
+			var players = this.ClientModel.players;
 
 			for(p in this.ClientModel.players){
-				
 				
 				object = new Object();
 				object.playerIndex = parseInt(p);
@@ -106,9 +107,9 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 				}else{
 					object.highlight = false;
 				}
-				object.score = this.ClientModel.players[p].victoryPoints;
-				object.army = this.ClientModel.players[p].largestArmy;
-				object.road = this.ClientModel.players[p].longestRoad;
+				object.score = players[p].victoryPoints;
+				object.army = players[p].largestArmy;
+				object.road = players[p].longestRoad;
 
 
 				this.View.updatePlayer(object);

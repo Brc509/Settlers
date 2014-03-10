@@ -12,6 +12,7 @@ catan.roll.Controller = (function roll_namespace(){
 
 	var Controller = catan.core.BaseController;
 	var value;
+	var timeout;
     
 	/**
 		 * @class RollController
@@ -32,7 +33,6 @@ catan.roll.Controller = (function roll_namespace(){
 			Controller.call(this,view,clientModel);
 			this.rollInterval = false;
 			this.showRollResult = false;
-			// view.showModal();
 	};
         
 		/**
@@ -46,9 +46,7 @@ catan.roll.Controller = (function roll_namespace(){
 			this.ClientModel.isModalUp = false;
 
 			if(this.ClientModel.turnTracker.status == "Robbing" && value == 7 && !this.ClientModel.isModalUp){
-				this.ClientModel.isModalUp = true;
-				this.ClientModel.observers[2].getModalView().showModal("robber");
-				this.ClientModel.observers[2].getView().startDrop("robber");
+				this.displayRobber();
 			}
 		}
 		
@@ -64,7 +62,9 @@ catan.roll.Controller = (function roll_namespace(){
 			this.View.closeModal();
 			this.ClientModel.isModalUp = false;
 			this.showRollResult = true;
+			
 			if(!this.ClientModel.isModalUp){
+				
 				var numba1=Math.floor((Math.random()*6) + 1);
             	var numba2=Math.floor((Math.random()*6) + 1);
 
@@ -83,45 +83,54 @@ catan.roll.Controller = (function roll_namespace(){
 		RollController.prototype.update = function(){
 
 			var currPlayerIndex = this.ClientModel.playerIndex;
+			var status = this.ClientModel.turnTracker.status;
+
 			if(this.ClientModel.turnTracker.currentTurn == currPlayerIndex){
-				if(this.ClientModel.turnTracker.status == "Rolling" && !this.ClientModel.isModalUp){
+				if(status == "Rolling" && !this.ClientModel.isModalUp){
+					
 					this.View.showModal();
 					this.ClientModel.isModalUp = true;
-					myself = this;
-					var str = myself.View.MessageElem.innerText;
-					console.log(str.length);
 					
-					this.View.MessageElem.innerText = "Rolling automatically in... ";
-
-					this.View.MessageElem.innerText += "5";
-					timeout = setTimeout(function(){
-							str = str.substring(0, str.length - 1);
-							str += "4";
-							myself.View.MessageElem.innerText = str;
-						timeout = setTimeout(function(){
-							str = str.substring(0, str.length - 1);
-							str += "3";
-							myself.View.MessageElem.innerText = str;
-							timeout = setTimeout(function(){
-								str = str.substring(0, str.length - 1);
-								str += "2";
-								myself.View.MessageElem.innerText = str;
-									timeout = setTimeout(function(){
-									str = str.substring(0, str.length - 1);
-									str += "1";
-									myself.View.MessageElem.innerText = str;
-										timeout = setTimeout(function(){
-											str = str.substring(0, str.length - 1);
-											myself.View.MessageElem.innerText = str;
-											myself.rollDice();},1000);},1000);},1000);},1000);},1000);
-
-				}else if((!this.ClientModel.isModalUp && this.ClientModel.turnTracker.status == "Robbing") || 
-					(!this.ClientModel.isModalUp && this.ClientModel.turnTracker.status == "Robbing" && value == 7)) {
-					this.ClientModel.isModalUp = true;
-					this.ClientModel.observers[2].getModalView().showModal("robber");
-					this.ClientModel.observers[2].getView().startDrop("robber");	
+					this.countdown();
+		
+				}else if((!this.ClientModel.isModalUp && status == "Robbing") || 
+					(!this.ClientModel.isModalUp && status == "Robbing" && value == 7)){
+					this.displayRobber();
 			}
 		}
+	}
+
+	RollController.prototype.countdown = function(){
+		myself = this;
+		var str = "Rolling automatically in... ";
+					
+		this.View.MessageElem.innerText = str;
+					
+		var count=5;
+		myself.View.MessageElem.innerText += count;
+		timeout = setInterval(timer, 1000); 
+
+		function timer(){
+  			count=count-1;
+  			if (count <= 0){
+     						
+     			clearInterval(timeout);
+				myself.rollDice();
+     			return;
+  						
+  			}
+
+		str = str.substring(0, str.length - 1);
+		myself.View.MessageElem.innerText = (str += count);
+		}				
+	}
+
+	RollController.prototype.displayRobber = function(){
+
+		this.ClientModel.isModalUp = true;
+		this.ClientModel.observers[2].getModalView().showModal("robber");
+		this.ClientModel.observers[2].getView().startDrop("robber");	
+	
 	}
 		return RollController;
 	}());

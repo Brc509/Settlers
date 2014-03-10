@@ -59,7 +59,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 				this.soldierPlayed = false;
 			}
 			else {
-				this.getClientModel().clientProxy.robPlayer(orderID, this.robberSpot, this.getClientModel().updateModel);
+				this.getClientModel().robPlayer(orderID, this.robberSpot);
 			}
 			this.getRobView().closeModal();
 			this.getClientModel().isModalUp = false;
@@ -323,7 +323,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 				case 'city':
 					// Place the city
 					var vertexLoc = new VertexLocation(new HexLocation(loc.x, loc.y), VertexDirection[loc.dir]);
-					this.getClientModel().clientProxy.buildCity(vertexLoc, this.free, this.getClientModel().updateModel);
+					this.getClientModel().buildCity(vertexLoc, this.free);
 					break;
 				case 'road':
 					if (this.roadBuilding) {
@@ -331,7 +331,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 						if (this.roadBuildingNumBuilt == 2) {
 							this.roadBuilding = false;
 							var roadBuildingLoc2 = new EdgeLocation(new HexLocation(loc.x, loc.y), EdgeDirection[loc.dir]);
-							this.getClientModel().clientProxy.roadBuilding(this.roadBuildingLoc1, roadBuildingLoc2, this.getClientModel().updateModel);
+							this.getClientModel().roadBuilding(this.roadBuildingLoc1, roadBuildingLoc2);
 						// If the first road was just placed, continue to the second
 						} else {
 							this.roadBuildingLoc1 = new EdgeLocation(new HexLocation(loc.x, loc.y), EdgeDirection[loc.dir]);
@@ -341,7 +341,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 					} else {
 						// Place the road
 						var edgeLoc = new EdgeLocation(new HexLocation(loc.x, loc.y), EdgeDirection[loc.dir]);
-						this.getClientModel().clientProxy.buildRoad(edgeLoc, this.free, this.getClientModel().updateModel);
+						this.getClientModel().buildRoad(edgeLoc, this.free);
 					}
 					break;
 				case 'robber':
@@ -383,7 +383,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 						this.validEdgeLocsForNextRoad = vertexLoc.getConnectedEdges();
 					}
 					// Place the settlement
-					this.getClientModel().clientProxy.buildSettlement(vertexLoc, this.free, this.getClientModel().updateModel);
+					this.getClientModel().buildSettlement(vertexLoc, this.free);
 					break;
 				default:
 					throw Error('MapController.onDrop(): Invalid placeable type specified.');

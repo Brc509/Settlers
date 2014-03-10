@@ -29,6 +29,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 			this.playerID 		= JSON.parse(decodeURIComponent(Cookies.get('catan.user'))).playerID; // Get the player ID from the cookie
 			this.clientProxy 	= new catan.models.ClientProxy(this);
+			this.command		= new catan.models.Command(this.clientProxy, this);
 			this.map 			= new catan.models.Map(4);
 			this.players 		= new Array();
 			this.turnTracker 	= new catan.models.TurnTracker();
@@ -52,11 +53,8 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
          * */
 		ClientModel.prototype.initFromServer = function(success){
             // TODO: 1) fetch the game state from the server, 2) update the client model, 3) call the "success" function.
-			myself.clientProxy.gameModel(function (error, model) {
-				if (error) {
-					console.log('ERROR: ' + model.statusText);
-					alert ('ERROR: ' + model.statusText);
-				}
+			myself.command.execute('gameModel', function(error, model) {
+				if (error) {alert ('ERROR communicating with server: ' + model.statusText);}
 				else {
 					myself.updateModel(error, model);
 					if (success) success();
@@ -128,13 +126,12 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			@param {boolean} free Whether or not client gets this piece for free (i.e. setup)
 			@param {} 
 		*/
-		ClientModel.prototype.buildRoad = function(free, hex, direction) {
+		ClientModel.prototype.buildRoad = function(edgeLoc, free) {
 
 			if (!this.clientPlayer.canAffordRoad())
 				console.log("You can't afford a road!");
-			// TODO: Finish the conditions (The conditions should be easy to check
-			// after learning how to reference a single edge or single vertex - 
-			// Parameters will have to be modified to reference the map -> hex -> edge)
+
+			this.command.execute('buildRoad', edgeLoc, free);
 		}
 
 		/**
@@ -149,11 +146,11 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			@method buildSettlement
 			@param {boolean} free Whether or not the client gets this piece for free (i.e. setup)
 		*/
-		ClientModel.prototype.buildSettlement = function(free) {
+		ClientModel.prototype.buildSettlement = function(vertexLoc, free) {
 
 			if (!this.clientPlayer.canAffordSettlement())
 				console.log("You can't afford a settlement!");
-			// TODO: Finish checking conditions
+			this.command.execute('buildSettlement', vertexLoc, free);
 		}
 
 		/**
@@ -166,16 +163,18 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			</pre>
 			@method buildcity
 		*/
-		ClientModel.prototype.buildCity = function() {
+		ClientModel.prototype.buildCity = function(vertexLoc, free) {
 
 			if (!this.clientPlayer.canAffordCity())
 				console.log("You can't afford a city!");
-			// TODO: Finish Checking Conditions
+
+			this.command.execute('buildCity', vertexLoc, free);
+
+			// this.clientProxy.buildCity(vertexLoc, free, this.updateModel);
 		}
 
-		ClientModel.prototype.robPlayer = function(playerIndex, victimIndex, robberPoint) {
-
-			//TODO: Implement
+		ClientModel.prototype.robPlayer = function(orderID, robberSpot) {
+			this.command.execute('robPlayer', orderID, robberSpot);
 		}
 
 		/**
@@ -205,7 +204,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		ClientModel.prototype.buyDevCard = function () {
 			var myself = this;
 			if (this.canBuyDevCard()) {
-				this.clientProxy.buyDevCard(this.updateModel);
+				this.command.execute('buyDevCard');
 			}
 		}
 
@@ -242,7 +241,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 
 			// Success!
-			this.clientProxy.yearOfPlenty(resource1, resource2, this.updateModel);
+			this.command.execute('yearOfPlenty', resource1, resource2);
 		}
 
 		/**
@@ -266,7 +265,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			@param {Edge} edge2 The edge of the second hex to build the second road on
 		*/
 
-		ClientModel.prototype.roadBuilding = function (hex1, edge1, hex2, edge2) {
+		ClientModel.prototype.roadBuilding = function (roadBuildingLoc1, roadBuildingLoc2) {
 
 			// All of the potentially failed pre-conditions
 			if (this.turnTracker.currentTurn != this.playerIndex || this.turnTracker.status != "Playing")
@@ -287,7 +286,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 			// Success!
 			var myself = this;
-			this.clientProxy.roadBuilding(hex1, edge1, hex2, edge2, this.updateModel);
+			this.command.execute('roadBuilding', roadBuildingLoc1, roadBuildingLoc2);
 		}
 
 		/**
@@ -325,7 +324,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 
 			// Success!
-			this.clientProxy.soldier(victimID, robberSpot, this.updateModel);
+			this.command.execute('soldier', victimID, robberSpot);
 		}
 
 		/**
@@ -354,8 +353,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 			
 			// Success!
-			this.clientProxy.monopoly(resource, this.updateModel);
-
+			this.command.execute('monopoly', resource);
 		}
 
 		/**
@@ -384,7 +382,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 			}
 
 			// Success!
-			this.clientProxy.monument(this.updateModel);
+			this.command.execute('monument');
 		}
 
 		/**
@@ -397,12 +395,12 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @param PlayerIndex receiver, The recipient of the trade
 		*/
 		ClientModel.prototype.canOfferTrade = function (receiver, offer) {
-			// TODO
 		}
 
 		ClientModel.prototype.offerTrade = function (receiver, offer) {
 			//if (canOfferTrade()) {
-				this.clientProxy.offerTrade(receiver, offer, this.updateModel);
+				this.command.execute('offerTrade', receiver, offer);
+				// this.clientProxy.offerTrade(receiver, offer, this.updateModel);
 			//}
 		}
 
@@ -418,12 +416,12 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @param boolean willAccept, whether or not the player will accept the offer
 		*/
 		ClientModel.prototype.canAcceptTrade = function () {
-			// TODO
+
 		}
 
 		ClientModel.prototype.acceptTrade = function (willAccept) {
 			//if (canAcceptTrade()) {
-				this.clientProxy.acceptTrade(willAccept, this.updateModel);
+				this.command.execute('acceptTrade',willAccept, this.updateModel);
 			//}
 		}
 
@@ -454,7 +452,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.maritimeTrade = function (ratio, input, output) {
 
-			this.clientProxy.maritimeTrade(ratio, input, output, this.updateModel);
+			this.command.execute('maritimeTrade', ratio, input, output);
 		}
 
 		/**
@@ -466,24 +464,23 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @param ResourceHand discardedCards, The cards being discarded
 		*/
 		ClientModel.prototype.discardCards = function (discardedCards) {
-			this.clientProxy.discardCards(discardedCards, this.updateModel);
+			this.command.execute('discardCards', discardedCards);
 		}
 
 		//	ClientProxy.prototype.sendChat = function(content, callback) {
 		ClientModel.prototype.sendChat = function(lineContents) {
-			this.clientProxy.sendChat(lineContents, this.updateModel)
+			this.command.execute('sendChat', lineContents);
 		}
 
 		ClientModel.prototype.rollNumber = function(value) {
-			this.clientProxy.rollNumber(value, this.updateModel);
+			this.command.execute('rollNumber', value);
 		}
 
 		ClientModel.prototype.finishTurn = function(){
-			this.clientProxy.finishTurn(this.updateModel);
+			this.command.execute('finishTurn');
 		}
 
 		ClientModel.prototype.isMyTurn = function() {
-
 			return (this.turnTracker.currentTurn == this.playerIndex);
 		}
         

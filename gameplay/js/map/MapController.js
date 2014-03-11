@@ -321,73 +321,90 @@ catan.map.Controller = (function catan_controller_namespace() {
 			this.getClientModel().isModalUp = false;
 			switch (type.type.toLowerCase()) {
 				case 'city':
-					// Place the city
-					var vertexLoc = new VertexLocation(new HexLocation(loc.x, loc.y), VertexDirection[loc.dir]);
-					this.getClientModel().buildCity(vertexLoc, this.free);
+					onDropCity.call(this, loc);
 					break;
 				case 'road':
-					if (this.roadBuilding) {
-						// If the second road was just placed, send the road building command to the server
-						if (this.roadBuildingNumBuilt == 2) {
-							this.roadBuilding = false;
-							var roadBuildingLoc2 = new EdgeLocation(new HexLocation(loc.x, loc.y), EdgeDirection[loc.dir]);
-							this.getClientModel().roadBuilding(this.roadBuildingLoc1, roadBuildingLoc2);
-						// If the first road was just placed, continue to the second
-						} else {
-							this.roadBuildingLoc1 = new EdgeLocation(new HexLocation(loc.x, loc.y), EdgeDirection[loc.dir]);
-							this.roadBuildingNumBuilt++;
-							setTimeout(function() {this.startMove('road', true, false)}.bind(this), 0); // TODO Change this to this.getView().startDrop()?
-						}
-					} else {
-						// Place the road
-						var edgeLoc = new EdgeLocation(new HexLocation(loc.x, loc.y), EdgeDirection[loc.dir]);
-						this.getClientModel().buildRoad(edgeLoc, this.free);
-					}
+					onDropRoad.call(this, loc);
 					break;
 				case 'robber':
-					// TODO Build an array of target players and use this.getRobView().setPlayerInfo(Object[]); use [] if there are no victims. Players with no cards are not shown.
-					var cm = this.getClientModel();
-					var me = cm.clientPlayer;
-					var victims = {};
-					var hexLoc = new HexLocation(loc.x, loc.y);
-					this.robberSpot = hexLoc;
-					var hex = cm.map.getHexGrid().getHex(hexLoc);
-					var vertexes = hex.getVertexes();
-					for (n in vertexes) {
-						var ownerID = vertexes[n].ownerID;
-						if (ownerID != -1 && ownerID != me.orderNumber) {
-							var numCards = cm.players[ownerID].getResourceCardCount();
-							victims[ownerID] = true;
-						}
-					}
-					var playerInfo = [];
-					var victimIndex = 0;
-					for (victimID in victims) {
-						var victim = cm.players[victimID];
-						var pInfo = {};
-						pInfo.cards = victim.getResourceCardCount();
-						pInfo.color = this.colorLookupPlayerIndex[victimID];
-						pInfo.name = victim.name;
-						pInfo.playerNum = victimID;
-						playerInfo[victimIndex] = pInfo;
-						victimIndex++;
-					}
-					this.getRobView().setPlayerInfo(playerInfo);
-					this.getRobView().showModal();
-					this.getClientModel().isModalUp = true;
+					onDropRobber.call(this, loc);
 					break;
 				case 'settlement':
-					var vertexLoc = new VertexLocation(new HexLocation(loc.x, loc.y), VertexDirection[loc.dir]);
-					// If in setup phase, determine valid locations for next road
-					if (this.disconnected) {
-						this.validEdgeLocsForNextRoad = vertexLoc.getConnectedEdges();
-					}
-					// Place the settlement
-					this.getClientModel().buildSettlement(vertexLoc, this.free);
+					onDropSettlement.call(this, loc);
 					break;
 				default:
 					throw Error('MapController.onDrop(): Invalid placeable type specified.');
 			}
+		};
+		
+		var onDropCity = function(loc) {
+			// Place the city
+			var vertexLoc = new VertexLocation(new HexLocation(loc.x, loc.y), VertexDirection[loc.dir]);
+			this.getClientModel().buildCity(vertexLoc, this.free);
+		};
+		
+		var onDropRoad = function(loc) {
+			if (this.roadBuilding) {
+				// If the second road was just placed, send the road building command to the server
+				if (this.roadBuildingNumBuilt == 2) {
+					this.roadBuilding = false;
+					var roadBuildingLoc2 = new EdgeLocation(new HexLocation(loc.x, loc.y), EdgeDirection[loc.dir]);
+					this.getClientModel().roadBuilding(this.roadBuildingLoc1, roadBuildingLoc2);
+				// If the first road was just placed, continue to the second
+				} else {
+					this.roadBuildingLoc1 = new EdgeLocation(new HexLocation(loc.x, loc.y), EdgeDirection[loc.dir]);
+					this.roadBuildingNumBuilt++;
+					setTimeout(function() {this.startMove('road', true, false)}.bind(this), 0); // TODO Change this to this.getView().startDrop()?
+				}
+			} else {
+				// Place the road
+				var edgeLoc = new EdgeLocation(new HexLocation(loc.x, loc.y), EdgeDirection[loc.dir]);
+				this.getClientModel().buildRoad(edgeLoc, this.free);
+			}
+		};
+		
+		var onDropRobber = function(loc) {
+			var cm = this.getClientModel();
+			var me = cm.clientPlayer;
+			var victims = {};
+			var hexLoc = new HexLocation(loc.x, loc.y);
+			this.robberSpot = hexLoc;
+			var hex = cm.map.getHexGrid().getHex(hexLoc);
+			var vertexes = hex.getVertexes();
+			for (n in vertexes) {
+				var ownerID = vertexes[n].ownerID;
+				if (ownerID != -1 && ownerID != me.orderNumber) {
+					var numCards = cm.players[ownerID].getResourceCardCount();
+					if (numCards > 0) {
+						victims[ownerID] = true;
+					}
+				}
+			}
+			var playerInfo = [];
+			var victimIndex = 0;
+			for (victimID in victims) {
+				var victim = cm.players[victimID];
+				var pInfo = {};
+				pInfo.cards = victim.getResourceCardCount();
+				pInfo.color = this.colorLookupPlayerIndex[victimID];
+				pInfo.name = victim.name;
+				pInfo.playerNum = victimID;
+				playerInfo[victimIndex] = pInfo;
+				victimIndex++;
+			}
+			this.getRobView().setPlayerInfo(playerInfo);
+			this.getRobView().showModal();
+			this.getClientModel().isModalUp = true;
+		};
+		
+		var onDropSettlement = function(loc) {
+			var vertexLoc = new VertexLocation(new HexLocation(loc.x, loc.y), VertexDirection[loc.dir]);
+			// If in setup phase, determine valid locations for next road
+			if (this.disconnected) {
+				this.validEdgeLocsForNextRoad = vertexLoc.getConnectedEdges();
+			}
+			// Place the settlement
+			this.getClientModel().buildSettlement(vertexLoc, this.free);
 		};
 		
 		/**

@@ -78,9 +78,7 @@ catan.models.ResourceList  = (function clientModelNameSpace(){
         */
         ResourceList.prototype.canAffordRoad = function() {
 
-            if (this.brick >= 1 && this.wood >= 1)
-                return true;
-            return false;
+            return (this.brick >= 1 && this.wood >= 1);
         }
 
         /**
@@ -92,9 +90,7 @@ catan.models.ResourceList  = (function clientModelNameSpace(){
         */
         ResourceList.prototype.canAffordSettlement = function() {
 
-            if (this.brick >= 1 && this.wood >= 1 && this.wheat >= 1 && this.sheep >= 1)
-                return true;
-            return false;
+            return (this.brick >= 1 && this.wood >= 1 && this.wheat >= 1 && this.sheep >= 1);
         }
 
         /**
@@ -106,9 +102,7 @@ catan.models.ResourceList  = (function clientModelNameSpace(){
         */
         ResourceList.prototype.canAffordCity = function() {
 
-            if (this.wheat >= 2 && this.ore >= 3) 
-                return true;
-            return false;
+            return (this.wheat >= 2 && this.ore >= 3);
         }
 
         /**
@@ -120,9 +114,41 @@ catan.models.ResourceList  = (function clientModelNameSpace(){
         */
         ResourceList.prototype.canAffordDevCard = function() {
 
-            if (this.sheep >= 1 && this.wheat >= 1 && this.ore >= 1)
-                return true;
-            return false;
+            return (this.sheep >= 1 && this.wheat >= 1 && this.ore >= 1);
+        }
+
+        /*
+            Create a list of the resources > 0 in this list
+            Used by the bank list for the maritime controller
+        */
+        ResourceList.prototype.getOwnedResources = function() {
+
+            var ownedResources = [];
+            var types = catan.definitions.ResourceTypes;
+            for (t in types) {
+
+                if (this[types[t]] > 0)
+                    ownedResources.push(types[t]);
+            }
+            return ownedResources;
+        }
+
+        /*
+            Get resources in this list that are greater than the ratioList
+        */
+        ResourceList.prototype.getResourcesGreaterThan = function(ratioList) {
+
+            var giveResources = [];
+            var types = catan.definitions.ResourceTypes;
+            
+            for (t in types) {
+
+                // add the value to the list IF the player can afford the ratio
+                if (this[types[t]] >= ratioList[types[t]])
+                    giveResources.push(types[t]);
+            }
+
+            return giveResources;
         }
 
         /*

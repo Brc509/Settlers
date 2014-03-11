@@ -58,10 +58,8 @@ catan.models.DevCardList = (function DevCardListNameSpace() {
         */
         DevCardList.prototype.hasAnyCard = function() {
 
-            if (this.monopoly > 0 || this.monument > 0 || this.roadBuilding > 0 ||
-                this.soldier > 0 || this.yearOfPlenty > 0) 
-                return true;
-            return false;
+            return (this.monopoly > 0 || this.monument > 0 || this.roadBuilding > 0 ||
+                this.soldier > 0 || this.yearOfPlenty > 0);
         }
 
         return DevCardList;

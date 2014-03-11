@@ -52,7 +52,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
          * @param {function} success - A callback function that is called after the game state has been fetched from the server and the client model updated. This function is passed a single parameter which is the game state object received from the server.
          * */
 		ClientModel.prototype.initFromServer = function(success){
-            // TODO: 1) fetch the game state from the server, 2) update the client model, 3) call the "success" function.
+            
 			myself.command.execute('gameModel', function(error, model) {
 				if (error) {alert ('ERROR communicating with server: ' + model.statusText);}
 				else {
@@ -68,8 +68,11 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 				alert ('ERROR: ' + model.statusText);
 			} else {
 				//console.log(model);
-				myself.bank = model.bank;
-				myself.deck = model.deck;
+				myself.bank = new catan.models.ResourceList();
+				myself.deck = new catan.models.DevCardList();				
+				myself.bank.update(model.bank);
+				myself.deck.update(model.deck);
+
 				myself.chat = model.chat;
 				myself.log = model.log;
 				myself.model = model;
@@ -92,10 +95,8 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 						myself.playerIndex = parseInt(n);
 					}
 				}
-				
-				myself.clientPlayer = myself.players[myself.playerIndex];
-				//console.log(myself.players);
 
+				myself.clientPlayer = myself.players[myself.playerIndex];
 				myself.notifyObservers();
 			}
 		}
@@ -128,9 +129,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.buildRoad = function(edgeLoc, free) {
 
-			if (!this.clientPlayer.canAffordRoad())
-				console.log("You can't afford a road!");
-
 			this.command.execute('buildRoad', edgeLoc, free);
 		}
 
@@ -148,8 +146,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.buildSettlement = function(vertexLoc, free) {
 
-			if (!this.clientPlayer.canAffordSettlement())
-				console.log("You can't afford a settlement!");
 			this.command.execute('buildSettlement', vertexLoc, free);
 		}
 
@@ -165,15 +161,14 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.buildCity = function(vertexLoc, free) {
 
-			if (!this.clientPlayer.canAffordCity())
-				console.log("You can't afford a city!");
-
 			this.command.execute('buildCity', vertexLoc, free);
-
-			// this.clientProxy.buildCity(vertexLoc, free, this.updateModel);
 		}
 
+		/**
+			Send a request to the server to rob the player
+		*/
 		ClientModel.prototype.robPlayer = function(orderID, robberSpot) {
+
 			this.command.execute('robPlayer', orderID, robberSpot);
 		}
 
@@ -187,12 +182,7 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.canBuyDevCard = function () {
 
-			var deckCardCount = 0;
-			for (card in this.deck) {
-				deckCardCount += this.deck[card];
-			}
-			
-			return (this.clientPlayer.canAffordDevCard() && deckCardCount > 0);
+			return (this.clientPlayer.canAffordDevCard() && this.deck.hasAnyCard());
 		}
 
 		/**
@@ -202,10 +192,8 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @method buyDevCard
 		*/
 		ClientModel.prototype.buyDevCard = function () {
-			var myself = this;
-			if (this.canBuyDevCard()) {
-				this.command.execute('buyDevCard');
-			}
+
+			this.command.execute('buyDevCard');
 		}
 
 		/**
@@ -222,25 +210,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.yearOfPlenty = function (resource1, resource2) {
 
-			// All of the potentially failed pre-conditions
-			if (this.turnTracker.currentTurn != this.playerIndex || this.turnTracker.status != "Playing")
-			{
-				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
-				return false;
-			} 
-			if (this.clientPlayer.playedDevCard)
-			{
-				console.log("ERROR: Player has already played a dev card this turn -OR- they do not have a YearOfPlenty card");
-				return false;
-			}
-			if (this.bank[resource1] < 1 || this.bank[resource2] < 1 || 
-				(resource1 == resource2 && this.bank[resource1] < 2))
-			{
-				console.log("ERROR: Bank does not have one or both of the desired resources");
-				return false;
-			}
-
-			// Success!
 			this.command.execute('yearOfPlenty', resource1, resource2);
 		}
 
@@ -267,25 +236,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 
 		ClientModel.prototype.roadBuilding = function (roadBuildingLoc1, roadBuildingLoc2) {
 
-			// All of the potentially failed pre-conditions
-			if (this.turnTracker.currentTurn != this.playerIndex || this.turnTracker.status != "Playing")
-			{
-				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
-				return;
-			} 
-			if (this.clientPlayer.playedDevCar)
-			{
-				console.log("ERROR: Player has already played a dev card this turn -OR- they do not have a roadBuilding card");
-				return;
-			}
-			if (this.clientPlayer.roads < 2)
-			{
-				console.log("ERROR: Player does not have 2 roads to place")
-				return;
-			}
-
-			// Success!
-			var myself = this;
 			this.command.execute('roadBuilding', roadBuildingLoc1, roadBuildingLoc2);
 		}
 
@@ -306,24 +256,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.soldier = function (robberSpot, victimID) {
 
-			// All of the potentially failed pre-conditions
-			if (this.turnTracker.currentTurn != this.playerIndex || this.turnTracker.status != "Playing")
-			{
-				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
-				return "ERROR: It's not current players turn or their status is not playing";
-			} 
-			if (this.clientPlayer.playedDevCard)
-			{
-				console.log("ERROR: Player has already played a dev card this turn -OR- they do not	have a soldier card");
-				return "ERROR: Player has already played a dev card this turn -OR- they do not	have a soldier card";
-			}
-			if (victimID != -1 && this.players[victimID].resources.getCardCount() < 1)
-			{
-				console.log("ERROR: Player to rob has no cards!")
-				return "ERROR: Player to rob has no cards!";
-			}
-
-			// Success!
 			this.command.execute('soldier', victimID, robberSpot);
 		}
 
@@ -340,19 +272,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.monopoly = function (resource) {
 			
-			// All of the potentially failed pre-conditions
-			if (this.turnTracker.currentTurn != this.playerIndex || this.turnTracker.status != "Playing")
-			{
-				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
-				return "ERROR: Isn't player's turn -OR- isn't \"Playing\"";
-			} 
-			if (this.clientPlayer.playedDevCard)
-			{
-				console.log("ERROR: Player has already played a dev card this turn -OR- they do not	have a monopoly card");
-				return "ERROR: Player has already played a dev card this turn -OR- they do not	have a monopoly card";
-			}
-			
-			// Success!
 			this.command.execute('monopoly', resource);
 		}
 
@@ -368,20 +287,6 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		*/
 		ClientModel.prototype.monument = function () {
 
-			// All of the potentially failed pre-conditions
-			if (this.turnTracker.currentTurn != this.playerIndex || this.turnTracker.status != "Playing")
-			{
-				console.log("ERROR: Isn't player's turn -OR- isn't \"Playing\"");
-				return;
-			} 
-			if (this.clientPlayer.playedDevCard ||
-				(this.clientPlayer.oldDevCards.monument < 1 && this.clientPlayer.newDevCards.monument < 1))
-			{
-				console.log("ERROR: Player has already played a dev card this turn -OR- they do not	have a monopoly card");
-				return;
-			}
-
-			// Success!
 			this.command.execute('monument');
 		}
 
@@ -394,14 +299,9 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @param ResourceList offer, pos numbers are traded away, negative numbers are received
 		    @param PlayerIndex receiver, The recipient of the trade
 		*/
-		ClientModel.prototype.canOfferTrade = function (receiver, offer) {
-		}
-
 		ClientModel.prototype.offerTrade = function (receiver, offer) {
-			//if (canOfferTrade()) {
-				this.command.execute('offerTrade', receiver, offer);
-				// this.clientProxy.offerTrade(receiver, offer, this.updateModel);
-			//}
+
+			this.command.execute('offerTrade', receiver, offer);
 		}
 
 		/**
@@ -415,14 +315,9 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @method acceptTrade
 		    @param boolean willAccept, whether or not the player will accept the offer
 		*/
-		ClientModel.prototype.canAcceptTrade = function () {
-
-		}
-
 		ClientModel.prototype.acceptTrade = function (willAccept) {
-			//if (canAcceptTrade()) {
-				this.command.execute('acceptTrade',willAccept, this.updateModel);
-			//}
+
+			this.command.execute('acceptTrade',willAccept, this.updateModel);
 		}
 
 		/**
@@ -464,23 +359,28 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		    @param ResourceHand discardedCards, The cards being discarded
 		*/
 		ClientModel.prototype.discardCards = function (discardedCards) {
+
 			this.command.execute('discardCards', discardedCards);
 		}
 
 		//	ClientProxy.prototype.sendChat = function(content, callback) {
 		ClientModel.prototype.sendChat = function(lineContents) {
+
 			this.command.execute('sendChat', lineContents);
 		}
 
 		ClientModel.prototype.rollNumber = function(value) {
+
 			this.command.execute('rollNumber', value);
 		}
 
 		ClientModel.prototype.finishTurn = function(){
+
 			this.command.execute('finishTurn');
 		}
 
 		ClientModel.prototype.isMyTurn = function() {
+
 			return (this.turnTracker.currentTurn == this.playerIndex);
 		}
         

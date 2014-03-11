@@ -45,8 +45,8 @@ catan.trade.maritime.Controller = (function trade_namespace(){
 			if (this.clientModel.isMyTurn()) {
 			
 				this.setResourceRatios(this.giveResourceList);
-				this.setResourcesClientCanGive();
-				this.listBankResources();
+				this.giveResourceList = this.clientModel.clientPlayer.resources.getResourcesGreaterThan(this.ratios);
+				this.getResourceList = this.clientModel.bank.getOwnedResources();
 				this.unsetGiveValue();
 			}
 			else {
@@ -107,37 +107,6 @@ catan.trade.maritime.Controller = (function trade_namespace(){
 			}
 
 			this.ratios = ratios;
-		}
-
-		/* 
-			Generate a list of all the resourceTypes that the bank currently has
-		*/
-		MaritimeController.prototype.listBankResources = function() {
-
-            var ownedResources = [];
-			var types = catan.definitions.ResourceTypes;
-            for (t in types) {
-
-            	if (this.clientModel.bank[types[t]] > 0)
-            		ownedResources.push(types[t]);
-            }
-            this.getResourceList = ownedResources;
-        }
-
-		MaritimeController.prototype.setResourcesClientCanGive = function() {
-
-			var giveResources = [];
-			var types = catan.definitions.ResourceTypes;
-			var resources = this.clientModel.clientPlayer.resources;
-			
-			for (t in types) {
-
-				// add the value to the list IF the player can afford the ratio
-				if (resources[types[t]] >= this.ratios[types[t]])
-					giveResources.push(types[t]);
-			}
-
-			this.giveResourceList = giveResources;
 		}
 
 		/**

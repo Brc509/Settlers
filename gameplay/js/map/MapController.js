@@ -427,57 +427,17 @@ catan.map.Controller = (function catan_controller_namespace() {
 				this.colorLookupPlayerID[player.playerID] = player.color;
 			}
 			
-			// Update the hexes
-			var hexes = map.getHexes();
+			// Update the hexes, settlements, cities, and roads (iterate through all hexes)
+			// TODO Use hexgrid.getEdges() and hexgrid.getVertexes() instead of a brute-force iteration through all hexes?
 			for (lineNum in hexes) {
 				var line = hexes[lineNum];
 				for (hexNum in line) {
+					// Update each hex
 					var hex = line[hexNum];
 					var loc = hex.getLocation();
 					var type = hex.getType();
 					//console.log('MapController.update(): Hex: (' + loc.x + ',' + loc.y + ') ' + type);
 					view.addHex(loc, type, true);
-				}
-			}
-			
-			// Update the tokens
-			var tokens = map.getTokens();
-			var nums = [2, 3, 4, 5, 6, 8, 9, 10, 11, 12];
-			for (numNum in nums) {
-				var n = nums[numNum];
-				var nTokens = tokens[n];
-				for (k in nTokens) {
-					var tokenLoc = nTokens[k];
-					//console.log('MapController.update(): Token: (' + tokenLoc.x + ',' + tokenLoc.y + ') ' + n);
-					view.addNumber(tokenLoc, n, true);
-				}
-			}
-			
-			// Update the ports
-			var ports = map.getPorts();
-			for (portNum in ports) {
-				var port = ports[portNum];
-				var loc = port.getLocation();
-				var portLoc = new catan.map.View.PortLoc(loc.x, loc.y, EdgeDirection[loc.direction]);
-				var type = port.getInputResource();
-				if (!type) {
-					type = 'three';
-				}
-				//console.log('MapController.update(): Port: (' + portLoc.x + ',' + portLoc.y + ',' + portLoc.rotation + ') ' + type);
-				view.addPort(portLoc, type, true);
-			}
-			
-			// Update the robber
-			var robber = map.getRobber();
-			//console.log('MapController.update(): Robber: (' + robber.x + ',' + robber.y + ')');
-			view.placeRobber(robber, true);
-			
-			// Update the settlements, cities, and roads (iterate through all hexes)
-			// TODO Use hexgrid.getEdges() and hexgrid.getVertexes() instead of a brute-force iteration through all hexes?
-			for (lineNum in hexes) {
-				var line = hexes[lineNum];
-				for (hexNum in line) {
-					var hex = line[hexNum];
 					// Update the roads (edges)
 					var edges = hex.getEdges();
 					for (edgeNum in edges) {
@@ -519,6 +479,39 @@ catan.map.Controller = (function catan_controller_namespace() {
 					}
 				}
 			}
+			
+			// Update the tokens
+			var tokens = map.getTokens();
+			var nums = [2, 3, 4, 5, 6, 8, 9, 10, 11, 12];
+			for (numNum in nums) {
+				var n = nums[numNum];
+				var nTokens = tokens[n];
+				for (k in nTokens) {
+					var tokenLoc = nTokens[k];
+					//console.log('MapController.update(): Token: (' + tokenLoc.x + ',' + tokenLoc.y + ') ' + n);
+					view.addNumber(tokenLoc, n, true);
+				}
+			}
+			
+			// Update the ports
+			var ports = map.getPorts();
+			for (portNum in ports) {
+				var port = ports[portNum];
+				var loc = port.getLocation();
+				var portLoc = new catan.map.View.PortLoc(loc.x, loc.y, EdgeDirection[loc.direction]);
+				var type = port.getInputResource();
+				if (!type) {
+					type = 'three';
+				}
+				//console.log('MapController.update(): Port: (' + portLoc.x + ',' + portLoc.y + ',' + portLoc.rotation + ') ' + type);
+				view.addPort(portLoc, type, true);
+			}
+			
+			// Update the robber
+			var robber = map.getRobber();
+			//console.log('MapController.update(): Robber: (' + robber.x + ',' + robber.y + ')');
+			view.placeRobber(robber, true);
+			
 			view.drawPieces();
 		};
         

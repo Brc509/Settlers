@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class GameCommandsHandler_Prod implements GameCommandsHandler {
+public class GameListAIHandler_Prod implements GameListAIHandler {
 
 	@Override
 	public void handle(HttpExchange arg0) throws IOException {

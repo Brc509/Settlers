@@ -7,9 +7,8 @@ import catan.server.Server;
 import catan.server.handler.HandlerUtils;
 
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 
-public class GameListAIHandler_Test implements HttpHandler {
+public class GameListAIHandler_Test implements GameListAIHandler {
 
 	// Static constants
 	private static final String SAMPLE = "[\"LARGEST_ARMY\"]";

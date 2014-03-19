@@ -1,10 +1,15 @@
 package catan.server.handler;
 
 import catan.server.handler.game.GameAddAIHandler;
+import catan.server.handler.game.GameAddAIHandler_Test;
 import catan.server.handler.game.GameCommandsHandler;
+import catan.server.handler.game.GameCommandsHandler_Test;
 import catan.server.handler.game.GameListAIHandler;
+import catan.server.handler.game.GameListAIHandler_Test;
 import catan.server.handler.game.GameModelHandler;
+import catan.server.handler.game.GameModelHandler_Test;
 import catan.server.handler.game.GameResetHandler;
+import catan.server.handler.game.GameResetHandler_Test;
 import catan.server.handler.games.GamesCreateHandler;
 import catan.server.handler.games.GamesJoinHandler;
 import catan.server.handler.games.GamesListHandler;
@@ -26,7 +31,9 @@ import catan.server.handler.moves.MovesSendChatHandler;
 import catan.server.handler.moves.MovesSoldierHandler;
 import catan.server.handler.moves.MovesYearOfPlentyHandler;
 import catan.server.handler.user.UserLoginHandler;
+import catan.server.handler.user.UserLoginHandler_Test;
 import catan.server.handler.user.UserRegisterHandler;
+import catan.server.handler.user.UserRegisterHandler_Test;
 
 import com.google.inject.AbstractModule;
 

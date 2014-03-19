@@ -1,4 +1,4 @@
-package catan.server.handler.game;
+package catan.server.handler.user;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -8,16 +8,16 @@ import catan.server.handler.HandlerUtils;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class GameModelHandler_Test implements GameModelHandler {
+public class UserRegisterHandler_Test implements UserRegisterHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
 		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
-		if (exchange.getRequestMethod().toUpperCase().equals("GET")) {
-			if (Server.isDebugEnabled()) System.out.println("  /game/model");
-			HandlerUtils.sendSampleModel(exchange, HttpURLConnection.HTTP_OK);
+		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
+			if (Server.isDebugEnabled()) System.out.println("  /user/register");
+			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_OK, "Success");
 		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request to /game/model.");
+			if (Server.isDebugEnabled()) System.out.println("  Bad request to /user/register.");
 			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}

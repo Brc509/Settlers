@@ -1,10 +1,10 @@
-package catan.server.handler.game;
+package catan.server.handler.user;
 
 import java.io.IOException;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class GameCommandsHandler_Prod implements GameCommandsHandler {
+public class UserLoginHandler_Prod implements UserLoginHandler {
 
 	@Override
 	public void handle(HttpExchange arg0) throws IOException {

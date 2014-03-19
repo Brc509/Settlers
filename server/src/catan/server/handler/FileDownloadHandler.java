@@ -16,7 +16,7 @@ public class FileDownloadHandler implements HttpHandler {
 	private final String context;
 	private final String root;
 
-	public FileDownloadHandler(Server server, String context, String root) {
+	public FileDownloadHandler(String context, String root) {
 		// Ensure proper formatting
 		if (context.endsWith("/")) {
 			context = context.substring(0, context.length() - 1);

@@ -4,35 +4,39 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import catan.server.handler.FileDownloadHandler;
-import catan.server.handler.GameAddAIHandler;
-import catan.server.handler.GameCommandsHandler;
-import catan.server.handler.GameListAIHandler;
-import catan.server.handler.GameModelHandler;
-import catan.server.handler.GameResetHandler;
-import catan.server.handler.GamesCreateHandler;
-import catan.server.handler.GamesJoinHandler;
-import catan.server.handler.GamesListHandler;
-import catan.server.handler.MovesAcceptTradeHandler;
-import catan.server.handler.MovesBuildCityHandler;
-import catan.server.handler.MovesBuildRoadHandler;
-import catan.server.handler.MovesBuildSettlementHandler;
-import catan.server.handler.MovesBuyDevCardHandler;
-import catan.server.handler.MovesDiscardCardsHandler;
-import catan.server.handler.MovesFinishTurnHandler;
-import catan.server.handler.MovesMaritimeTradeHandler;
-import catan.server.handler.MovesMonopolyHandler;
-import catan.server.handler.MovesMonumentHandler;
-import catan.server.handler.MovesOfferTradeHandler;
-import catan.server.handler.MovesRoadBuildingHandler;
-import catan.server.handler.MovesRobPlayerHandler;
-import catan.server.handler.MovesRollNumberHandler;
-import catan.server.handler.MovesSendChatHandler;
-import catan.server.handler.MovesSoldierHandler;
-import catan.server.handler.MovesYearOfPlentyHandler;
-import catan.server.handler.UserLoginHandler;
-import catan.server.handler.UserRegisterHandler;
+import catan.server.handler.HandlerModule_Test;
+import catan.server.handler.HandlerUtils;
 import catan.server.handler.UtilChangeLogLevelHandler;
+import catan.server.handler.game.GameAddAIHandler;
+import catan.server.handler.game.GameCommandsHandler;
+import catan.server.handler.game.GameListAIHandler;
+import catan.server.handler.game.GameModelHandler;
+import catan.server.handler.game.GameResetHandler;
+import catan.server.handler.games.GamesCreateHandler;
+import catan.server.handler.games.GamesJoinHandler;
+import catan.server.handler.games.GamesListHandler;
+import catan.server.handler.moves.MovesAcceptTradeHandler;
+import catan.server.handler.moves.MovesBuildCityHandler;
+import catan.server.handler.moves.MovesBuildRoadHandler;
+import catan.server.handler.moves.MovesBuildSettlementHandler;
+import catan.server.handler.moves.MovesBuyDevCardHandler;
+import catan.server.handler.moves.MovesDiscardCardsHandler;
+import catan.server.handler.moves.MovesFinishTurnHandler;
+import catan.server.handler.moves.MovesMaritimeTradeHandler;
+import catan.server.handler.moves.MovesMonopolyHandler;
+import catan.server.handler.moves.MovesMonumentHandler;
+import catan.server.handler.moves.MovesOfferTradeHandler;
+import catan.server.handler.moves.MovesRoadBuildingHandler;
+import catan.server.handler.moves.MovesRobPlayerHandler;
+import catan.server.handler.moves.MovesRollNumberHandler;
+import catan.server.handler.moves.MovesSendChatHandler;
+import catan.server.handler.moves.MovesSoldierHandler;
+import catan.server.handler.moves.MovesYearOfPlentyHandler;
+import catan.server.handler.user.UserLoginHandler;
+import catan.server.handler.user.UserRegisterHandler;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.sun.net.httpserver.HttpServer;
 
 public class Server {
@@ -56,6 +60,8 @@ public class Server {
 	private final int port;
 	private final int queueSize;
 	private final HttpServer server;
+	// TODO is this the right way to create the injector used for the handlers?
+	private final Injector injector = Guice.createInjector(new HandlerModule_Test());
 
 	public Server(Integer port, Integer queueSize) {
 		// Initialize fields
@@ -98,38 +104,43 @@ public class Server {
 
 	private void initHandlers() {
 		if (debugEnabled) System.out.println("Initializing handlers...");
+		// Set the server to be used by the handlers
+		HandlerUtils.setServer(this);
 		// Initialize file download handlers
-		server.createContext("/", new FileDownloadHandler(this, "/", "gameplay"));
-		server.createContext("/docs", new FileDownloadHandler(this, "/docs", "docs"));
+		// TODO How are we supposed to use Guice with constructors that take parameters?
+		//		See http://code.google.com/p/google-guice/wiki/AssistedInject
+		server.createContext("/", new FileDownloadHandler("/", "gameplay"));
+		server.createContext("/docs", new FileDownloadHandler("/docs", "docs"));
 		// Initialize API handlers
-		server.createContext("/user/login", new UserLoginHandler(this));
-		server.createContext("/user/register", new UserRegisterHandler(this));
-		server.createContext("/games/list", new GamesListHandler(this));
-		server.createContext("/games/create", new GamesCreateHandler(this));
-		server.createContext("/games/join", new GamesJoinHandler(this));
-		server.createContext("/game/model", new GameModelHandler(this));
-		server.createContext("/game/reset", new GameResetHandler(this));
-		server.createContext("/game/commands", new GameCommandsHandler(this));
-		server.createContext("/game/addAI", new GameAddAIHandler(this));
-		server.createContext("/game/listAI", new GameListAIHandler(this));
-		server.createContext("/util/changeLogLevel", new UtilChangeLogLevelHandler(this));
-		server.createContext("/moves/sendChat", new MovesSendChatHandler(this));
-		server.createContext("/moves/rollNumber", new MovesRollNumberHandler(this));
-		server.createContext("/moves/robPlayer", new MovesRobPlayerHandler(this));
-		server.createContext("/moves/finishTurn", new MovesFinishTurnHandler(this));
-		server.createContext("/moves/buyDevCard", new MovesBuyDevCardHandler(this));
-		server.createContext("/moves/Year_of_Plenty", new MovesYearOfPlentyHandler(this));
-		server.createContext("/moves/Road_Building", new MovesRoadBuildingHandler(this));
-		server.createContext("/moves/Soldier", new MovesSoldierHandler(this));
-		server.createContext("/moves/Monopoly", new MovesMonopolyHandler(this));
-		server.createContext("/moves/Monument", new MovesMonumentHandler(this));
-		server.createContext("/moves/buildRoad", new MovesBuildRoadHandler(this));
-		server.createContext("/moves/buildSettlement", new MovesBuildSettlementHandler(this));
-		server.createContext("/moves/buildCity", new MovesBuildCityHandler(this));
-		server.createContext("/moves/offerTrade", new MovesOfferTradeHandler(this));
-		server.createContext("/moves/acceptTrade", new MovesAcceptTradeHandler(this));
-		server.createContext("/moves/maritimeTrade", new MovesMaritimeTradeHandler(this));
-		server.createContext("/moves/discardCards", new MovesDiscardCardsHandler(this));
+		// TODO Organize handler classes into subpackages of catan.server.handler
+		server.createContext("/user/login", injector.getInstance(UserLoginHandler.class));
+		server.createContext("/user/register", injector.getInstance(UserRegisterHandler.class));
+		server.createContext("/games/list", injector.getInstance(GamesListHandler.class));
+		server.createContext("/games/create", injector.getInstance(GamesCreateHandler.class));
+		server.createContext("/games/join", injector.getInstance(GamesJoinHandler.class));
+		server.createContext("/game/model", injector.getInstance(GameModelHandler.class));
+		server.createContext("/game/reset", injector.getInstance(GameResetHandler.class));
+		server.createContext("/game/commands", injector.getInstance(GameCommandsHandler.class));
+		server.createContext("/game/addAI", injector.getInstance(GameAddAIHandler.class));
+		server.createContext("/game/listAI", injector.getInstance(GameListAIHandler.class));
+		server.createContext("/util/changeLogLevel", injector.getInstance(UtilChangeLogLevelHandler.class));
+		server.createContext("/moves/sendChat", injector.getInstance(MovesSendChatHandler.class));
+		server.createContext("/moves/rollNumber", injector.getInstance(MovesRollNumberHandler.class));
+		server.createContext("/moves/robPlayer", injector.getInstance(MovesRobPlayerHandler.class));
+		server.createContext("/moves/finishTurn", injector.getInstance(MovesFinishTurnHandler.class));
+		server.createContext("/moves/buyDevCard", injector.getInstance(MovesBuyDevCardHandler.class));
+		server.createContext("/moves/Year_of_Plenty", injector.getInstance(MovesYearOfPlentyHandler.class));
+		server.createContext("/moves/Road_Building", injector.getInstance(MovesRoadBuildingHandler.class));
+		server.createContext("/moves/Soldier", injector.getInstance(MovesSoldierHandler.class));
+		server.createContext("/moves/Monopoly", injector.getInstance(MovesMonopolyHandler.class));
+		server.createContext("/moves/Monument", injector.getInstance(MovesMonumentHandler.class));
+		server.createContext("/moves/buildRoad", injector.getInstance(MovesBuildRoadHandler.class));
+		server.createContext("/moves/buildSettlement", injector.getInstance(MovesBuildSettlementHandler.class));
+		server.createContext("/moves/buildCity", injector.getInstance(MovesBuildCityHandler.class));
+		server.createContext("/moves/offerTrade", injector.getInstance(MovesOfferTradeHandler.class));
+		server.createContext("/moves/acceptTrade", injector.getInstance(MovesAcceptTradeHandler.class));
+		server.createContext("/moves/maritimeTrade", injector.getInstance(MovesMaritimeTradeHandler.class));
+		server.createContext("/moves/discardCards", injector.getInstance(MovesDiscardCardsHandler.class));
 		if (debugEnabled) System.out.println("Done.");
 	}
 
@@ -137,6 +148,7 @@ public class Server {
 	public static void main(String[] args) {
 		Integer port = (args.length > 0) ? Integer.parseInt(args[0]) : null;
 		Server.setDebugEnabled(true);
+		// TODO Are we supposed to use Guice for the server class?
 		Server server = new Server(port, null);
 		server.start();
 	}

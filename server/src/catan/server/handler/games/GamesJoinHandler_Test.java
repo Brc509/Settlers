@@ -15,10 +15,10 @@ public class GamesJoinHandler_Test implements GamesJoinHandler {
 		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
 			if (Server.isDebugEnabled()) System.out.println("  /games/join");
-			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_OK, "Success! You have joined the game.");
+			HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "Success! You have joined the game.");
 		} else {
 			if (Server.isDebugEnabled()) System.out.println("  Bad request to /games/join.");
-			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
+			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}
 }

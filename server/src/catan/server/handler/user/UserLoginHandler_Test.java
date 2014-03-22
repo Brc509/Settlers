@@ -15,10 +15,10 @@ public class UserLoginHandler_Test implements UserLoginHandler {
 		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
 			if (Server.isDebugEnabled()) System.out.println("  /user/login");
-			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_OK, "Success");
+			HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "Success");
 		} else {
 			if (Server.isDebugEnabled()) System.out.println("  Bad request to /user/login.");
-			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
+			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}
 }

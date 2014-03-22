@@ -1,14 +1,18 @@
 package catan.server.command;
 
+import catan.server.Server;
+
 public class UtilChangeLogLevelCommand implements Command {
 
-	public UtilChangeLogLevelCommand() {
-		// TODO
+	private final String logLevel;
+
+	public UtilChangeLogLevelCommand(String logLevel) {
+		this.logLevel = logLevel;
 	}
 
 	@Override
-	public Object execute() {
-		// TODO Auto-generated method stub
-		return null;
+	public String execute() {
+		if (Server.isDebugEnabled()) System.out.println("  Log level changed to \"" + logLevel + "\".");
+		return "Success";
 	}
 }

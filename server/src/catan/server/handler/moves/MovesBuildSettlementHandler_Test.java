@@ -18,7 +18,7 @@ public class MovesBuildSettlementHandler_Test implements MovesBuildSettlementHan
 			HandlerUtils.sendSampleModel(exchange, HttpURLConnection.HTTP_OK);
 		} else {
 			if (Server.isDebugEnabled()) System.out.println("  Bad request to /moves/buildSettlement.");
-			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
+			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}
 }

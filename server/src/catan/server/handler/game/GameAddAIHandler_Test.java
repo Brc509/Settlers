@@ -15,10 +15,10 @@ public class GameAddAIHandler_Test implements GameAddAIHandler {
 		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
 			if (Server.isDebugEnabled()) System.out.println("  /game/addAI");
-			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_OK, "You have reached /game/addAI.");
+			HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "You have reached /game/addAI.");
 		} else {
 			if (Server.isDebugEnabled()) System.out.println("  Bad request to /game/addAI.");
-			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
+			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}
 }

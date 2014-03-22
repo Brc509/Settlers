@@ -34,10 +34,10 @@ public class FileDownloadHandler_Test implements FileDownloadHandler {
 		String relativePath = exchange.getRequestURI().getPath().substring(context.length());
 		if (exchange.getRequestMethod().toUpperCase().equals("GET")) {
 			if (Server.isDebugEnabled()) System.out.println("  " + relativePath);
-			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_OK);
+			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_OK);
 		} else {
 			if (Server.isDebugEnabled()) System.out.println("  Bad request to " + relativePath + ".");
-			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
+			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}
 }

@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.TreeMap;
 
 import catan.server.Server;
 
@@ -30,63 +33,93 @@ public class HandlerUtils {
 	}
 
 	public static void sendSampleModel(HttpExchange exchange, int responseCode) throws IOException {
-		sendJSONString(exchange, responseCode, SAMPLE_MODEL);
+		sendStringAsJSON(exchange, responseCode, SAMPLE_MODEL);
 	}
 
-	public static void sendJSONString(HttpExchange exchange, int responseCode, String data) throws IOException {
-		exchange.getResponseHeaders().set("Content-Type", "application/json");
-		sendResponse(exchange, responseCode, data);
-	}
-
-	public static void sendResponse(HttpExchange exchange, int responseCode, File data) throws IOException {
+	public static void sendFile(HttpExchange exchange, int responseCode, File data) throws IOException {
 		if (exchange != null) {
 			if (data != null) {
 				BufferedInputStream bis = new BufferedInputStream(new FileInputStream(data));
-				sendResponseStream(exchange, responseCode, bis, data.length());
+				sendInputStream(exchange, responseCode, bis, data.length());
 				bis.close();
 			} else {
-				sendResponse(exchange, responseCode);
+				sendEmptyBody(exchange, responseCode);
 			}
 		}
 	}
 
-	public static void sendResponse(HttpExchange exchange, int responseCode, Object data) throws IOException {
+	public static void sendObject(HttpExchange exchange, int responseCode, Object data) throws IOException {
 		if (exchange != null) {
 			if (data == null) {
-				sendResponse(exchange, responseCode);
+				sendEmptyBody(exchange, responseCode);
 			} else if (Serializable.class.isInstance(data)) {
 				// TODO Serialize and send the data as a JSON string?
-				sendResponse(exchange, responseCode, data.toString());
+				sendStringAsJSON(exchange, responseCode, data.toString());
 			} else {
-				sendResponse(exchange, responseCode, data.toString());
+				sendString(exchange, responseCode, data.toString());
 			}
 		}
 	}
 
-	public static void sendResponse(HttpExchange exchange, int responseCode, String data) throws IOException {
+	public static void sendString(HttpExchange exchange, int responseCode, String data) throws IOException {
 		if (exchange != null) {
 			if (data != null) {
 				exchange.sendResponseHeaders(responseCode, data.length());
 				exchange.getResponseBody().write(data.getBytes(StandardCharsets.UTF_8));
 				exchange.getResponseBody().close();
 			} else {
-				sendResponse(exchange, responseCode);
+				sendEmptyBody(exchange, responseCode);
 			}
 		}
 	}
 
-	public static void sendResponse(HttpExchange exchange, int responseCode) throws IOException {
+	public static void sendStringAsJSON(HttpExchange exchange, int responseCode, String data) throws IOException {
+		exchange.getResponseHeaders().set("Content-Type", "application/json");
+		sendString(exchange, responseCode, data);
+	}
+
+	public static void sendEmptyBody(HttpExchange exchange, int responseCode) throws IOException {
 		if (exchange != null) {
 			exchange.sendResponseHeaders(responseCode, -1);
 		}
 	}
 
-	private static void sendResponseStream(HttpExchange exchange, int responseCode, InputStream data, long length) throws IOException {
+	public static String inputStreamToString(InputStream is) {
+		String str = "";
+		Scanner scan = new Scanner(is);
+		scan.useDelimiter("\\A");
+		if (scan.hasNext()) {
+			str = scan.next();
+		}
+		scan.close();
+		return str;
+	}
+
+	public static Map<String, String> decodeQueryString(String str) {
+		return decodeQueryString(str, "&", "=");
+	}
+
+	private static Map<String, String> decodeQueryString(String str, String paramSeparator, String keyValueSeparator) {
+		Map<String, String> params = new TreeMap<>();
+		Scanner scan = new Scanner(str);
+		scan.useDelimiter(paramSeparator);
+		while (scan.hasNext()) {
+			String param = scan.next();
+			int separatorIndex = param.indexOf(keyValueSeparator);
+			String key = param.substring(0, separatorIndex);
+			String value = param.substring(separatorIndex + 1);
+			params.put(key, value);
+		}
+		scan.close();
+		return params;
+	}
+
+	private static void sendInputStream(HttpExchange exchange, int responseCode, InputStream data, long length) throws IOException {
 		if (exchange != null) {
 			if (data != null) {
 				if (Server.isDebugEnabled()) System.out.println("  Sending stream to client...");
 				if (length == 0) {
-					sendResponse(exchange, responseCode);
+					sendEmptyBody(exchange, responseCode);
 				} else {
 					boolean knownLength = length > 0;
 					exchange.sendResponseHeaders(responseCode, knownLength ? length : 0);
@@ -117,7 +150,7 @@ public class HandlerUtils {
 					if (Server.isDebugEnabled()) System.out.println("  Done.");
 				}
 			} else {
-				sendResponse(exchange, responseCode);
+				sendEmptyBody(exchange, responseCode);
 			}
 		}
 	}

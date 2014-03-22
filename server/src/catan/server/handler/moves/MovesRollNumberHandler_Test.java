@@ -18,7 +18,7 @@ public class MovesRollNumberHandler_Test implements MovesRollNumberHandler {
 			HandlerUtils.sendSampleModel(exchange, HttpURLConnection.HTTP_OK);
 		} else {
 			if (Server.isDebugEnabled()) System.out.println("  Bad request to /moves/rollNumber.");
-			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
+			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}
 }

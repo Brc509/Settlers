@@ -18,7 +18,7 @@ public class MovesRobPlayerHandler_Test implements MovesRobPlayerHandler {
 			HandlerUtils.sendSampleModel(exchange, HttpURLConnection.HTTP_OK);
 		} else {
 			if (Server.isDebugEnabled()) System.out.println("  Bad request to /moves/robPlayer.");
-			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
+			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}
 }

@@ -55,7 +55,7 @@ public class FileDownloadHandler_Prod implements FileDownloadHandler {
 						String redirectStr = removeTailFromPath(uri, 1);
 						if (Server.isDebugEnabled()) System.out.println("  File has trailing slash. Redirecting client to \"" + redirectStr + "\".");
 						exchange.getResponseHeaders().set("Location", redirectStr);
-						HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_MOVED_PERM);
+						HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_MOVED_PERM);
 						return;
 					}
 					// Otherwise, send the target file
@@ -69,7 +69,7 @@ public class FileDownloadHandler_Prod implements FileDownloadHandler {
 						String redirectStr = addTailToPath(uri, "/");
 						if (Server.isDebugEnabled()) System.out.println("  Directory is missing trailing slash. Redirecting client to \"" + redirectStr + "\".");
 						exchange.getResponseHeaders().set("Location", redirectStr);
-						HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_MOVED_PERM);
+						HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_MOVED_PERM);
 						return;
 					}
 					// Otherwise, look for a default file in the directory and send it
@@ -84,10 +84,10 @@ public class FileDownloadHandler_Prod implements FileDownloadHandler {
 			}
 			// If any tests fail, report the file not found
 			if (Server.isDebugEnabled()) System.out.println("  Could not find resource \"" + uri.toString() + "\".");
-			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_NOT_FOUND);
+			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_NOT_FOUND);
 		} else {
 			if (Server.isDebugEnabled()) System.out.println("  Bad request to \"" + uri.toString() + "\".");
-			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
+			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}
 
@@ -101,13 +101,13 @@ public class FileDownloadHandler_Prod implements FileDownloadHandler {
 			// Report if the file has not been modified
 			if (requestETag.equals(eTag)) {
 				if (Server.isDebugEnabled()) System.out.println("  Client already has latest version.");
-				HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_NOT_MODIFIED);
+				HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_NOT_MODIFIED);
 				return;
 			}
 		}
 		// If there is no requested ETag or the file has been modified, send the file and its current ETag
 		exchange.getResponseHeaders().set("ETag", eTag);
-		HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_OK, file);
+		HandlerUtils.sendFile(exchange, HttpURLConnection.HTTP_OK, file);
 	}
 
 	private String addTailToPath(URI uri, String tail) {

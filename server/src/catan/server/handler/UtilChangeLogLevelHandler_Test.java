@@ -14,10 +14,10 @@ public class UtilChangeLogLevelHandler_Test implements UtilChangeLogLevelHandler
 		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
 			if (Server.isDebugEnabled()) System.out.println("  /util/changeLogLevel");
-			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_OK, "Success");
+			HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "Success");
 		} else {
 			if (Server.isDebugEnabled()) System.out.println("  Bad request to /util/changeLogLevel.");
-			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
+			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}
 }

@@ -18,7 +18,7 @@ public class MovesMonopolyHandler_Test implements MovesMonopolyHandler {
 			HandlerUtils.sendSampleModel(exchange, HttpURLConnection.HTTP_OK);
 		} else {
 			if (Server.isDebugEnabled()) System.out.println("  Bad request to /moves/Monopoly.");
-			HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
+			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}
 }

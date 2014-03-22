@@ -11,37 +11,58 @@ import catan.server.handler.game.GameModelHandler_Prod;
 import catan.server.handler.game.GameResetHandler;
 import catan.server.handler.game.GameResetHandler_Prod;
 import catan.server.handler.games.GamesCreateHandler;
+import catan.server.handler.games.GamesCreateHandler_Prod;
 import catan.server.handler.games.GamesJoinHandler;
+import catan.server.handler.games.GamesJoinHandler_Prod;
 import catan.server.handler.games.GamesListHandler;
+import catan.server.handler.games.GamesListHandler_Prod;
 import catan.server.handler.moves.MovesAcceptTradeHandler;
+import catan.server.handler.moves.MovesAcceptTradeHandler_Prod;
 import catan.server.handler.moves.MovesBuildCityHandler;
+import catan.server.handler.moves.MovesBuildCityHandler_Prod;
 import catan.server.handler.moves.MovesBuildRoadHandler;
+import catan.server.handler.moves.MovesBuildRoadHandler_Prod;
 import catan.server.handler.moves.MovesBuildSettlementHandler;
+import catan.server.handler.moves.MovesBuildSettlementHandler_Prod;
 import catan.server.handler.moves.MovesBuyDevCardHandler;
+import catan.server.handler.moves.MovesBuyDevCardHandler_Prod;
 import catan.server.handler.moves.MovesDiscardCardsHandler;
+import catan.server.handler.moves.MovesDiscardCardsHandler_Prod;
 import catan.server.handler.moves.MovesFinishTurnHandler;
+import catan.server.handler.moves.MovesFinishTurnHandler_Prod;
 import catan.server.handler.moves.MovesMaritimeTradeHandler;
+import catan.server.handler.moves.MovesMaritimeTradeHandler_Prod;
 import catan.server.handler.moves.MovesMonopolyHandler;
+import catan.server.handler.moves.MovesMonopolyHandler_Prod;
 import catan.server.handler.moves.MovesMonumentHandler;
+import catan.server.handler.moves.MovesMonumentHandler_Prod;
 import catan.server.handler.moves.MovesOfferTradeHandler;
+import catan.server.handler.moves.MovesOfferTradeHandler_Prod;
 import catan.server.handler.moves.MovesRoadBuildingHandler;
+import catan.server.handler.moves.MovesRoadBuildingHandler_Prod;
 import catan.server.handler.moves.MovesRobPlayerHandler;
+import catan.server.handler.moves.MovesRobPlayerHandler_Prod;
 import catan.server.handler.moves.MovesRollNumberHandler;
+import catan.server.handler.moves.MovesRollNumberHandler_Prod;
 import catan.server.handler.moves.MovesSendChatHandler;
+import catan.server.handler.moves.MovesSendChatHandler_Prod;
 import catan.server.handler.moves.MovesSoldierHandler;
+import catan.server.handler.moves.MovesSoldierHandler_Prod;
 import catan.server.handler.moves.MovesYearOfPlentyHandler;
+import catan.server.handler.moves.MovesYearOfPlentyHandler_Prod;
 import catan.server.handler.user.UserLoginHandler;
 import catan.server.handler.user.UserLoginHandler_Prod;
 import catan.server.handler.user.UserRegisterHandler;
 import catan.server.handler.user.UserRegisterHandler_Prod;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 public class HandlerModule_Prod extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(FileDownloadHandler.class).to(FileDownloadHandler_Prod.class);
+		install(new FactoryModuleBuilder().implement(FileDownloadHandler.class, FileDownloadHandler_Prod.class).build(FileDownloadHandlerFactory.class));
 		bind(GameAddAIHandler.class).to(GameAddAIHandler_Prod.class);
 		bind(GameCommandsHandler.class).to(GameCommandsHandler_Prod.class);
 		bind(GameListAIHandler.class).to(GameListAIHandler_Prod.class);

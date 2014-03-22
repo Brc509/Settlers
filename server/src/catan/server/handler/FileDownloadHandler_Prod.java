@@ -7,6 +7,8 @@ import java.net.URI;
 
 import catan.server.Server;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import com.sun.net.httpserver.HttpExchange;
 
 public class FileDownloadHandler_Prod implements FileDownloadHandler {
@@ -15,7 +17,8 @@ public class FileDownloadHandler_Prod implements FileDownloadHandler {
 	private final String context;
 	private final String root;
 
-	public FileDownloadHandler_Prod(String context, String root) {
+	@Inject
+	public FileDownloadHandler_Prod(@Assisted("context") String context, @Assisted("root") String root) {
 		// Ensure proper formatting
 		if (context.endsWith("/")) {
 			context = context.substring(0, context.length() - 1);
@@ -89,18 +92,21 @@ public class FileDownloadHandler_Prod implements FileDownloadHandler {
 	}
 
 	private void fileFound(HttpExchange exchange, File file) throws IOException {
+		// Generate ETag
+		String eTag = String.valueOf(file.lastModified());
+		if (Server.isDebugEnabled()) System.out.println("  ETag: \"" + eTag + "\".");
 		// Check for a requested ETag
 		if (exchange.getRequestHeaders().containsKey("If-None-Match")) {
-			String eTag = exchange.getRequestHeaders().getFirst("If-None-Match");
+			String requestETag = exchange.getRequestHeaders().getFirst("If-None-Match");
 			// Report if the file has not been modified
-			if (eTag.equals(String.valueOf(file.lastModified()))) {
+			if (requestETag.equals(eTag)) {
 				if (Server.isDebugEnabled()) System.out.println("  Client already has latest version.");
 				HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_NOT_MODIFIED);
 				return;
 			}
 		}
 		// If there is no requested ETag or the file has been modified, send the file and its current ETag
-		exchange.getResponseHeaders().set("ETag", String.valueOf(file.lastModified()));
+		exchange.getResponseHeaders().set("ETag", eTag);
 		HandlerUtils.sendResponse(exchange, HttpURLConnection.HTTP_OK, file);
 	}
 

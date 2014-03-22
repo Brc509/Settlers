@@ -3,7 +3,7 @@ package catan.server;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-import catan.server.handler.FileDownloadHandler;
+import catan.server.handler.FileDownloadHandlerFactory;
 import catan.server.handler.HandlerModule_Test;
 import catan.server.handler.HandlerUtils;
 import catan.server.handler.UtilChangeLogLevelHandler;
@@ -60,10 +60,12 @@ public class Server {
 	private final int port;
 	private final int queueSize;
 	private final HttpServer server;
-	// TODO is this the right way to create the injector used for the handlers?
-	private final Injector injector = Guice.createInjector(new HandlerModule_Test());
+	private final Injector injector;
+	private final FileDownloadHandlerFactory fdhFactory;
 
 	public Server(Integer port, Integer queueSize) {
+		injector = Guice.createInjector(new HandlerModule_Test());
+		fdhFactory = injector.getInstance(FileDownloadHandlerFactory.class);
 		// Initialize fields
 		this.port = (port == null) ? DEFAULT_PORT : port;
 		this.queueSize = (queueSize == null) ? DEFAULT_QUEUE_SIZE : queueSize;
@@ -107,12 +109,9 @@ public class Server {
 		// Set the server to be used by the handlers
 		HandlerUtils.setServer(this);
 		// Initialize file download handlers
-		// TODO How are we supposed to use Guice with constructors that take parameters?
-		//		See http://code.google.com/p/google-guice/wiki/AssistedInject
-		server.createContext("/", new FileDownloadHandler("/", "gameplay"));
-		server.createContext("/docs", new FileDownloadHandler("/docs", "docs"));
+		server.createContext("/", fdhFactory.create("/", "gameplay"));
+		server.createContext("/docs", fdhFactory.create("/docs", "docs"));
 		// Initialize API handlers
-		// TODO Organize handler classes into subpackages of catan.server.handler
 		server.createContext("/user/login", injector.getInstance(UserLoginHandler.class));
 		server.createContext("/user/register", injector.getInstance(UserRegisterHandler.class));
 		server.createContext("/games/list", injector.getInstance(GamesListHandler.class));
@@ -148,7 +147,6 @@ public class Server {
 	public static void main(String[] args) {
 		Integer port = (args.length > 0) ? Integer.parseInt(args[0]) : null;
 		Server.setDebugEnabled(true);
-		// TODO Are we supposed to use Guice for the server class?
 		Server server = new Server(port, null);
 		server.start();
 	}

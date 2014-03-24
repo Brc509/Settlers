@@ -429,7 +429,7 @@ catan.map.Controller = (function catan_controller_namespace() {
 			
 			// Update the hexes, settlements, cities, and roads (iterate through all hexes)
 			// TODO Use hexgrid.getEdges() and hexgrid.getVertexes() instead of a brute-force iteration through all hexes?
-			var hexes = map.getHexGrid().getHexes();
+			var hexes = map.getHexGrid().hexes;
 			for (lineNum in hexes) {
 				var line = hexes[lineNum];
 				for (hexNum in line) {

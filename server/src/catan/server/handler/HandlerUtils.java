@@ -15,27 +15,79 @@ import catan.server.Server;
 
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Provides methods that facilitate <code>HttpHandler</code> operations.
+ * 
+ * @author Spencer Bench
+ */
 public class HandlerUtils {
 
 	// Static constants
 	private static final byte[] BUFFER = new byte[1048576]; // 1 MiB buffer
 	private static final String SAMPLE_MODEL = "{\"deck\":{\"yearOfPlenty\":2,\"monopoly\":2,\"soldier\":10,\"roadBuilding\":1,\"monument\":4},\"map\":{\"hexGrid\":{\"hexes\":[[{\"isLand\":false,\"location\":{\"x\":0,\"y\":-3},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"isLand\":false,\"location\":{\"x\":1,\"y\":-3},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"isLand\":false,\"location\":{\"x\":2,\"y\":-3},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"isLand\":false,\"location\":{\"x\":3,\"y\":-3},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]}],[{\"isLand\":false,\"location\":{\"x\":-1,\"y\":-2},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"isLand\":true,\"location\":{\"x\":0,\"y\":-2},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"landtype\":\"Brick\",\"isLand\":true,\"location\":{\"x\":1,\"y\":-2},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":3}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"landtype\":\"Wood\",\"isLand\":true,\"location\":{\"x\":2,\"y\":-2},\"vertexes\":[{\"value\":{\"worth\":1,\"ownerID\":3}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":0}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":3}}]},{\"isLand\":false,\"location\":{\"x\":3,\"y\":-2},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":2,\"ownerID\":0}}],\"edges\":[{\"value\":{\"ownerID\":0}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":0}}]}],[{\"isLand\":false,\"location\":{\"x\":-2,\"y\":-1},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"landtype\":\"Brick\",\"isLand\":true,\"location\":{\"x\":-1,\"y\":-1},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":1}},{\"value\":{\"ownerID\":-1}}]},{\"landtype\":\"Wood\",\"isLand\":true,\"location\":{\"x\":0,\"y\":-1},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"landtype\":\"Ore\",\"isLand\":true,\"location\":{\"x\":1,\"y\":-1},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":3}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":2}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":3}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":2}},{\"value\":{\"ownerID\":-1}}]},{\"landtype\":\"Sheep\",\"isLand\":true,\"location\":{\"x\":2,\"y\":-1},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":2,\"ownerID\":0}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":0}},{\"value\":{\"ownerID\":0}},{\"value\":{\"ownerID\":0}},{\"value\":{\"ownerID\":-1}}]},{\"isLand\":false,\"location\":{\"x\":3,\"y\":-1},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":2,\"ownerID\":0}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":0}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]}],[{\"isLand\":false,\"location\":{\"x\":-3,\"y\":0},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"landtype\":\"Ore\",\"isLand\":true,\"location\":{\"x\":-2,\"y\":0},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"landtype\":\"Sheep\",\"isLand\":true,\"location\":{\"x\":-1,\"y\":0},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"landtype\":\"Wheat\",\"isLand\":true,\"location\":{\"x\":0,\"y\":0},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":2}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":2}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":2}},{\"value\":{\"ownerID\":-1}}]},{\"landtype\":\"Brick\",\"isLand\":true,\"location\":{\"x\":1,\"y\":0},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":2}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":2}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":0}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"landtype\":\"Wheat\",\"isLand\":true,\"location\":{\"x\":2,\"y\":0},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":2,\"ownerID\":0}}],\"edges\":[{\"value\":{\"ownerID\":0}},{\"value\":{\"ownerID\":0}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":0}}]},{\"isLand\":false,\"location\":{\"x\":3,\"y\":0},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]}],[{\"isLand\":false,\"location\":{\"x\":-3,\"y\":1},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"landtype\":\"Wheat\",\"isLand\":true,\"location\":{\"x\":-2,\"y\":1},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":1}}]},{\"landtype\":\"Sheep\",\"isLand\":true,\"location\":{\"x\":-1,\"y\":1},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":2}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":3}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":3}}]},{\"landtype\":\"Wood\",\"isLand\":true,\"location\":{\"x\":0,\"y\":1},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":2}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":0}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":2}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":0}},{\"value\":{\"ownerID\":-1}}]},{\"landtype\":\"Sheep\",\"isLand\":true,\"location\":{\"x\":1,\"y\":1},\"vertexes\":[{\"value\":{\"worth\":1,\"ownerID\":0}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":2,\"ownerID\":0}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":0}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"isLand\":false,\"location\":{\"x\":2,\"y\":1},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":2,\"ownerID\":0}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]}],[{\"isLand\":false,\"location\":{\"x\":-3,\"y\":2},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"landtype\":\"Wood\",\"isLand\":true,\"location\":{\"x\":-2,\"y\":2},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":3}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":3}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"landtype\":\"Ore\",\"isLand\":true,\"location\":{\"x\":-1,\"y\":2},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":3}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"landtype\":\"Wheat\",\"isLand\":true,\"location\":{\"x\":0,\"y\":2},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":1,\"ownerID\":0}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":0}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"isLand\":false,\"location\":{\"x\":1,\"y\":2},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]}],[{\"isLand\":false,\"location\":{\"x\":-3,\"y\":3},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"isLand\":false,\"location\":{\"x\":-2,\"y\":3},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"isLand\":false,\"location\":{\"x\":-1,\"y\":3},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]},{\"isLand\":false,\"location\":{\"x\":0,\"y\":3},\"vertexes\":[{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}},{\"value\":{\"worth\":0,\"ownerID\":-1}}],\"edges\":[{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}},{\"value\":{\"ownerID\":-1}}]}]],\"offsets\":[3,2,1,0,0,0,0],\"radius\":4,\"x0\":3,\"y0\":3},\"radius\":4,\"numbers\":{\"2\":[{\"x\":-2,\"y\":1}],\"3\":[{\"x\":-1,\"y\":2},{\"x\":0,\"y\":-1}],\"4\":[{\"x\":1,\"y\":-2},{\"x\":0,\"y\":1}],\"5\":[{\"x\":1,\"y\":0},{\"x\":-2,\"y\":0}],\"6\":[{\"x\":2,\"y\":0},{\"x\":-2,\"y\":2}],\"8\":[{\"x\":0,\"y\":2},{\"x\":-1,\"y\":-1}],\"9\":[{\"x\":1,\"y\":-1},{\"x\":-1,\"y\":1}],\"10\":[{\"x\":1,\"y\":1},{\"x\":-1,\"y\":0}],\"11\":[{\"x\":2,\"y\":-2},{\"x\":0,\"y\":0}],\"12\":[{\"x\":2,\"y\":-1}]},\"ports\":[{\"ratio\":3,\"validVertex1\":{\"direction\":\"SW\",\"x\":3,\"y\":-3},\"validVertex2\":{\"direction\":\"W\",\"x\":3,\"y\":-3},\"orientation\":\"SW\",\"location\":{\"x\":3,\"y\":-3}},{\"ratio\":2,\"inputResource\":\"Wheat\",\"validVertex1\":{\"direction\":\"SE\",\"x\":-1,\"y\":-2},\"validVertex2\":{\"direction\":\"SW\",\"x\":-1,\"y\":-2},\"orientation\":\"S\",\"location\":{\"x\":-1,\"y\":-2}},{\"ratio\":2,\"inputResource\":\"Wood\",\"validVertex1\":{\"direction\":\"NE\",\"x\":-3,\"y\":2},\"validVertex2\":{\"direction\":\"E\",\"x\":-3,\"y\":2},\"orientation\":\"NE\",\"location\":{\"x\":-3,\"y\":2}},{\"ratio\":3,\"validVertex1\":{\"direction\":\"NW\",\"x\":0,\"y\":3},\"validVertex2\":{\"direction\":\"NE\",\"x\":0,\"y\":3},\"orientation\":\"N\",\"location\":{\"x\":0,\"y\":3}},{\"ratio\":2,\"inputResource\":\"Brick\",\"validVertex1\":{\"direction\":\"NE\",\"x\":-2,\"y\":3},\"validVertex2\":{\"direction\":\"E\",\"x\":-2,\"y\":3},\"orientation\":\"NE\",\"location\":{\"x\":-2,\"y\":3}},{\"ratio\":3,\"validVertex1\":{\"direction\":\"E\",\"x\":-3,\"y\":0},\"validVertex2\":{\"direction\":\"SE\",\"x\":-3,\"y\":0},\"orientation\":\"SE\",\"location\":{\"x\":-3,\"y\":0}},{\"ratio\":2,\"inputResource\":\"Ore\",\"validVertex1\":{\"direction\":\"SE\",\"x\":1,\"y\":-3},\"validVertex2\":{\"direction\":\"SW\",\"x\":1,\"y\":-3},\"orientation\":\"S\",\"location\":{\"x\":1,\"y\":-3}},{\"ratio\":2,\"inputResource\":\"Sheep\",\"validVertex1\":{\"direction\":\"W\",\"x\":3,\"y\":-1},\"validVertex2\":{\"direction\":\"NW\",\"x\":3,\"y\":-1},\"orientation\":\"NW\",\"location\":{\"x\":3,\"y\":-1}},{\"ratio\":3,\"validVertex1\":{\"direction\":\"W\",\"x\":2,\"y\":1},\"validVertex2\":{\"direction\":\"NW\",\"x\":2,\"y\":1},\"orientation\":\"NW\",\"location\":{\"x\":2,\"y\":1}}],\"robber\":{\"x\":1,\"y\":-1}},\"players\":[{\"MAX_GAME_POINTS\":10,\"resources\":{\"brick\":14,\"wood\":13,\"sheep\":15,\"wheat\":10,\"ore\":8},\"oldDevCards\":{\"yearOfPlenty\":0,\"monopoly\":0,\"soldier\":2,\"roadBuilding\":0,\"monument\":1},\"newDevCards\":{\"yearOfPlenty\":0,\"monopoly\":0,\"soldier\":1,\"roadBuilding\":1,\"monument\":0},\"roads\":8,\"cities\":2,\"settlements\":4,\"soldiers\":1,\"victoryPoints\":7,\"monuments\":0,\"longestRoad\":true,\"largestArmy\":false,\"playedDevCard\":true,\"discarded\":false,\"playerID\":0,\"orderNumber\":0,\"name\":\"Sam\",\"color\":\"orange\"},{\"MAX_GAME_POINTS\":10,\"resources\":{\"brick\":1,\"wood\":0,\"sheep\":1,\"wheat\":0,\"ore\":6},\"oldDevCards\":{\"yearOfPlenty\":0,\"monopoly\":0,\"soldier\":0,\"roadBuilding\":0,\"monument\":0},\"newDevCards\":{\"yearOfPlenty\":0,\"monopoly\":0,\"soldier\":0,\"roadBuilding\":0,\"monument\":0},\"roads\":13,\"cities\":4,\"settlements\":3,\"soldiers\":0,\"victoryPoints\":2,\"monuments\":0,\"longestRoad\":false,\"largestArmy\":false,\"playedDevCard\":false,\"discarded\":false,\"playerID\":1,\"orderNumber\":1,\"name\":\"Brooke\",\"color\":\"blue\"},{\"MAX_GAME_POINTS\":10,\"resources\":{\"brick\":5,\"wood\":1,\"sheep\":0,\"wheat\":1,\"ore\":0},\"oldDevCards\":{\"yearOfPlenty\":0,\"monopoly\":0,\"soldier\":0,\"roadBuilding\":0,\"monument\":0},\"newDevCards\":{\"yearOfPlenty\":0,\"monopoly\":0,\"soldier\":0,\"roadBuilding\":0,\"monument\":0},\"roads\":13,\"cities\":4,\"settlements\":3,\"soldiers\":0,\"victoryPoints\":2,\"monuments\":0,\"longestRoad\":false,\"largestArmy\":false,\"playedDevCard\":false,\"discarded\":false,\"playerID\":10,\"orderNumber\":2,\"name\":\"Pete\",\"color\":\"red\"},{\"MAX_GAME_POINTS\":10,\"resources\":{\"brick\":0,\"wood\":1,\"sheep\":1,\"wheat\":0,\"ore\":2},\"oldDevCards\":{\"yearOfPlenty\":0,\"monopoly\":0,\"soldier\":0,\"roadBuilding\":0,\"monument\":0},\"newDevCards\":{\"yearOfPlenty\":0,\"monopoly\":0,\"soldier\":0,\"roadBuilding\":0,\"monument\":0},\"roads\":13,\"cities\":4,\"settlements\":3,\"soldiers\":0,\"victoryPoints\":2,\"monuments\":0,\"longestRoad\":false,\"largestArmy\":false,\"playedDevCard\":false,\"discarded\":false,\"playerID\":11,\"orderNumber\":3,\"name\":\"Mark\",\"color\":\"green\"}],\"log\":{\"lines\":[{\"source\":\"Sam\",\"message\":\"Sambuiltaroad\"},{\"source\":\"Sam\",\"message\":\"Sambuiltasettlement\"},{\"source\":\"Sam\",\"message\":\"Sam\u0027sturnjustended\"},{\"source\":\"Brooke\",\"message\":\"Brookebuiltaroad\"},{\"source\":\"Brooke\",\"message\":\"Brookebuiltasettlement\"},{\"source\":\"Brooke\",\"message\":\"Brooke\u0027sturnjustended\"},{\"source\":\"Pete\",\"message\":\"Petebuiltaroad\"},{\"source\":\"Pete\",\"message\":\"Petebuiltasettlement\"},{\"source\":\"Pete\",\"message\":\"Pete\u0027sturnjustended\"},{\"source\":\"Mark\",\"message\":\"Markbuiltaroad\"},{\"source\":\"Mark\",\"message\":\"Markbuiltasettlement\"},{\"source\":\"Mark\",\"message\":\"Mark\u0027sturnjustended\"},{\"source\":\"Mark\",\"message\":\"Markbuiltaroad\"},{\"source\":\"Mark\",\"message\":\"Markbuiltasettlement\"},{\"source\":\"Mark\",\"message\":\"Mark\u0027sturnjustended\"},{\"source\":\"Pete\",\"message\":\"Petebuiltaroad\"},{\"source\":\"Pete\",\"message\":\"Petebuiltasettlement\"},{\"source\":\"Pete\",\"message\":\"Pete\u0027sturnjustended\"},{\"source\":\"Brooke\",\"message\":\"Brookebuiltaroad\"},{\"source\":\"Brooke\",\"message\":\"Brookebuiltasettlement\"},{\"source\":\"Brooke\",\"message\":\"Brooke\u0027sturnjustended\"},{\"source\":\"Sam\",\"message\":\"Sambuiltaroad\"},{\"source\":\"Sam\",\"message\":\"Sambuiltasettlement\"},{\"source\":\"Sam\",\"message\":\"Sam\u0027sturnjustended\"},{\"source\":\"Sam\",\"message\":\"Samrolleda3.\"},{\"source\":\"Sam\",\"message\":\"Sambuiltaroad\"},{\"source\":\"Sam\",\"message\":\"Sambuiltaroad\"},{\"source\":\"Sam\",\"message\":\"Sambuiltaroad\"},{\"source\":\"Sam\",\"message\":\"Sambuiltaroad\"},{\"source\":\"Sam\",\"message\":\"Sambuiltaroad\"},{\"source\":\"Sam\",\"message\":\"Samupgradedtoacity\"},{\"source\":\"Sam\",\"message\":\"Sambuiltasettlement\"},{\"source\":\"Sam\",\"message\":\"Samupgradedtoacity\"},{\"source\":\"Sam\",\"message\":\"SamboughtaDevelopmentCard.\"},{\"source\":\"Sam\",\"message\":\"SamboughtaDevelopmentCard.\"},{\"source\":\"Sam\",\"message\":\"SamboughtaDevelopmentCard.\"},{\"source\":\"Sam\",\"message\":\"SamboughtaDevelopmentCard.\"},{\"source\":\"Sam\",\"message\":\"Sam\u0027sturnjustended\"},{\"source\":\"Brooke\",\"message\":\"Brookerolleda5.\"},{\"source\":\"Brooke\",\"message\":\"Brooke\u0027sturnjustended\"},{\"source\":\"Pete\",\"message\":\"Peterolleda5.\"},{\"source\":\"Pete\",\"message\":\"Pete\u0027sturnjustended\"},{\"source\":\"Mark\",\"message\":\"Mark\u0027sturnjustended\"},{\"source\":\"Mark\",\"message\":\"Markrolleda5.\"},{\"source\":\"Mark\",\"message\":\"Markrolleda5.\"},{\"source\":\"Mark\",\"message\":\"Mark\u0027sturnjustended\"},{\"source\":\"Sam\",\"message\":\"Samrolleda5.\"},{\"source\":\"Sam\",\"message\":\"SamboughtaDevelopmentCard.\"},{\"source\":\"Sam\",\"message\":\"SamboughtaDevelopmentCard.\"},{\"source\":\"Sam\",\"message\":\"Samusedasoldier\"},{\"source\":\"Sam\",\"message\":\"SammovedtherobberandrobbedPete.\"}]},\"chat\":{\"lines\":[]},\"bank\":{\"brick\":4,\"wood\":9,\"sheep\":1,\"wheat\":7,\"ore\":2},\"turnTracker\":{\"status\":\"Playing\",\"currentTurn\":0},\"biggestArmy\":2,\"longestRoad\":0,\"winner\":-1}";
 
-	// Static mutables
-	private static Server server;
-
-	public static Server getServer() {
-		return server;
+	/**
+	 * Gets the cookies received with a client's request. Since all cookies should be contained in a single <b>Cookie</b> header, only the first such header is parsed.
+	 * 
+	 * @param exchange - An instance of <code>HttpExchange</code> received by an <code>HttpHandler</code>.
+	 * @return A <code>Map</code> where the keys are cookie names and the values are cookie values. If the client did not send any cookies, an empty <code>Map</code> is returned.
+	 */
+	public static Map<String, String> getCookies(HttpExchange exchange) {
+		if (Server.isDebugEnabled()) System.out.println("Parsing cookies...");
+		Map<String, String> cookies = new TreeMap<>();
+		if (exchange != null) {
+			// String cookieStr = "name0=value0;name1=value1; name2 = value2;  name3  =  value3=value3";
+			String cookieStr = exchange.getRequestHeaders().getFirst("Cookie");
+			if (cookieStr != null) {
+				cookies = decodeQueryString(cookieStr, "\\s*;\\s*", "\\s*=\\s*");
+				if (Server.isDebugEnabled()) {
+					for (Map.Entry<String, String> e : cookies.entrySet()) {
+						System.out.println("  \"" + e.getKey() + "\" = \"" + e.getValue() + "\".");
+					}
+				}
+			}
+		}
+		if (Server.isDebugEnabled()) System.out.println("Done.");
+		return cookies;
 	}
 
-	public static void setServer(Server server) {
-		HandlerUtils.server = server;
+	/**
+	 * Sets a cookie to be sent with the server's response, in addition to any existing <b>Set-Cookie</b> headers. If either of the name or value is empty or <code>null</code>, no cookie is set.
+	 * 
+	 * @param exchange - An instance of <code>HttpExchange</code> received by an <code>HttpHandler</code>.
+	 * @param name - The name of the cookie.
+	 * @param value - The value of the cookie.
+	 */
+	public static void addCookie(HttpExchange exchange, String name, String value) {
+		if (exchange != null) {
+			if (name != null && value != null && !name.isEmpty() && !value.isEmpty()) {
+				exchange.getResponseHeaders().add("Set-Cookie", name + "=" + value);
+				if (Server.isDebugEnabled()) System.out.println("Cookie added: \"" + name + "\" = \"" + value + "\".");
+			}
+		}
 	}
 
+	/**
+	 * Sends a sample game model in JSON format to a client and closes the connection.
+	 * 
+	 * @param exchange - An instance of <code>HttpExchange</code> received by an <code>HttpHandler</code>.
+	 * @param responseCode - The HTTP response code to send to the client.
+	 * @throws IOException If an I/O error occurs while communicating with the client.
+	 */
 	public static void sendSampleModel(HttpExchange exchange, int responseCode) throws IOException {
-		sendStringAsJSON(exchange, responseCode, SAMPLE_MODEL);
+		if (exchange != null) {
+			sendStringAsJSON(exchange, responseCode, SAMPLE_MODEL);
+		}
 	}
 
+	/**
+	 * Sends a file to a client and closes the connection. If the file is <code>null</code>, no response body is sent.
+	 * 
+	 * @param exchange - An instance of <code>HttpExchange</code> received by an <code>HttpHandler</code>.
+	 * @param responseCode - The HTTP response code to send to the client.
+	 * @param data - The file to send to the client.
+	 * @throws IOException If an I/O error occurs while communicating with the client.
+	 */
 	public static void sendFile(HttpExchange exchange, int responseCode, File data) throws IOException {
 		if (exchange != null) {
 			if (data != null) {
@@ -48,12 +100,20 @@ public class HandlerUtils {
 		}
 	}
 
+	/**
+	 * Sends an object to a client and closes the connection. If the object is <code>Serializable</code>, it is serialized and sent as JSON. Otherwise, the value of the object's <code>toString()</code> method is sent. If the object is <code>null</code>, no response body is sent.
+	 * 
+	 * @param exchange - An instance of <code>HttpExchange</code> received by an <code>HttpHandler</code>.
+	 * @param responseCode - The HTTP response code to send to the client.
+	 * @param data - The object to send to the client.
+	 * @throws IOException If an I/O error occurs while communicating with the client.
+	 */
 	public static void sendObject(HttpExchange exchange, int responseCode, Object data) throws IOException {
 		if (exchange != null) {
 			if (data == null) {
 				sendEmptyBody(exchange, responseCode);
 			} else if (Serializable.class.isInstance(data)) {
-				// TODO Serialize and send the data as a JSON string?
+				// TODO Serialize and send the data as a JSON string
 				sendStringAsJSON(exchange, responseCode, data.toString());
 			} else {
 				sendString(exchange, responseCode, data.toString());
@@ -61,6 +121,14 @@ public class HandlerUtils {
 		}
 	}
 
+	/**
+	 * Sends a string to a client and closes the connection. If the string is <code>null</code>, no response body is sent.
+	 * 
+	 * @param exchange - An instance of <code>HttpExchange</code> received by an <code>HttpHandler</code>.
+	 * @param responseCode - The HTTP response code to send to the client.
+	 * @param data - The string to send to the client.
+	 * @throws IOException If an I/O error occurs while communicating with the client.
+	 */
 	public static void sendString(HttpExchange exchange, int responseCode, String data) throws IOException {
 		if (exchange != null) {
 			if (data != null) {
@@ -73,44 +141,84 @@ public class HandlerUtils {
 		}
 	}
 
+	/**
+	 * Sends a string to a client as JSON and closes the connection. If the string is <code>null</code>, no response body is sent.
+	 * 
+	 * @param exchange - An instance of <code>HttpExchange</code> received by an <code>HttpHandler</code>.
+	 * @param responseCode - The HTTP response code to send to the client.
+	 * @param data - The string to send to the client as JSON.
+	 * @throws IOException If an I/O error occurs while communicating with the client.
+	 */
 	public static void sendStringAsJSON(HttpExchange exchange, int responseCode, String data) throws IOException {
-		exchange.getResponseHeaders().set("Content-Type", "application/json");
-		sendString(exchange, responseCode, data);
+		if (exchange != null) {
+			exchange.getResponseHeaders().set("Content-Type", "application/json");
+			sendString(exchange, responseCode, data);
+		}
 	}
 
+	/**
+	 * Sends a response with no body to a client.
+	 * 
+	 * @param exchange - An instance of <code>HttpExchange</code> received by an <code>HttpHandler</code>.
+	 * @param responseCode - The HTTP response code to send to the client.
+	 * @throws IOException If an I/O error occurs while communicating with the client.
+	 */
 	public static void sendEmptyBody(HttpExchange exchange, int responseCode) throws IOException {
 		if (exchange != null) {
 			exchange.sendResponseHeaders(responseCode, -1);
 		}
 	}
 
+	/**
+	 * Converts the contents of an input stream to a string. This method makes it easy to convert a client's request body into a string:
+	 * 
+	 * <pre>String requestBodyStr = HandlerUtils.inputStreamToString(httpExchange.getRequestBody());</pre>
+	 * 
+	 * @param is - The input stream to convert to a string.
+	 * @return A string containing the contents of the input stream. If the input stream is <code>null</code>, an empty string is returned.
+	 */
 	public static String inputStreamToString(InputStream is) {
 		String str = "";
-		Scanner scan = new Scanner(is);
-		scan.useDelimiter("\\A");
-		if (scan.hasNext()) {
-			str = scan.next();
+		if (is != null) {
+			Scanner scan = new Scanner(is);
+			scan.useDelimiter("\\A");
+			if (scan.hasNext()) {
+				str = scan.next();
+			}
+			scan.close();
 		}
-		scan.close();
 		return str;
 	}
 
+	/**
+	 * Decodes a query string into a map of key-value pairs. This method is useful for decoding form-encoded request bodies. It assumes a string of the following form:
+	 * 
+	 * <pre>key0=value0&key1=value1&key2=value2</pre>
+	 * 
+	 * @param str - The query string to decode.
+	 * @return A <code>Map</code> containing the key-value pairs represented by the string.
+	 */
 	public static Map<String, String> decodeQueryString(String str) {
 		return decodeQueryString(str, "&", "=");
 	}
 
 	private static Map<String, String> decodeQueryString(String str, String paramSeparator, String keyValueSeparator) {
 		Map<String, String> params = new TreeMap<>();
-		Scanner scan = new Scanner(str);
-		scan.useDelimiter(paramSeparator);
-		while (scan.hasNext()) {
-			String param = scan.next();
-			int separatorIndex = param.indexOf(keyValueSeparator);
-			String key = param.substring(0, separatorIndex);
-			String value = param.substring(separatorIndex + 1);
+		Scanner pScan = new Scanner(str);
+		pScan.useDelimiter(paramSeparator);
+		Scanner kvScan;
+		while (pScan.hasNext()) {
+			String param = pScan.next();
+			kvScan = new Scanner(param);
+			kvScan.useDelimiter(keyValueSeparator);
+			String key = kvScan.next();
+			kvScan.skip(keyValueSeparator);
+			kvScan.useDelimiter("\\A");
+			String value = kvScan.next();
+			kvScan.close();
 			params.put(key, value);
 		}
-		scan.close();
+		pScan.close();
 		return params;
 	}
 

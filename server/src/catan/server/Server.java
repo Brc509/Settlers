@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import catan.server.handler.FileDownloadHandlerFactory;
-import catan.server.handler.HandlerModule_Test;
-import catan.server.handler.HandlerUtils;
+import catan.server.handler.HandlerModule_Prod;
 import catan.server.handler.UtilChangeLogLevelHandler;
 import catan.server.handler.game.GameAddAIHandler;
 import catan.server.handler.game.GameCommandsHandler;
@@ -64,7 +63,7 @@ public class Server {
 	private final FileDownloadHandlerFactory fdhFactory;
 
 	public Server(Integer port, Integer queueSize) {
-		injector = Guice.createInjector(new HandlerModule_Test());
+		injector = Guice.createInjector(new HandlerModule_Prod());
 		fdhFactory = injector.getInstance(FileDownloadHandlerFactory.class);
 		// Initialize fields
 		this.port = (port == null) ? DEFAULT_PORT : port;
@@ -106,8 +105,6 @@ public class Server {
 
 	private void initHandlers() {
 		if (debugEnabled) System.out.println("Initializing handlers...");
-		// Set the server to be used by the handlers
-		HandlerUtils.setServer(this);
 		// Initialize file download handlers
 		server.createContext("/", fdhFactory.create("/", "gameplay"));
 		server.createContext("/docs", fdhFactory.create("/docs", "docs"));

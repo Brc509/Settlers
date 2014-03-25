@@ -4,6 +4,11 @@ import java.io.IOException;
 
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Handles requests to /games/create.
+ * 
+ * @author Spencer Bench
+ */
 public class GamesCreateHandler_Prod implements GamesCreateHandler {
 
 	@Override

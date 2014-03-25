@@ -4,6 +4,11 @@ import java.io.IOException;
 
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Handles requests to /games/list.
+ * 
+ * @author Spencer Bench
+ */
 public class GamesListHandler_Prod implements GamesListHandler {
 
 	@Override

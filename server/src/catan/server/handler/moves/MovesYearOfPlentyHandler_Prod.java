@@ -9,6 +9,11 @@ import catan.server.handler.HandlerUtils;
 
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Handles requests to /moves/Year_of_Plenty.
+ * 
+ * @author Spencer Bench
+ */
 public class MovesYearOfPlentyHandler_Prod implements MovesYearOfPlentyHandler {
 
 	@Override

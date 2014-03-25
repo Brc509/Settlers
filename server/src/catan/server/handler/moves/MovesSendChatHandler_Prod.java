@@ -4,6 +4,11 @@ import java.io.IOException;
 
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Handles requests to /moves/sendChat.
+ * 
+ * @author Spencer Bench
+ */
 public class MovesSendChatHandler_Prod implements MovesSendChatHandler {
 
 	@Override

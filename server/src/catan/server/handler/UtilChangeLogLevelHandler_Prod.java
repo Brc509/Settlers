@@ -9,6 +9,11 @@ import catan.server.command.UtilChangeLogLevelCommand;
 
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Handles requests to /util/changeLogLevel.
+ * 
+ * @author Spencer Bench
+ */
 public class UtilChangeLogLevelHandler_Prod implements UtilChangeLogLevelHandler {
 
 	@Override

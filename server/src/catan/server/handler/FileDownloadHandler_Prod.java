@@ -11,6 +11,11 @@ import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Handles requests to download files from the server.
+ * 
+ * @author Spencer Bench
+ */
 public class FileDownloadHandler_Prod implements FileDownloadHandler {
 
 	// Instance constants

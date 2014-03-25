@@ -4,6 +4,11 @@ import java.io.IOException;
 
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Handles requests to /games/join.
+ * 
+ * @author Spencer Bench
+ */
 public class GamesJoinHandler_Prod implements GamesJoinHandler {
 
 	@Override

@@ -4,6 +4,11 @@ import java.io.IOException;
 
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Handles requests to /moves/Soldier.
+ * 
+ * @author Spencer Bench
+ */
 public class MovesSoldierHandler_Prod implements MovesSoldierHandler {
 
 	@Override

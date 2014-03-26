@@ -2,37 +2,25 @@ package catan.server.command.moves;
 
 import catan.server.command.Command;
 
-public class MovesBuildCityCommand implements Command {
+import com.google.gson.JsonObject;
+import com.sun.net.httpserver.HttpExchange;
 
-	String type;
-	int playerIndex;
-	VertexLocation vertexLocation;
-	boolean free;
+public class MovesBuildCityCommand implements Command{
 	
-	public MovesBuildCityCommand() {}
-	
+	HttpExchange arg0;
+	JsonObject json;
+
+	public MovesBuildCityCommand(HttpExchange arg0,JsonObject json) {
+		// TODO Auto-generated constructor stub
+		this.arg0 = arg0;
+		this.json = json;
+		execute();
+	}
+
 	@Override
 	public Object execute() {
-
-		System.out.println("TODO, actually do things with the variables and return the game model to send back");
+		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	class VertexLocation {
-		
-		int x;
-		int y;
-		String direction;
-		
-		public VertexLocation() {}
-		
-		public String toString() {
-			
-			String str = "";
-			str += x + " ";
-			str += y + " ";
-			str += direction;
-			return str;
-		}
-	}
+
 }

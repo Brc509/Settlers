@@ -6,16 +6,20 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
+import catan.server.Cookie;
 import catan.server.RegisteredUser;
 import catan.server.RegisteredUsers;
 import catan.server.Server;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 
 /**
@@ -31,6 +35,20 @@ public class HandlerUtils {
 	private static final Gson gson = new Gson();
 
 	/**
+	 * Returns the <code>Cookie</code> object corresponding to a requesting client.
+	 * 
+	 * @param exchange - An instance of <code>HttpExchange</code> received by an <code>HttpHandler</code>.
+	 * @return the <code>Cookie</code> object corresponding to the requesting client.
+	 */
+	public static Cookie getCookie(HttpExchange exchange) {
+		Cookie cookie = null;
+		try {
+			cookie = gson.fromJson(URLDecoder.decode(getCookies(exchange).get("catan.user"), "UTF-8"), Cookie.class);
+		} catch (JsonSyntaxException | UnsupportedEncodingException e) {}
+		return cookie;
+	}
+
+	/**
 	 * Gets the cookies received with a client's request. Since all cookies should be contained in a single <b>Cookie</b> header, only the first such header is parsed.
 	 * 
 	 * @param exchange - An instance of <code>HttpExchange</code> received by an <code>HttpHandler</code>.
@@ -40,7 +58,6 @@ public class HandlerUtils {
 		if (Server.isDebugEnabled()) System.out.println("Parsing cookies...");
 		Map<String, String> cookies = new TreeMap<>();
 		if (exchange != null) {
-			// String cookieStr = "name0=value0;name1=value1; name2 = value2;  name3  =  value3=value3";
 			String cookieStr = exchange.getRequestHeaders().getFirst("Cookie");
 			if (cookieStr != null) {
 				cookies = decodeQueryString(cookieStr, "\\s*;\\s*", "\\s*=\\s*");
@@ -79,14 +96,16 @@ public class HandlerUtils {
 	 */
 	public static boolean authorizeUser(HttpExchange exchange) {
 		boolean authorized = false;
-		Map<String, String> cookies = getCookies(exchange);
-		String username = cookies.get("catanUsername");
-		String password = cookies.get("catanPassword");
-		int userID = Integer.parseInt(cookies.get("catanUserID"));
-		for (RegisteredUser user : RegisteredUsers.get().getUsers()) {
-			if (user.getName().equals(username) && user.getPassword().equals(password) && user.getPlayerID() == userID) {
-				authorized = true;
-				break;
+		Cookie cookie = getCookie(exchange);
+		if (cookie != null) {
+			String username = cookie.getUsername();
+			String password = cookie.getPassword();
+			int userID = cookie.getId();
+			for (RegisteredUser user : RegisteredUsers.get().getUsers()) {
+				if (user.getName().equals(username) && user.getPassword().equals(password) && user.getPlayerID() == userID) {
+					authorized = true;
+					break;
+				}
 			}
 		}
 		return authorized;

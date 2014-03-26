@@ -16,7 +16,7 @@ public class ClientModel {
 	private int winner;
 	private transient int numPlayers;
 	public String name;
-	public TradeOffer offer;
+	public TradeOffer tradeOffer;
 
 	/**
 	 * Create a new client model (for a new game)
@@ -39,7 +39,7 @@ public class ClientModel {
 		turnTracker = new TurnTracker();
 		winner = -1;
 		numPlayers = 0;
-		offer = null;
+		tradeOffer = null;
 	}
 
 	public Player[] getPlayers() {

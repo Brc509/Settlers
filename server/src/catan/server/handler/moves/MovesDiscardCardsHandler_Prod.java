@@ -18,5 +18,6 @@ public class MovesDiscardCardsHandler_Prod implements MovesDiscardCardsHandler {
 	    Gson g = new Gson();
 	    JsonObject json = g.fromJson(s.hasNext() ? s.next() : "", JsonObject.class);		
 		MovesDiscardCardsCommand test = new MovesDiscardCardsCommand(arg0, json);
+		test.execute();
 	}
 }

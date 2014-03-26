@@ -19,6 +19,7 @@ public class Player {
 	private int settlements;
 	private int soldiers;
 	private int victoryPoints;
+	private Integer MAX_GAME_POINTS;
 	
 	/**
 	 * Constructs a new player
@@ -27,27 +28,43 @@ public class Player {
 	public Player(){
 		playerID = null;
 	}
-	public Player(int order) {
+	public Player(int order, int id, String color, String name) {
 		
-		color = "";
+		this.color = color;
 		cities = 4;
 		discarded = false;
 		largestArmy = false;
 		longestRoad = false;
 		monuments = 0;
-		name = "";
+		this.name = name;
 		newDevCards = new DevCardList();
 		oldDevCards = new DevCardList();
 		orderNumber = order;
 		playedDevCard = false;
-		playerID = -2;
+		playerID = id;
 		resources = new ResourceList();
 		roads = 15;
 		settlements = 5;
 		soldiers = 0;
 		victoryPoints = 0;
+		MAX_GAME_POINTS = 10;
 	}
 
+	public Integer getMAX_GAME_POINTS() {
+		return MAX_GAME_POINTS;
+	}
+	public void setMAX_GAME_POINTS(Integer mAX_GAME_POINTS) {
+		MAX_GAME_POINTS = mAX_GAME_POINTS;
+	}
+	public boolean isDiscarded() {
+		return discarded;
+	}
+	public boolean isLargestArmy() {
+		return largestArmy;
+	}
+	public boolean isLongestRoad() {
+		return longestRoad;
+	}
 	public int getCities() {
 		return cities;
 	}

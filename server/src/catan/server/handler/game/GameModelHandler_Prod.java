@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 
 import catan.model.ClientModel;
+import catan.server.Games;
 import catan.server.Server;
 import catan.server.handler.HandlerUtils;
 
@@ -17,20 +18,20 @@ public class GameModelHandler_Prod implements GameModelHandler {
 		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("GET")) {
 			if (Server.isDebugEnabled()) System.out.println("  /game/model");
-			ClientModel cm = new ClientModel();
+			ClientModel cm = Games.get().getGames().get(1);
 			try {
 				
 				// Create default map and some player values
 				cm.initializeMap(false, false, false);
-				cm.getPlayers()[0].setPlayerID(0);
-				cm.getPlayers()[0].setName("Pete");
-				cm.getPlayers()[1].setName("Peter");
-				cm.getPlayers()[2].setName("Petey");
-				cm.getPlayers()[3].setName("Cole");
-				cm.getPlayers()[0].setColor("red");
-				cm.getPlayers()[1].setColor("orange");
-				cm.getPlayers()[2].setColor("blue");
-				cm.getPlayers()[3].setColor("green");
+//				cm.getPlayers()[0].setPlayerID(0);
+//				cm.getPlayers()[0].setName("Pete");
+//				cm.getPlayers()[1].setName("Peter");
+//				cm.getPlayers()[2].setName("Petey");
+//				cm.getPlayers()[3].setName("Cole");
+//				cm.getPlayers()[0].setColor("red");
+//				cm.getPlayers()[1].setColor("orange");
+//				cm.getPlayers()[2].setColor("blue");
+//				cm.getPlayers()[3].setColor("green");
 				
 				Gson gson = new Gson();
 				String model = gson.toJson(cm);

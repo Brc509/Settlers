@@ -12,6 +12,7 @@ public class ClientModel {
 	private Player[] players;
 	private TurnTracker turnTracker;
 	private int winner;
+	private int numPlayers;
 	
 	/**
 	 * Create a new client model (for a new game)
@@ -32,6 +33,7 @@ public class ClientModel {
 		
 		turnTracker = new TurnTracker();
 		winner = -1;
+		numPlayers = 0;
 	}
 	
 	public void initializeDefaultMap() throws Exception {
@@ -39,9 +41,19 @@ public class ClientModel {
 		map.createDefaultMap();
 	}
 	
-	public void addPlayer(int playerIndex, int playerID, String color) {
+	/**
+	 * Adds a player in the next available index for this game
+	 * @param playerID
+	 * @param color
+	 */
+	public void addPlayer(int playerID, String playerName, String color) {
 		
-		players[playerIndex].setPlayerID(playerID);
-		players[playerIndex].setColor(color);
+		if (numPlayers >= 0 && numPlayers < 4) {
+			
+			players[numPlayers].setPlayerID(playerID);
+			players[numPlayers].setColor(color);
+			players[numPlayers].setName(playerName);
+			numPlayers++;
+		}
 	}
 }

@@ -27,7 +27,22 @@
 	<!-- Our server's classpath -->
 	<path id="our-server-classpath">
 		<pathelement location="${our-server-bin.dir}"/>
-		<pathelement location="${our-server-lib.dir}"/>
+		<pathelement location="${our-server-lib.dir}/aopalliance.jar"/>
+		<pathelement location="${our-server-lib.dir}/gson-2.2.4.jar"/>
+		<pathelement location="${our-server-lib.dir}/gson-2.2.4-javadoc.jar"/>
+		<pathelement location="${our-server-lib.dir}/gson-2.2.4-sources.jar"/>
+		<pathelement location="${our-server-lib.dir}/guice-3.0.jar"/>
+		<pathelement location="${our-server-lib.dir}/guice-assistedinject-3.0.jar"/>
+		<pathelement location="${our-server-lib.dir}/guice-grapher-3.0.jar"/>
+		<pathelement location="${our-server-lib.dir}/guice-jmx-3.0.jar"/>
+		<pathelement location="${our-server-lib.dir}/guice-jndi-3.0.jar"/>
+		<pathelement location="${our-server-lib.dir}/guice-multibindings-3.0.jar"/>
+		<pathelement location="${our-server-lib.dir}/guice-persist-3.0.jar"/>
+		<pathelement location="${our-server-lib.dir}/guice-servlet-3.0.jar"/>
+		<pathelement location="${our-server-lib.dir}/guice-spring-3.0.jar"/>
+		<pathelement location="${our-server-lib.dir}/guice-struts2-plugin-3.0.jar"/>
+		<pathelement location="${our-server-lib.dir}/guice-throwingproviders-3.0.jar"/>
+		<pathelement location="${our-server-lib.dir}/javax.inject.jar"/>
 	</path>
 
 	<!-- TARGETS -->

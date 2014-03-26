@@ -37,12 +37,11 @@ public class GamesCreateHandler_Prod implements GamesCreateHandler {
 			
 			ClientModel cm = new ClientModel();
 			cm.name = gameCreateInfoMap.get("name");
-			
+				
 			Games catanGames = Games.get();
 			catanGames.addGame(cm);
 			
 			Gson gson = new Gson();
-			
 			
 			ArrayList<GameListPlayer> glp = new ArrayList<GameListPlayer>();
 			for(int i = 0; i < 4; i++){
@@ -50,13 +49,13 @@ public class GamesCreateHandler_Prod implements GamesCreateHandler {
 			}
 			
 			GameListGames g = new GameListGames(cm.name, catanGames.getGames().size(), glp);
-
 			
 			String jsonString = gson.toJson(g);
 			
 			if (Server.isDebugEnabled()) System.out.println("  /games/create");
 			
 			HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, jsonString);
+			
 		} else {
 			if (Server.isDebugEnabled()) System.out.println("  Bad request to /games/create.");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);

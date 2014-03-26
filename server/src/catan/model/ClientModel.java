@@ -33,7 +33,7 @@ public class ClientModel {
 
 		players = new Player[4];
 		for (int i = 0; i < players.length; i++)
-			players[i] = new Player(i);
+			players[i] = new Player();
 
 		turnTracker = new TurnTracker();
 		winner = -1;

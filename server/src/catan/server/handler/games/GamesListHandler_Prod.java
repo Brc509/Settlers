@@ -33,7 +33,9 @@ public class GamesListHandler_Prod implements GamesListHandler {
 
 			ArrayList<GameListGames> games = new ArrayList<GameListGames>();
 			Games theGames = Games.get();
+			
 			Map<Integer, ClientModel> gameList = theGames.getGames();
+			
 			for(int i = 1; i < gameList.size()+1; i++){
 				
 				ArrayList<GameListPlayer> thePlayers = new ArrayList<GameListPlayer>();
@@ -41,7 +43,12 @@ public class GamesListHandler_Prod implements GamesListHandler {
 				Player players[] = model.getPlayers();
 				
                 for (int z = 0; z < players.length; z++) {
-					GameListPlayer playa = new GameListPlayer(players[z].getColor(), players[z].getName(), players[z].getPlayerID());
+                	GameListPlayer playa;
+                	if(players[z].getPlayerID() == null){
+                		playa = new GameListPlayer();
+                	}else{
+                		playa = new GameListPlayer(players[z].getColor(), players[z].getName(), players[z].getPlayerID());
+                	}
 					thePlayers.add(playa);
 				}
 

@@ -13,7 +13,7 @@ public class Player {
 	private DevCardList oldDevCards;
 	private int orderNumber;
 	private boolean playedDevCard;
-	private int playerID;
+	private Integer playerID;
 	private ResourceList resources;
 	private int roads;
 	private int settlements;
@@ -24,6 +24,9 @@ public class Player {
 	 * Constructs a new player
 	 * @param order The index number of this player (0-3)
 	 */
+	public Player(){
+		playerID = null;
+	}
 	public Player(int order) {
 		
 		color = "";
@@ -133,11 +136,11 @@ public class Player {
 		this.playedDevCard = playedDevCard;
 	}
 
-	public int getPlayerID() {
+	public Integer getPlayerID() {
 		return playerID;
 	}
 
-	public void setPlayerID(int playerID) {
+	public void setPlayerID(Integer playerID) {
 		this.playerID = playerID;
 	}
 

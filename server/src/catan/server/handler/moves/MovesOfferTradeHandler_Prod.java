@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import catan.server.command.moves.MovesMonumentCommand;
 import catan.server.command.moves.MovesOfferTradeCommand;
 import catan.server.handler.HandlerUtils;
 

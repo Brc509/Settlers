@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import catan.server.command.moves.MovesMonopolyCommand;
 import catan.server.command.moves.MovesMonumentCommand;
 import catan.server.handler.HandlerUtils;
 
@@ -15,6 +14,7 @@ public class MovesMonumentHandler_Prod implements MovesMonumentHandler {
 
 	@Override
 	public void handle(HttpExchange arg0) throws IOException {
+		System.out.println("fdjskafjdskal;fjdksalfjdals;");
 		Map<String, String> cookies = HandlerUtils.getCookies(arg0);
 		
 		InputStream is = arg0.getRequestBody();

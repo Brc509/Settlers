@@ -53,16 +53,21 @@ public class ClientModel {
 	 * Adds a player in the next available index for this game
 	 * 
 	 * @param playerID
+	 * @param playerName
 	 * @param color
+	 * 
+	 * @return <code>true</code> if the player was added, <code>false</code> otherwise.
 	 */
-	public void addPlayer(int playerID, String playerName, String color) {
+	public boolean addPlayer(int playerID, String playerName, String color) {
 
 		if (numPlayers >= 0 && numPlayers < 4) {
-
 			players[numPlayers].setPlayerID(playerID);
 			players[numPlayers].setColor(color);
 			players[numPlayers].setName(playerName);
 			numPlayers++;
+			return true;
+		} else {
+			return false;
 		}
 	}
 

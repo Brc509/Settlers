@@ -43,7 +43,10 @@ public class HandlerUtils {
 	public static Cookie getCookie(HttpExchange exchange) {
 		Cookie cookie = null;
 		try {
-			cookie = gson.fromJson(URLDecoder.decode(getCookies(exchange).get("catan.user"), "UTF-8"), Cookie.class);
+			String encodedCookieStr = getCookies(exchange).get("catan.user");
+			String decodedCookieStr = URLDecoder.decode(encodedCookieStr, "UTF-8");
+			if (Server.isDebugEnabled()) System.out.println("Decoded cookie: \"" + decodedCookieStr + "\".");
+			cookie = gson.fromJson(decodedCookieStr, Cookie.class);
 		} catch (JsonSyntaxException | UnsupportedEncodingException e) {}
 		return cookie;
 	}
@@ -82,8 +85,9 @@ public class HandlerUtils {
 	public static void addCookie(HttpExchange exchange, String name, String value) {
 		if (exchange != null) {
 			if (name != null && value != null && !name.isEmpty() && !value.isEmpty()) {
-				exchange.getResponseHeaders().add("Set-Cookie", name + "=" + value + "; Path=/");
-				if (Server.isDebugEnabled()) System.out.println("Cookie added: \"" + name + "\" = \"" + value + "\".");
+				String cookie = name + "=" + value + "; Path=/";
+				exchange.getResponseHeaders().add("Set-Cookie", cookie);
+				if (Server.isDebugEnabled()) System.out.println("Cookie added: \"" + cookie + "\".");
 			}
 		}
 	}

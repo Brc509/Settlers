@@ -3,7 +3,6 @@ package catan.server.handler.user;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.util.Map;
 
 import catan.server.RegisteredUser;
@@ -11,7 +10,6 @@ import catan.server.RegisteredUsers;
 import catan.server.Server;
 import catan.server.handler.HandlerUtils;
 
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
 public class UserRegisterHandler_Prod implements UserRegisterHandler {
@@ -28,10 +26,32 @@ public class UserRegisterHandler_Prod implements UserRegisterHandler {
 			String registerInfor = HandlerUtils.inputStreamToString(headers);
 			Map<String,String> registerInfoMap = HandlerUtils.decodeQueryString(registerInfor);
 			
-			RegisteredUser rUser = new RegisteredUser(registerInfoMap.get("username"),registerInfoMap.get("password"), rUsers.getUsers().size());
-			rUsers.addUser(rUser);
+			Boolean didFind = false;
+			
+			for(int i = 0; i < rUsers.getUsers().size(); i++){
+				String username = registerInfoMap.get("username");
+				
+				String uNameToCheck = rUsers.getUsers().get(i).getName();
+				
+				if(uNameToCheck.equals(username)){
+					didFind = true;
+					break;
+				}		
+			}
+			
+			if(!didFind){
+				RegisteredUser rUser = new RegisteredUser(registerInfoMap.get("username"),registerInfoMap.get("password"), rUsers.getUsers().size());
+				rUsers.addUser(rUser);
+			}else{
+				HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_BAD_REQUEST, "Username already taken");
+			}
 			
 			if (Server.isDebugEnabled()) System.out.println("  /user/register");
+			
+			HandlerUtils.addCookie(exchange, "catanUsername", "username=" + registerInfoMap.get("username"));
+			HandlerUtils.addCookie(exchange, "catanPassword", "password=" + registerInfoMap.get("password"));
+			HandlerUtils.addCookie(exchange, "catanUserID", "userID=" + rUsers.getUsers().size());
+			
 			HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "Success");
 		} else {
 			if (Server.isDebugEnabled()) System.out.println("  Bad request to /user/register.");

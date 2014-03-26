@@ -26,6 +26,8 @@ public class UserLoginHandler_Prod implements UserLoginHandler {
 			String loginInfo = HandlerUtils.inputStreamToString(headers);
 			Map<String,String> loginInfoMap = HandlerUtils.decodeQueryString(loginInfo);
 			
+			RegisteredUser foundUser = null;
+			
 			Boolean didFind = false;
 			
 			for(int i = 0; i < rUsers.getUsers().size(); i++){
@@ -37,13 +39,18 @@ public class UserLoginHandler_Prod implements UserLoginHandler {
 				
 				if(uNameToCheck.equals(username) && pToCheck.equals(password)){
 					didFind = true;
+					foundUser = rUsers.getUsers().get(i);
 					break;
 				}		
 			}
 			
 			if(didFind){
 
-				HandlerUtils.addCookie(exchange, "catanUser", "username-" + loginInfoMap.get("username") + "&" + "password-" + loginInfoMap.get("password"));
+				HandlerUtils.addCookie(exchange, "catanUsername", "username=" + loginInfoMap.get("username"));
+				HandlerUtils.addCookie(exchange, "catanPassword", "password=" + loginInfoMap.get("password"));
+				HandlerUtils.addCookie(exchange, "catanUserID", "userID=" + foundUser.getPlayerID());
+
+
 				HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "Success");
 
 			}else{

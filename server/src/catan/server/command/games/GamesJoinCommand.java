@@ -6,6 +6,7 @@ import catan.model.ClientModel;
 import catan.server.Games;
 import catan.server.RegisteredUser;
 import catan.server.RegisteredUsers;
+import catan.server.Server;
 import catan.server.command.Command;
 
 /**
@@ -40,6 +41,9 @@ public class GamesJoinCommand implements Command {
 			}
 			if (name != null) {
 				success = game.addPlayer(userID, name, color);
+				if (Server.isDebugEnabled() && success) {
+					System.out.println("  \"" + name + "\" (" + userID + ") joined game " + gameID + " as \"" + color + "\".");
+				}
 			}
 		}
 		return success;

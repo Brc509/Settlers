@@ -18,5 +18,6 @@ public class MovesBuildRoadHandler_Prod implements MovesBuildRoadHandler {
 	    Gson g = new Gson();
 	    JsonObject json = g.fromJson(s.hasNext() ? s.next() : "", JsonObject.class);		
 		MovesBuildRoadCommand test = new MovesBuildRoadCommand(arg0, json);
+		test.execute();
 	}
 }

@@ -10,15 +10,15 @@ public class MovesBuildSettlementCommand implements Command{
 	HttpExchange arg0;
 	JsonObject json;
 
-	public MovesBuildSettlementCommand(HttpExchange arg0,JsonObject json) {
+	public MovesBuildSettlementCommand(HttpExchange arg0,JsonObject json){
 		// TODO Auto-generated constructor stub
 		this.arg0 = arg0;
 		this.json = json;
-		execute();
+		//execute();
 	}
 
 	@Override
-	public Object execute() {
+	public Object execute(){
 		// TODO Auto-generated method stub
 		return null;
 	}

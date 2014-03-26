@@ -21,7 +21,7 @@ public class MovesAcceptTradeCommand implements Command{
 		// TODO Auto-generated constructor stub
 		this.arg0 = arg0;
 		this.json = json;
-		execute();
+		//execute();
 	}
 
 	@Override
@@ -29,8 +29,10 @@ public class MovesAcceptTradeCommand implements Command{
 		// TODO Auto-generated method stub
 		System.out.println(arg0.getRequestURI().getPath());
 		System.out.println(json.toString());
+		
+		
 		try {
-			HandlerUtils.sendObject(arg0, 200, (Object)json);
+			HandlerUtils.sendStringAsJSON(arg0, 200, json.toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

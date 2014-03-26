@@ -1,8 +1,12 @@
 package catan.server.handler.games;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.util.Map;
 
+import catan.model.ClientModel;
+import catan.server.Games;
 import catan.server.Server;
 import catan.server.handler.HandlerUtils;
 
@@ -22,6 +26,17 @@ public class GamesCreateHandler_Prod implements GamesCreateHandler {
 	public void handle(HttpExchange exchange) throws IOException {
 		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
+			
+			InputStream headers = exchange.getRequestBody();
+			String gameCreateInfo = HandlerUtils.inputStreamToString(headers);
+			Map<String,String> gameCreateInfoMap = HandlerUtils.decodeQueryString(gameCreateInfo);
+			
+			ClientModel cm = new ClientModel();
+			cm.name = gameCreateInfoMap.get("name");
+			
+			Games catanGames = Games.get();
+			catanGames.addGame(cm);
+			
 			if (Server.isDebugEnabled()) System.out.println("  /games/create");
 			HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, SAMPLE);
 		} else {

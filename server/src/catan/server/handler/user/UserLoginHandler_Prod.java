@@ -46,9 +46,9 @@ public class UserLoginHandler_Prod implements UserLoginHandler {
 			
 			if(didFind){
 
-				HandlerUtils.addCookie(exchange, "catanUsername", "username=" + loginInfoMap.get("username"));
-				HandlerUtils.addCookie(exchange, "catanPassword", "password=" + loginInfoMap.get("password"));
-				HandlerUtils.addCookie(exchange, "catanUserID", "userID=" + foundUser.getPlayerID());
+				HandlerUtils.addCookie(exchange, "catanUsername", loginInfoMap.get("username"));
+				HandlerUtils.addCookie(exchange, "catanPassword", loginInfoMap.get("password"));
+				HandlerUtils.addCookie(exchange, "catanUserID", "" + foundUser.getPlayerID());
 
 
 				HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "Success");

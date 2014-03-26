@@ -48,9 +48,9 @@ public class UserRegisterHandler_Prod implements UserRegisterHandler {
 			
 			if (Server.isDebugEnabled()) System.out.println("  /user/register");
 			
-			HandlerUtils.addCookie(exchange, "catanUsername", "username=" + registerInfoMap.get("username"));
-			HandlerUtils.addCookie(exchange, "catanPassword", "password=" + registerInfoMap.get("password"));
-			HandlerUtils.addCookie(exchange, "catanUserID", "userID=" + rUsers.getUsers().size());
+			HandlerUtils.addCookie(exchange, "catanUsername", registerInfoMap.get("username"));
+			HandlerUtils.addCookie(exchange, "catanPassword", registerInfoMap.get("password"));
+			HandlerUtils.addCookie(exchange, "catanUserID", "" + rUsers.getUsers().size());
 			
 			HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "Success");
 		} else {

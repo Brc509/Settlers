@@ -3,13 +3,16 @@ package catan.server.handler.user;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
 import java.util.Map;
 
+import catan.server.Cookie;
 import catan.server.RegisteredUser;
 import catan.server.RegisteredUsers;
 import catan.server.Server;
 import catan.server.handler.HandlerUtils;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 
 public class UserRegisterHandler_Prod implements UserRegisterHandler {
@@ -48,9 +51,12 @@ public class UserRegisterHandler_Prod implements UserRegisterHandler {
 			
 			if (Server.isDebugEnabled()) System.out.println("  /user/register");
 			
-			HandlerUtils.addCookie(exchange, "catanUsername", "username=" + registerInfoMap.get("username"));
-			HandlerUtils.addCookie(exchange, "catanPassword", "password=" + registerInfoMap.get("password"));
-			HandlerUtils.addCookie(exchange, "catanUserID", "userID=" + rUsers.getUsers().size());
+			Cookie cookie = new Cookie(registerInfoMap.get("username"), registerInfoMap.get("password"), rUsers.getUsers().size());
+			Gson gson = new Gson();
+			String cookieString = gson.toJson(cookie);
+			cookieString = URLEncoder.encode(cookieString, "UTF-8");
+			HandlerUtils.addCookie(exchange, "catan.user", cookieString);
+
 			
 			HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "Success");
 		} else {

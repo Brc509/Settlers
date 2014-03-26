@@ -13,12 +13,14 @@ public class ClientModel {
 	private TurnTracker turnTracker;
 	private int winner;
 	private int numPlayers;
+	public String name;
 	
 	/**
 	 * Create a new client model (for a new game)
 	 */
 	public ClientModel() {
 		
+		name = "";
 		deck = new DevCardList(2, 5, 2, 14, 2);
 		bank = new ResourceList(24, 24, 24, 24, 24);
 		biggestArmy = -1;

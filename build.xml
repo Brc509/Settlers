@@ -62,7 +62,7 @@
 	<target name="our-server" description="Compiles and runs our team's server">
 		<delete dir="${our-server-bin.dir}"/>
 		<mkdir dir="${our-server-bin.dir}"/>
-		<javac srcdir="${our-server-src.dir}" destdir="${our-server-bin.dir}" debug="true" includeantruntime="true"/>
+		<javac srcdir="${our-server-src.dir}" destdir="${our-server-bin.dir}" classpathref="our-server-classpath" debug="true" includeantruntime="true"/>
 		<java classname="catan.server.Server" fork="true">
 			<classpath>
 				<path refid="our-server-classpath"/>

@@ -2,24 +2,19 @@ package catan.model;
 
 public class ResourceList {
 
-	private int brick;
-	private int ore;
-	private int sheep;
-	private int wheat;
-	private int wood;
-
+	private int brick = 0;
+	private int ore = 0;
+	private int sheep = 0;
+	private int wheat = 0;
+	private int wood = 0;
+	
 	/**
 	 * Initialize all resource values to 0
 	 * Used for initializing players
 	 */
-	public ResourceList() {
-		
-		this.brick = 0;
-		this.ore = 0;
-		this.sheep = 0;
-		this.wheat = 0;
-		this.wood = 0;
-	}
+	public ResourceList() {}
+
+
 	
 	/**
 	 * Initialize the resource list with pre-defined resource values
@@ -37,6 +32,10 @@ public class ResourceList {
 		this.sheep = sheep;
 		this.wheat = wheat;
 		this.wood = wood;
+	}
+	
+	public void testString () {
+		System.out.println( brick + " " + ore + " " + sheep + " " + wheat + " " + wood + " ");
 	}
 
 	public int getBrick() {

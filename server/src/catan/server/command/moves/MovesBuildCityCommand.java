@@ -18,6 +18,11 @@ public class MovesBuildCityCommand implements Command {
 		return null;
 	}
 	
+	public void print() {
+		
+		System.out.println(vertexLocation.toString());
+	}
+	
 	class VertexLocation {
 		
 		int x;

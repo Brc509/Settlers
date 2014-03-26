@@ -1,22 +1,26 @@
 package catan.server.handler.moves;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 
-import catan.server.command.moves.MovesAcceptTradeCommand;
 import catan.server.command.moves.MovesBuildCityCommand;
+import catan.server.handler.HandlerUtils;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 
 public class MovesBuildCityHandler_Prod implements MovesBuildCityHandler {
 
 	@Override
 	public void handle(HttpExchange arg0) throws IOException {
-		// TODO Auto-generated method stub
-	    java.util.Scanner s = new java.util.Scanner(arg0.getRequestBody()).useDelimiter("\\A");
-	    Gson g = new Gson();
-	    JsonObject json = g.fromJson(s.hasNext() ? s.next() : "", JsonObject.class);		
-		MovesBuildCityCommand test = new MovesBuildCityCommand(arg0, json);
+
+		Map<String, String> cookies = HandlerUtils.getCookies(arg0);
+		Gson gson = new Gson();
+		InputStream is = arg0.getRequestBody();
+		String json = HandlerUtils.inputStreamToString(is);
+		
+		MovesBuildCityCommand mbcc = gson.fromJson(json, MovesBuildCityCommand.class);
+		mbcc.print();
 	}
 }

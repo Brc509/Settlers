@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
+import catan.server.RegisteredUser;
+import catan.server.RegisteredUsers;
 import catan.server.Server;
 
 import com.google.gson.Gson;
@@ -67,6 +69,27 @@ public class HandlerUtils {
 				if (Server.isDebugEnabled()) System.out.println("Cookie added: \"" + name + "\" = \"" + value + "\".");
 			}
 		}
+	}
+
+	/**
+	 * Attempts to authorize a user. If a request contains cookies corresponding to a valid combination of username, password, and user ID, the user is authorized.
+	 * 
+	 * @param exchange - An instance of <code>HttpExchange</code> received by an <code>HttpHandler</code>.
+	 * @return <code>true</code> if the user was authorized, <code>false</code> otherwise.
+	 */
+	public static boolean authorizeUser(HttpExchange exchange) {
+		boolean authorized = false;
+		Map<String, String> cookies = getCookies(exchange);
+		String username = cookies.get("catanUsername");
+		String password = cookies.get("catanPassword");
+		int userID = Integer.parseInt(cookies.get("catanUserID"));
+		for (RegisteredUser user : RegisteredUsers.get().getUsers()) {
+			if (user.getName().equals(username) && user.getPassword().equals(password) && user.getPlayerID() == userID) {
+				authorized = true;
+				break;
+			}
+		}
+		return authorized;
 	}
 
 	/**

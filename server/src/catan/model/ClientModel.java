@@ -65,12 +65,14 @@ public class ClientModel {
 	 * 
 	 * @return <code>true</code> if the player was added, <code>false</code> otherwise.
 	 */
-	public boolean addPlayer(int playerID, String playerName, String color) {
+	public boolean addPlayer(int orderNumber, int playerID, String playerName, String color) {
 
 		if (numPlayers >= 0 && numPlayers < 4) {
-			players[numPlayers].setPlayerID(playerID);
-			players[numPlayers].setColor(color);
-			players[numPlayers].setName(playerName);
+			
+			players[numPlayers] = new Player(orderNumber, playerID, color, playerName);
+//			players[numPlayers].setPlayerID(playerID);
+//			players[numPlayers].setColor(color);
+//			players[numPlayers].setName(playerName);
 			numPlayers++;
 			return true;
 		} else {

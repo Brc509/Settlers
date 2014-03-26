@@ -28,6 +28,7 @@ public class GamesListHandler_Prod implements GamesListHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
+		
 		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("GET")) {
 

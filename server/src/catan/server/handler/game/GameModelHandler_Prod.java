@@ -20,7 +20,18 @@ public class GameModelHandler_Prod implements GameModelHandler {
 			ClientModel cm = new ClientModel();
 			try {
 				
-				cm.initializeDefaultMap();
+				// Create default map and some player values
+				cm.initializeMap(false, false, false);
+				cm.getPlayers()[0].setPlayerID(0);
+				cm.getPlayers()[0].setName("Pete");
+				cm.getPlayers()[1].setName("Peter");
+				cm.getPlayers()[2].setName("Petey");
+				cm.getPlayers()[3].setName("Cole");
+				cm.getPlayers()[0].setColor("red");
+				cm.getPlayers()[1].setColor("orange");
+				cm.getPlayers()[2].setColor("blue");
+				cm.getPlayers()[3].setColor("green");
+				
 				Gson gson = new Gson();
 				String model = gson.toJson(cm);
 				HandlerUtils.sendStringAsJSON(exchange,  HttpURLConnection.HTTP_OK, model);

@@ -2,38 +2,18 @@ package catan.model;
 
 public class Vertex {
 
-	private VertexLocation location;
-	private int ownerID;
-	private int worth;
+	private VertexValue value;
 	
-	public Vertex(int x, int y, int direction) {
+	public Vertex() {
 		
-		location = new VertexLocation(x, y, direction);
-		ownerID = -1;
-		worth = 0;
+		value = new VertexValue(-1, 0);
 	}
 
-	public VertexLocation getLocation() {
-		return location;
+	public VertexValue getValue() {
+		return value;
 	}
 
-	public void setLocation(VertexLocation location) {
-		this.location = location;
-	}
-
-	public int getOwnerID() {
-		return ownerID;
-	}
-
-	public void setOwnerID(int ownerID) {
-		this.ownerID = ownerID;
-	}
-
-	public int getWorth() {
-		return worth;
-	}
-
-	public void setWorth(int worth) {
-		this.worth = worth;
+	public void setValue(VertexValue value) {
+		this.value = value;
 	}
 }

@@ -44,9 +44,16 @@ public class ClientModel {
 		return players;
 	}
 
-	public void initializeDefaultMap() throws Exception {
+	/**
+	 * Initialize the map for this game
+	 * @param randomNumbers Whether to place random numbers (or use default numbers)
+	 * @param randomHexes Whether to place random hexes (or use default hexes)
+	 * @param randomPorts Whether to place random ports (or use default ports)
+	 * @throws Exception
+	 */
+	public void initializeMap(boolean randomNumbers, boolean randomHexes, boolean randomPorts) {
 
-		map.createDefaultMap();
+		map.createMap(randomNumbers, randomHexes, randomPorts);
 	}
 
 	/**
@@ -72,7 +79,8 @@ public class ClientModel {
 			VertexLocation loc = new VertexLocation(x, y, direction);
 			//TODO
 
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

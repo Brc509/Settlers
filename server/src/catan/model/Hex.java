@@ -5,7 +5,7 @@ public class Hex {
 	private Edge[] edges;
 	private Vertex[] vertexes;
 	private HexLocation location;
-	private String type;
+	private String landtype;
 	private boolean isLand;
 	
 	public Hex(int x, int y) {
@@ -14,8 +14,8 @@ public class Hex {
 		vertexes = new Vertex[6];
 		for (int i = 0; i < 6; i++) {
 			
-			edges[i] = new Edge(x, y, i);
-			vertexes[i] = new Vertex(x, y, i);
+			edges[i] = new Edge();
+			vertexes[i] = new Vertex();
 		}
 		
 		location = new HexLocation(x, y);
@@ -47,7 +47,7 @@ public class Hex {
 	
 	public void setType(String type) {
 		
-		this.type = type;
+		this.landtype = type;
 		isLand = true;
 		if (type.equals("water"))
 			isLand = false;	
@@ -55,7 +55,7 @@ public class Hex {
 	
 	public String getType() {
 		
-		return type;
+		return landtype;
 	}
 	
 	public boolean isLand() {

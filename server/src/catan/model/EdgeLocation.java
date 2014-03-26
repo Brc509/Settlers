@@ -14,7 +14,7 @@ public class EdgeLocation {
 		this.direction = direction;
 	}
 	
-	public EdgeLocation(int x, int y, String direction) throws Exception {
+	public EdgeLocation(int x, int y, String direction) {
 		
 		this.x = x;
 		this.y = y;
@@ -30,7 +30,7 @@ public class EdgeLocation {
 			}
 		}
 		if (!found)
-			throw new Exception();
+			System.out.println("ERROR: When trying to create a new EdgeLocation, an invalid direction was created");
 	}
 
 	public int getX() {

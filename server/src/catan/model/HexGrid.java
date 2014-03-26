@@ -4,6 +4,7 @@ public class HexGrid {
 
 	Hex[][] hexes;
 	int[] offsets;
+	int radius = 4;
 	int x0;
 	int y0;
 
@@ -12,11 +13,13 @@ public class HexGrid {
 		// Default values for the default size HexGrid
 		x0 = 3;
 		y0 = 3;
-		offsets = new int[] {3, 2, 1, 0, 1, 2, 3};
+		radius = 4;
+		offsets = new int[] {3, 2, 1, 0, 0, 0, 0};
+		int[] actualOffsets = new int[] {3, 2, 1, 0, 1, 2, 3};
 		
 		hexes = new Hex[7][];
-		for (int i = 0; i < offsets.length; i++)
-			hexes[i] = new Hex[7 - offsets[i]];
+		for (int i = 0; i < actualOffsets.length; i++)
+			hexes[i] = new Hex[7 - actualOffsets[i]];
 		
 		// Initialize Hexes with locations
 		for (int i = 0; i < hexes.length; i++)
@@ -75,6 +78,26 @@ public class HexGrid {
 		// row 7
 		for (int i = 0; i < hexes[6].length; i++)
 			hexes[6][i].setType("water");
+	}
+	
+	public void setRandomTypes() {
+		
+		// TODO actually implement this
+		setDefaultTypes();
+	}
+	
+	/**
+	 * Get the hex location of the only desert
+	 * @return
+	 */
+	public HexLocation getDesertLocation() {
+		
+		for (int i = 0; i < hexes.length; i++)
+			for (int j = 0; j < hexes[i].length; j++)
+				if (hexes[i][j].getType().equals("desert"))
+					return hexes[i][j].getLocation();
+		System.out.println("ERROR: No desert!");
+		return null;
 	}
 	
 	public Hex[][] getHexes() {

@@ -10,11 +10,11 @@ public class MovesBuildRoadCommand implements Command{
 	HttpExchange arg0;
 	JsonObject json;
 
-	public MovesBuildRoadCommand(HttpExchange arg0,JsonObject json) {
+	public MovesBuildRoadCommand(HttpExchange arg0,JsonObject json){
 		// TODO Auto-generated constructor stub
 		this.arg0 = arg0;
 		this.json = json;
-		execute();
+		//execute();
 	}
 
 	@Override

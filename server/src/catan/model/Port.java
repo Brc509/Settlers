@@ -5,22 +5,20 @@ public class Port {
 	private String inputResource;
 	private EdgeLocation location;
 	private int ratio;
-	private VertexLocation[] validVertexes;
-	
+	private VertexLocation validVertex1;
+	private VertexLocation validVertex2;
+
 	public Port() {
 		
-		validVertexes = new VertexLocation[2];
 	}
 	
-	public Port(String inputResource, int hexX, int hexY, String edgeDirection, int ratio, String vv0Direction, String vv1Direction) throws Exception {
+	public Port(String inputResource, int hexX, int hexY, String edgeDirection, int ratio, String vv0Direction, String vv1Direction) {
 		
 		this.inputResource = inputResource;
 		this.location = new EdgeLocation(hexX, hexY, edgeDirection);
 		this.ratio = ratio;
-		
-		this.validVertexes = new VertexLocation[2];
-		this.validVertexes[0] = new VertexLocation(hexX, hexY, vv0Direction);
-		this.validVertexes[1] = new VertexLocation(hexX, hexY, vv1Direction);
+		this.validVertex1 = new VertexLocation(hexX, hexY, vv0Direction);
+		this.validVertex2 = new VertexLocation(hexX, hexY, vv1Direction);
 	}
 
 	public String getInputResource() {
@@ -46,12 +44,20 @@ public class Port {
 	public void setRatio(int ratio) {
 		this.ratio = ratio;
 	}
-
-	public VertexLocation[] getValidVertexes() {
-		return validVertexes;
+	
+	public VertexLocation getValidVertex1() {
+		return validVertex1;
 	}
 
-	public void setValidVertexes(VertexLocation[] validVertexes) {
-		this.validVertexes = validVertexes;
+	public void setValidVertex1(VertexLocation validVertex1) {
+		this.validVertex1 = validVertex1;
+	}
+
+	public VertexLocation getValidVertex2() {
+		return validVertex2;
+	}
+
+	public void setValidVertex2(VertexLocation validVertex2) {
+		this.validVertex2 = validVertex2;
 	}
 }

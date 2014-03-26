@@ -2,28 +2,18 @@ package catan.model;
 
 public class Edge {
 
-	private EdgeLocation location;
-	private int ownerID;
+	private EdgeValue value;
 	
-	public Edge(int x, int y, int direction) {
+	public Edge() {
 
-		location = new EdgeLocation(x, y, direction);
-		ownerID = -1;
+		value = new EdgeValue(-1);
 	}
 
-	public EdgeLocation getLocation() {
-		return location;
+	public EdgeValue getValue() {
+		return value;
 	}
 
-	public void setLocation(EdgeLocation location) {
-		this.location = location;
-	}
-
-	public int getOwnerID() {
-		return ownerID;
-	}
-
-	public void setOwnerID(int ownerID) {
-		this.ownerID = ownerID;
+	public void setValue(EdgeValue value) {
+		this.value = value;
 	}
 }

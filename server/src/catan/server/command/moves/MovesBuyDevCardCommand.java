@@ -10,11 +10,11 @@ public class MovesBuyDevCardCommand implements Command{
 	HttpExchange arg0;
 	JsonObject json;
 
-	public MovesBuyDevCardCommand(HttpExchange arg0,JsonObject json) {
+	public MovesBuyDevCardCommand(HttpExchange arg0,JsonObject json){
 		// TODO Auto-generated constructor stub
 		this.arg0 = arg0;
 		this.json = json;
-		execute();
+		//execute();
 	}
 
 	@Override

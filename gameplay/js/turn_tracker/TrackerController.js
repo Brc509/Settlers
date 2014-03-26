@@ -56,19 +56,7 @@ catan.turntracker.Controller = (function turntracker_namespace() {
 				
 				var curTurn = this.ClientModel.turnTracker.currentTurn;
 				var currPlayerIndex = this.ClientModel.playerID;
-
-				for(p in this.ClientModel.players){
-					
-					var player = this.ClientModel.players[p];
-					
-					if(player.playerID == currPlayerIndex){
-					
-						return this.ClientModel.players[p];
-					
-					}
-				}
-			
-		
+				return this.ClientModel.players[this.ClientModel.playerID];
 		}
 
 		TurnTrackerController.prototype.update = function(){

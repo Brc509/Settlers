@@ -3,7 +3,6 @@ package catan.server.handler.games;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import catan.model.ClientModel;
@@ -31,7 +30,7 @@ public class GamesListHandler_Prod implements GamesListHandler {
 	public void handle(HttpExchange exchange) throws IOException {
 		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("GET")) {
-			
+
 			ArrayList<GameListGames> games = new ArrayList<GameListGames>();
 			Games theGames = Games.get();
 			Map<Integer, ClientModel> gameList = theGames.getGames();
@@ -41,19 +40,19 @@ public class GamesListHandler_Prod implements GamesListHandler {
 				ClientModel model = gameList.get(i);
 				Player players[] = model.getPlayers();
 				
-				for(int z = 0; z < players.length; z++){
+                for (int z = 0; z < players.length; z++) {
 					GameListPlayer playa = new GameListPlayer(players[z].getColor(), players[z].getName(), players[z].getPlayerID());
 					thePlayers.add(playa);
 				}
-				
+
 				GameListGames game = new GameListGames(model.name, i, thePlayers);
 				games.add(game);
 
 			}
-			
+
 			Gson gson = new Gson();
 			String jsonString = gson.toJson(games);
-			
+
 			if (Server.isDebugEnabled()) System.out.println("  /games/list");
 			HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, jsonString);
 		} else {

@@ -33,13 +33,14 @@ public class GamesListHandler_Prod implements GamesListHandler {
 		if (exchange.getRequestMethod().toUpperCase().equals("GET")) {
 			
 			ArrayList<GameListGames> games = new ArrayList<GameListGames>();
-			ClientModel m = new ClientModel();
 			Games theGames = Games.get();
 			Map<Integer, ClientModel> gameList = theGames.getGames();
-			for(int i = 0; i < gameList.size(); i++){
+			for(int i = 1; i < gameList.size()+1; i++){
+				
 				ArrayList<GameListPlayer> thePlayers = new ArrayList<GameListPlayer>();
 				ClientModel model = gameList.get(i);
 				Player players[] = model.getPlayers();
+				
 				for(int z = 0; z < players.length; z++){
 					GameListPlayer playa = new GameListPlayer(players[z].getColor(), players[z].getName(), players[z].getPlayerID());
 					thePlayers.add(playa);

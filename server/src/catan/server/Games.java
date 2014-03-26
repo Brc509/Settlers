@@ -30,7 +30,7 @@ public class Games {
 
 	 
 	  public void addGame(ClientModel cm){
-		  games.put(games.size(), cm);
+		  games.put(games.size()+1, cm);
 	  }
 
 }

@@ -20,6 +20,7 @@ public class GamesJoinCommand implements Command {
 	private final String color;
 
 	public GamesJoinCommand(int userID, int gameID, String color) {
+		System.out.println("GamesJoinCommand created: userID = " + userID + ", gameID = " + gameID + ", color = " + color);
 		this.userID = userID;
 		this.gameID = gameID;
 		this.color = color;

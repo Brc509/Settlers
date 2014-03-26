@@ -5,7 +5,7 @@ public class VertexLocation {
 	private int x;
 	private int y;
 	private int direction;
-	private final String[] VERTEX_STRINGS = new String[] {"W","NW","NE","E","SE","SW"};
+	private transient final String[] VERTEX_STRINGS = new String[] {"W","NW","NE","E","SE","SW"};
 	
 	public VertexLocation(int x, int y, int direction) {
 		

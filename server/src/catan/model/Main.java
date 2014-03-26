@@ -1,5 +1,7 @@
 package catan.model;
 
+import com.google.gson.Gson;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -8,6 +10,7 @@ public class Main {
 		try {
 		
 			clientModel.initializeDefaultMap();
+			System.out.println(clientModel.getModel());
 		} 
 		catch (Exception e) {
 			

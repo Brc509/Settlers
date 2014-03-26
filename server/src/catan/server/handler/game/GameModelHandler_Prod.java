@@ -17,13 +17,18 @@ public class GameModelHandler_Prod implements GameModelHandler {
 		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("GET")) {
 			if (Server.isDebugEnabled()) System.out.println("  /game/model");
-			ClientModel cm = new ClientModel(); 
-			Gson gson = new Gson();
-			String model = gson.toJson(cm);
-			
-			
-			
-			HandlerUtils.sendStringAsJSON(exchange,  HttpURLConnection.HTTP_OK, model);
+			ClientModel cm = new ClientModel();
+			try {
+				
+				cm.initializeDefaultMap();
+				Gson gson = new Gson();
+				String model = gson.toJson(cm);
+				HandlerUtils.sendStringAsJSON(exchange,  HttpURLConnection.HTTP_OK, model);
+			} 
+			catch (Exception e) {
+				
+				e.printStackTrace();
+			}
 			
 		} else {
 			if (Server.isDebugEnabled()) System.out.println("  Bad request to /game/model.");

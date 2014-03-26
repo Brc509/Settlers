@@ -5,7 +5,7 @@ public class EdgeLocation {
 	private int x;
 	private int y;
 	private int direction;
-	private final String[] EDGE_STRINGS = new String[] {"NW","N","NE","SE","S","SW"};
+	private transient final String[] EDGE_STRINGS = new String[] {"NW","N","NE","SE","S","SW"};
 	
 	public EdgeLocation(int x, int y, int direction) {
 		

@@ -1,5 +1,7 @@
 package catan.model;
 
+import com.google.gson.Gson;
+
 public class ClientModel {
 
 	private DevCardList deck;
@@ -12,7 +14,7 @@ public class ClientModel {
 	private Player[] players;
 	private TurnTracker turnTracker;
 	private int winner;
-	private int numPlayers;
+	private transient int numPlayers;
 	
 	/**
 	 * Create a new client model (for a new game)
@@ -55,5 +57,23 @@ public class ClientModel {
 			players[numPlayers].setName(playerName);
 			numPlayers++;
 		}
+	}
+	
+	public void buildCity(int playerIndex, int x, int y, String direction, boolean free) {
+		
+		try {
+			VertexLocation loc = new VertexLocation(x, y, direction);
+			//TODO
+			
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String getModel() {
+		
+		Gson gson = new Gson();
+		return gson.toJson(this);
 	}
 }

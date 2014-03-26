@@ -1,43 +1,48 @@
 package catan.server.command.moves;
 
+import catan.model.ClientModel;
+import catan.server.Games;
 import catan.server.command.Command;
+
 
 public class MovesBuildCityCommand implements Command {
 
-	String type;
-	int playerIndex;
-	VertexLocation vertexLocation;
-	boolean free;
+	private String type;
+	private int playerIndex;
+	private VertexLocation vertexLocation;
+	private boolean free;
+	private int gameID;
 	
 	public MovesBuildCityCommand() {}
 	
 	@Override
-	public Object execute() {
+	public ClientModel execute() {
 
-		System.out.println("TODO, actually do things with the variables and return the game model to send back");
-		return null;
+		ClientModel thisModel = Games.get().getGames().get(gameID);
+		thisModel.buildCity(playerIndex, vertexLocation.x, vertexLocation.y, vertexLocation.direction, free);
+		return thisModel;
+	}
+	
+	public void setGameID(int gameID) {
+		
+		this.gameID = gameID;
 	}
 	
 	public void print() {
 		
-		System.out.println(vertexLocation.toString());
+		System.out.println(type);
+		System.out.println(playerIndex);
+		System.out.println(vertexLocation.x);
+		System.out.println(vertexLocation.y);
+		System.out.println(vertexLocation.direction);
+		System.out.println(free);
+		System.out.println(gameID);
 	}
 	
 	class VertexLocation {
 		
-		int x;
-		int y;
-		String direction;
-		
-		public VertexLocation() {}
-		
-		public String toString() {
-			
-			String str = "";
-			str += x + " ";
-			str += y + " ";
-			str += direction;
-			return str;
-		}
+		public int x;
+		public int y;
+		public String direction;
 	}
 }

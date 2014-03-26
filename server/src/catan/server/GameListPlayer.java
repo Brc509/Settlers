@@ -4,9 +4,13 @@ public class GameListPlayer {
 
 	private String color;
 	private String name;
-	private int id;
+	private Integer id;
 
 
+	public GameListPlayer(){
+		id = null;
+	}
+	
 	public GameListPlayer(String c, String n, int id){
 		this.color = c;
 		this.name = n;

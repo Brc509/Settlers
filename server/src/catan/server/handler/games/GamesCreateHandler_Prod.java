@@ -3,13 +3,17 @@ package catan.server.handler.games;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.Map;
 
 import catan.model.ClientModel;
+import catan.server.GameListGames;
+import catan.server.GameListPlayer;
 import catan.server.Games;
 import catan.server.Server;
 import catan.server.handler.HandlerUtils;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 
 /**
@@ -20,7 +24,7 @@ import com.sun.net.httpserver.HttpExchange;
 public class GamesCreateHandler_Prod implements GamesCreateHandler {
 
 	// Static constants
-	private static final String SAMPLE = "{\"title\":\"testgame\",\"id\":3,\"players\":[{},{},{},{}]}";
+//	private static final String SAMPLE =""; "{\"title\":\"testgame\",\"id\":3,\"players\":[{},{},{},{}]}";
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
@@ -37,8 +41,22 @@ public class GamesCreateHandler_Prod implements GamesCreateHandler {
 			Games catanGames = Games.get();
 			catanGames.addGame(cm);
 			
+			Gson gson = new Gson();
+			
+			
+			ArrayList<GameListPlayer> glp = new ArrayList<GameListPlayer>();
+			for(int i = 0; i < 4; i++){
+				glp.add(new GameListPlayer());
+			}
+			
+			GameListGames g = new GameListGames(cm.name, catanGames.getGames().size(), glp);
+
+			
+			String jsonString = gson.toJson(g);
+			
 			if (Server.isDebugEnabled()) System.out.println("  /games/create");
-			HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, SAMPLE);
+			
+			HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, jsonString);
 		} else {
 			if (Server.isDebugEnabled()) System.out.println("  Bad request to /games/create.");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);

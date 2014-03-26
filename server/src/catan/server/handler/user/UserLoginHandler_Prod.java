@@ -49,14 +49,12 @@ public class UserLoginHandler_Prod implements UserLoginHandler {
 			
 			if(didFind){
 
-
 				
-				Cookie cookie = new Cookie(loginInfoMap.get("username"), loginInfoMap.get("password"), foundUser.getPlayerID());
+				Cookie cookie = new Cookie(loginInfoMap.get("name"), loginInfoMap.get("password"), foundUser.getPlayerID());
 				Gson gson = new Gson();
 				String cookieString = gson.toJson(cookie);
 				cookieString = URLEncoder.encode(cookieString, "UTF-8");
 				HandlerUtils.addCookie(exchange, "catan.user", cookieString);
-
 
 				HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "Success");
 

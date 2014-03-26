@@ -38,6 +38,10 @@ public class ClientModel {
 		numPlayers = 0;
 	}
 	
+	public Player[] getPlayers() {
+		return players;
+	}
+
 	public void initializeDefaultMap() throws Exception {
 		
 		map.createDefaultMap();

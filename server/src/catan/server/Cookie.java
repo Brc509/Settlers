@@ -2,22 +2,22 @@ package catan.server;
 
 public class Cookie {
 
-	private String username;
+	private String name;
 	private String password;
-	private int id;
+	private int playerID;
 
 	public Cookie(String username, String password, int id) {
-		this.username = username;
+		this.name = username;
 		this.password = password;
-		this.id = id;
+		this.playerID = id;
 	}
 
 	public String getUsername() {
-		return username;
+		return name;
 	}
 
 	public void setUsername(String username) {
-		this.username = username;
+		this.name = username;
 	}
 
 	public String getPassword() {
@@ -29,11 +29,11 @@ public class Cookie {
 	}
 
 	public int getId() {
-		return id;
+		return playerID;
 	}
 
 	public void setId(int id) {
-		this.id = id;
+		this.playerID = id;
 	}
 	
 	

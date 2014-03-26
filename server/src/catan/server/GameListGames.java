@@ -4,9 +4,16 @@ import java.util.ArrayList;
 
 public class GameListGames {
 
-	private String name;
+	private String title;
 	private int id;
 	private ArrayList<GameListPlayer> players;
+	
+	public GameListGames(String n, int id, ArrayList<GameListPlayer> p){
+		this.title = n;
+		this.id = id;
+		this.players = p;
+	}
+
 	
 	public ArrayList<GameListPlayer> getPlayers() {
 		return players;
@@ -16,17 +23,12 @@ public class GameListGames {
 		this.players = players;
 	}
 
-	public GameListGames(String n, int id){
-		this.name = n;
-		this.id = id;
-	}
-
 	public String getName() {
-		return name;
+		return title;
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.title = name;
 	}
 
 	public int getId() {

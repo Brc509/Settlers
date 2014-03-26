@@ -82,7 +82,7 @@ public class CatanMap {
 	public void createRandomPorts() {
 		
 		List<String> types = Arrays.asList(new String[] {"wood", "ore", "wheat", "sheep", "brick", null, null, null, null});
-		Collections.shuffle(types, new Random(1));
+		Collections.shuffle(types);
 		
 		ports[0] = new Port(types.get(0), -3, 2, "NE", 2, "NE", "E");
 		ports[1] = new Port(types.get(1), 3, -3, "SW", 3, "SW", "W");
@@ -169,7 +169,7 @@ public class CatanMap {
 		locations.add(h[3][3].getLocation());
 		locations.add(h[2][4].getLocation());
 		
-		Collections.shuffle(locations, new Random(1));
+		Collections.shuffle(locations);
 		return locations;
 	}
 }

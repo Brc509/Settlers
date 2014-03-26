@@ -21,10 +21,13 @@
 	<property name="our-server-src.dir" value="${our-server.dir}/src"/>
 	<!-- Our server's binary folder -->
 	<property name="our-server-bin.dir" value="${our-server.dir}/bin"/>
+	<!-- Our server's library folder -->
+	<property name="our-server-lib.dir" value="${our-server.dir}/lib"/>
 	
 	<!-- Our server's classpath -->
 	<path id="our-server-classpath">
 		<pathelement location="${our-server-bin.dir}"/>
+		<pathelement location="${our-server-lib.dir}"/>
 	</path>
 
 	<!-- TARGETS -->

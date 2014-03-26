@@ -1,9 +1,38 @@
 package catan.server.command.moves;
 
-public class MovesBuildCityCommand {
+import catan.server.command.Command;
 
-	public MovesBuildCityCommand() {
-		// TODO Auto-generated constructor stub
+public class MovesBuildCityCommand implements Command {
+
+	String type;
+	int playerIndex;
+	VertexLocation vertexLocation;
+	boolean free;
+	
+	public MovesBuildCityCommand() {}
+	
+	@Override
+	public Object execute() {
+
+		System.out.println("TODO, actually do things with the variables and return the game model to send back");
+		return null;
 	}
-
+	
+	class VertexLocation {
+		
+		int x;
+		int y;
+		String direction;
+		
+		public VertexLocation() {}
+		
+		public String toString() {
+			
+			String str = "";
+			str += x + " ";
+			str += y + " ";
+			str += direction;
+			return str;
+		}
+	}
 }

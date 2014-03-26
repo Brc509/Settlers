@@ -63,7 +63,7 @@ public class HandlerUtils {
 	public static void addCookie(HttpExchange exchange, String name, String value) {
 		if (exchange != null) {
 			if (name != null && value != null && !name.isEmpty() && !value.isEmpty()) {
-				exchange.getResponseHeaders().add("Set-Cookie", name + "=" + value);
+				exchange.getResponseHeaders().add("Set-Cookie", name + "=" + value + "; Path=/");
 				if (Server.isDebugEnabled()) System.out.println("Cookie added: \"" + name + "\" = \"" + value + "\".");
 			}
 		}

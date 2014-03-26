@@ -141,3 +141,6 @@ server/bin/catan/server/handler/user/UserLoginHandler_Test.class
 server/bin/catan/server/handler/user/UserRegisterHandler.class
 server/bin/catan/server/handler/user/UserRegisterHandler_Prod.class
 server/bin/catan/server/handler/user/UserRegisterHandler_Test.class
+server/bin/catan/server/Cookie.class
+server/bin/catan/server/GameListGames.class
+server/bin/catan/server/GameListPlayer.class

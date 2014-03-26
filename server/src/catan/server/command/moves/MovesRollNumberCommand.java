@@ -13,5 +13,4 @@ public class MovesRollNumberCommand implements Command {
 		System.out.println(type + playerIndex + number);
 		return null;
 	}
-
 }

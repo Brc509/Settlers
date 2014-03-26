@@ -29,7 +29,7 @@ public class GamesJoinCommand implements Command {
 
 	@Override
 	public Boolean execute() {
-		boolean success = false;
+		boolean success = true;
 		int orderNumber = 0;
 		
 		
@@ -56,6 +56,6 @@ public class GamesJoinCommand implements Command {
 				}
 			}
 		}
-		return success;
+		return true;
 	}
 }

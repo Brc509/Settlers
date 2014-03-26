@@ -41,7 +41,7 @@ public class Player {
 		oldDevCards = new DevCardList();
 		orderNumber = order;
 		playedDevCard = false;
-		playerID = -2;
+		playerID = id;
 		resources = new ResourceList();
 		roads = 15;
 		settlements = 5;

@@ -69,7 +69,8 @@ public class ClientModel {
 
 		if (numPlayers >= 0 && numPlayers < 4) {
 			
-			players[numPlayers] = new Player(orderNumber, playerID, color, playerName);
+			Player player = new Player(orderNumber, playerID, color, playerName);
+			players[numPlayers] = player;
 //			players[numPlayers].setPlayerID(playerID);
 //			players[numPlayers].setColor(color);
 //			players[numPlayers].setName(playerName);

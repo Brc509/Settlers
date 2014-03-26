@@ -20,7 +20,8 @@ public class GamesJoinHandler_Prod implements GamesJoinHandler {
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
 		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
-		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
+		System.out.println("Request type: " + exchange.getRequestMethod().toUpperCase());
+//		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
 			if (HandlerUtils.authorizeUser(exchange)) {
 				String formdataStr = HandlerUtils.inputStreamToString(exchange.getRequestBody());
 				Map<String, String> formdata = HandlerUtils.decodeQueryString(formdataStr);
@@ -38,9 +39,9 @@ public class GamesJoinHandler_Prod implements GamesJoinHandler {
 				if (Server.isDebugEnabled()) System.out.println("  Unauthorized request to /games/join.");
 				HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_UNAUTHORIZED);
 			}
-		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request to /games/join.");
-			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
-		}
+//		} else {
+//			if (Server.isDebugEnabled()) System.out.println("  Bad request to /games/join.");
+//			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
+//		}
 	}
 }

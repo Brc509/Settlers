@@ -21,6 +21,7 @@ public class MovesOfferTradeHandler_Prod implements MovesOfferTradeHandler {
 		
 		Gson gson = new Gson();
 		MovesOfferTradeCommand command = gson.fromJson(json, MovesOfferTradeCommand.class);
-		command.execute(null);
+		int gameId = Integer.parseInt(HandlerUtils.getCookies(arg0).get("catan.game"));
+		command.execute(gameId);
 	}
 }

@@ -87,6 +87,34 @@ public class Model {
 		return model;
 	}
 	
+	public boolean maritimeTrade (String type, int playerIndex, int ratio, String inputResource, String outputResource) {
+		return false;
+	}
+	
+	public boolean monopoly (String type, String resource, int playerIndex) {
+		return false;
+	}
+	
+	public boolean monument (String type, int playerIndex) {
+		return false;
+	}
+	
+	public boolean offerTrade ( String type, int playerIndex, ResourceList offer, int receiver) {
+		return false;
+	}
+	
+	public boolean roadBuilding ( String type, int playerIndex, EdgeLocation spot1, EdgeLocation spot2) {
+		return false;
+	}
+	
+	public boolean robPlayer ( String type, int playerIndex, int victimIndex, HexLocation location) {
+		return false;
+	}
+	
+	public boolean rollNumber ( String type,int playerIndex, int number) {
+		return false;
+	}
+	
 	public boolean yearOfPlenty(int playerIndex, String resource1, String resource2) {
 		boolean success = false;
 		if (playerIndex >= 0 && playerIndex < 4 && resourceNames.contains(resource1) && resourceNames.contains(resource2)) {

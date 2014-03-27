@@ -1,23 +1,22 @@
 package catan.server.command.moves;
 
+import catan.model.EdgeLocation;
+import catan.model.Model;
+import catan.server.Games;
 import catan.server.command.Command;
 
 public class MovesRoadBuildingCommand implements Command {
 	private String type;
 	private int playerIndex;
-	private Spot spot1;
-	private Spot spot2;
-	
-	class Spot {
-		int x;
-		int y;
-		String direction;
-	}
+	private EdgeLocation spot1;
+	private EdgeLocation spot2;
 
 	@Override
-	public Object execute(Object obj) {
+	public Object execute(Object gameId) {
 		// TODO Auto-generated method stub
-		System.out.println(type + playerIndex + spot1.x + spot1.y + spot1.direction + spot2.x + spot2.y + spot2.direction);
+		System.out.println(type + playerIndex + spot1.toString() + spot2.toString());
+		Model model = Games.get().getGames().get(gameId);
+		model.roadBuilding(type, playerIndex, spot1, spot2);
 		return null;
 	}
 

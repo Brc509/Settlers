@@ -16,7 +16,7 @@ public class Port {
 	public Port(String inputResource, int hexX, int hexY, String edgeDirection, int ratio, String vv0Direction, String vv1Direction) {
 		
 		this.inputResource = inputResource;
-		this.location = new EdgeLocation(hexX, hexY, edgeDirection);
+//		this.location = new EdgeLocation(hexX, hexY, edgeDirection);
 		this.ratio = ratio;
 		this.validVertex1 = new VertexLocation(hexX, hexY, vv0Direction);
 		this.validVertex2 = new VertexLocation(hexX, hexY, vv1Direction);

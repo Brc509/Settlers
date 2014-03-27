@@ -49,7 +49,7 @@ public class CatanMap {
 		else {
 		
 			hexGrid.setDefaultTypes();
-			robber = new HexLocation(0, -2);
+//			robber = new HexLocation(0, -2);
 		}
 		if (randomPorts)
 			createRandomPorts();

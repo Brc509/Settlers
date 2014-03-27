@@ -18,7 +18,7 @@ public class Hex {
 			vertexes[i] = new Vertex();
 		}
 		
-		location = new HexLocation(x, y);
+//		location = new HexLocation(x, y);
 	}
 
 	public Edge[] getEdges() {

@@ -1,5 +1,7 @@
 package catan.server.command.moves;
 
+import catan.model.Model;
+import catan.server.Games;
 import catan.server.command.Command;
 
 public class MovesMonumentCommand implements Command {
@@ -7,9 +9,11 @@ public class MovesMonumentCommand implements Command {
 	private int playerIndex;
 	
 	@Override
-	public Object execute(Object obj) {
+	public Object execute(Object gameId) {
 		// TODO Auto-generated method stub
 		System.out.println(type + playerIndex);
+		Model model = Games.get().getGames().get(gameId);
+		model.monument(type, playerIndex);
 		return null;
 	}
 

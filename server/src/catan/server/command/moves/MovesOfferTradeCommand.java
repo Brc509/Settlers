@@ -1,6 +1,8 @@
 package catan.server.command.moves;
 
+import catan.model.Model;
 import catan.model.ResourceList;
+import catan.server.Games;
 import catan.server.command.Command;
 
 public class MovesOfferTradeCommand implements Command {
@@ -11,9 +13,11 @@ public class MovesOfferTradeCommand implements Command {
 	private int receiver;
 	
 	@Override
-	public Object execute(Object obj) {
+	public Object execute(Object gameId) {
 		System.out.println(type + playerIndex + " " + receiver);
 		offer.testString();
+		Model model = Games.get().getGames().get(gameId);
+		model.offerTrade(type, playerIndex, offer, receiver);
 		return null;
 	}
 }

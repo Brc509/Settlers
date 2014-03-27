@@ -3,6 +3,7 @@ package catan.server.handler.moves;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
+import catan.server.Games;
 import catan.server.Server;
 import catan.server.command.moves.MovesYearOfPlentyCommand;
 import catan.server.handler.HandlerUtils;
@@ -28,6 +29,13 @@ public class MovesYearOfPlentyHandler_Prod implements MovesYearOfPlentyHandler {
 				MovesYearOfPlentyCommand command = gson.fromJson(requestBody, MovesYearOfPlentyCommand.class);
 				int gameID = Integer.parseInt(HandlerUtils.getCookies(exchange).get("catan.game"));
 				boolean success = command.execute(gameID);
+				if (success) {
+					if (Server.isDebugEnabled()) System.out.println("  Successful request to /moves/Year_of_Plenty.");
+					HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, Games.get().getGames().get(gameID).toString());
+				} else {
+					if (Server.isDebugEnabled()) System.out.println("  Invalid request to /moves/Year_of_Plenty.");
+					HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_INTERNAL_ERROR, "Your move to play a Year of Plenty card was invalid.");
+				}
 			} else {
 				if (Server.isDebugEnabled()) System.out.println("  Unauthorized request to /moves/Year_of_Plenty.");
 				HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_UNAUTHORIZED);

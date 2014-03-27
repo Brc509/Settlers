@@ -70,43 +70,79 @@ public class Model {
 		return false;
 	}
 
-	public JsonObject finishTurn(int playerIndex)
-	{
+	public JsonObject finishTurn(int playerIndex) {
 		int nextPlayer = model.get("turnTracker").getAsJsonObject().get("currentTurn").getAsInt();
-		if(nextPlayer < (model.get("players").getAsJsonArray().size())-1)
-		{
+		if (nextPlayer < (model.get("players").getAsJsonArray().size()) - 1) {
 			nextPlayer++;
-		}
-		else
-			nextPlayer = 0;
+		} else nextPlayer = 0;
 		Gson g = new Gson();
 		String name = model.getAsJsonArray("players").get(playerIndex).getAsString();
 		model.getAsJsonObject("turnTracker").addProperty("currentTurn", nextPlayer);
-		JsonElement newLog = g.toJsonTree("{'source':'"+name+",'message':"+name+"'s turn just ended}");
+		JsonElement newLog = g.toJsonTree("{'source':'" + name + ",'message':" + name + "'s turn just ended}");
 		model.getAsJsonObject("log").getAsJsonArray("lines").add(newLog);
 		return model;
 	}
-	
+
 	public boolean yearOfPlenty(int playerIndex, String resource1, String resource2) {
-		boolean success = false;
+
+		// Guilty until proven innocent
+		boolean verdict = false;
+
+		// Check validity of playerIndex and resource names
 		if (playerIndex >= 0 && playerIndex < 4 && resourceNames.contains(resource1) && resourceNames.contains(resource2)) {
+
 			JsonArray players = model.getAsJsonArray("players");
 			JsonObject player = players.get(playerIndex).getAsJsonObject();
-			JsonObject resources = player.getAsJsonObject("resources");
-			int playerNum1 = resources.get(resource1).getAsInt();
-			int playerNum2 = resources.get(resource2).getAsInt();
-			JsonObject bank = model.getAsJsonObject("bank");
-			int bankNum1 = bank.get(resource1).getAsInt();
-			int bankNum2 = bank.get(resource2).getAsInt();
-			if (bankNum1 > 0 && bankNum2 > 0) {
-				resources.addProperty(resource1, playerNum1 + 1);
-				resources.addProperty(resource2, playerNum2 + 1);
-				bank.addProperty(resource1, bankNum1 - 1);
-				bank.addProperty(resource2, bankNum2 - 1);
-				success = true;
+
+			// Make sure player has a Year of Plenty card to play
+			JsonObject oldDevCards = player.getAsJsonObject("oldDevCards");
+			int oldPlayerYearOfPlenty = oldDevCards.get("yearOfPlenty").getAsInt();
+			if (oldPlayerYearOfPlenty > 0) {
+
+				// Get old bank resource values
+				JsonObject bank = model.getAsJsonObject("bank");
+				int bankNum1 = bank.get(resource1).getAsInt();
+				int bankNum2 = bank.get(resource2).getAsInt();
+
+				// Make sure the bank has resources to give
+				boolean bankSufficient;
+				int resourceDelta;
+				if (resource1.equals(resource2)) {
+					bankSufficient = bankNum1 > 1;
+					resourceDelta = 2;
+				} else {
+					bankSufficient = bankNum1 > 0 && bankNum2 > 0;
+					resourceDelta = 1;
+				}
+				if (bankSufficient) {
+
+					// Get old player resource values
+					JsonObject resources = player.getAsJsonObject("resources");
+					int playerNum1 = resources.get(resource1).getAsInt();
+					int playerNum2 = resources.get(resource2).getAsInt();
+
+					// Increment the player's resources
+					resources.addProperty(resource1, playerNum1 + resourceDelta);
+					resources.addProperty(resource2, playerNum2 + resourceDelta);
+
+					// Decrement the bank's resources
+					bank.addProperty(resource1, bankNum1 - resourceDelta);
+					bank.addProperty(resource2, bankNum2 - resourceDelta);
+
+					// Move the Year of Plenty card back to the deck
+					oldDevCards.addProperty("yearOfPlenty", oldPlayerYearOfPlenty - 1);
+					JsonObject deck = model.getAsJsonObject("deck");
+					int oldDeckYearOfPlenty = deck.get("yearOfPlenty").getAsInt();
+					deck.addProperty("yearOfPlenty", oldDeckYearOfPlenty + 1);
+
+					// Innocent
+					verdict = true;
+				}
 			}
 		}
-		return success;
+
+		// Return the verdict
+		return verdict;
 	}
 
 	// *** MOVES METHODS END HERE *** //

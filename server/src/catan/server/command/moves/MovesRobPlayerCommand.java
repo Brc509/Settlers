@@ -1,5 +1,8 @@
 package catan.server.command.moves;
 
+import catan.model.HexLocation;
+import catan.model.Model;
+import catan.server.Games;
 import catan.server.command.Command;
 
 public class MovesRobPlayerCommand implements Command {
@@ -7,19 +10,13 @@ public class MovesRobPlayerCommand implements Command {
 	private String type;
 	private int playerIndex;
 	private int victimIndex;
-	private Location location;
-	
-	class Location {
-		String x;
-		String y;
-	}
+	private HexLocation location;
 	
 	@Override
-	public Object execute(Object obj) {
-		System.out.println(type + playerIndex + victimIndex + location.x + location.y);
-		//Get the appropriate game
-		//Change the model however you need
-		
+	public Object execute(Object gameId) {
+		System.out.println(type + playerIndex + victimIndex + location.toString());
+		Model model = Games.get().getGames().get(gameId);
+		model.robPlayer(type, playerIndex, victimIndex, location);
 		return null;
 	}
 

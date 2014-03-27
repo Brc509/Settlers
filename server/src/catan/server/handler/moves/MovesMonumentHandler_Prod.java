@@ -22,6 +22,7 @@ public class MovesMonumentHandler_Prod implements MovesMonumentHandler {
 		
 		Gson gson = new Gson();
 		MovesMonumentCommand command = gson.fromJson(json, MovesMonumentCommand.class);
-		command.execute(null);
+		int gameId = Integer.parseInt(HandlerUtils.getCookies(arg0).get("catan.game"));
+		command.execute(gameId);
 	}
 }

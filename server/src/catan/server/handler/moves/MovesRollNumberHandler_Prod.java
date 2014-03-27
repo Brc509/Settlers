@@ -22,6 +22,7 @@ public class MovesRollNumberHandler_Prod implements MovesRollNumberHandler {
 		
 		Gson gson = new Gson();
 		MovesRollNumberCommand command = gson.fromJson(json, MovesRollNumberCommand.class);
-		command.execute(null);
+		int gameId = Integer.parseInt(HandlerUtils.getCookies(arg0).get("catan.game"));
+		command.execute(gameId);
 	}
 }

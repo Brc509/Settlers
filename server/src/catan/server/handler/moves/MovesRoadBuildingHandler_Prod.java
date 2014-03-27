@@ -22,6 +22,7 @@ public class MovesRoadBuildingHandler_Prod implements MovesRoadBuildingHandler {
 		
 		Gson gson = new Gson();
 		MovesRoadBuildingCommand command = gson.fromJson(json, MovesRoadBuildingCommand.class);
-		command.execute(null);
+		int gameId = Integer.parseInt(HandlerUtils.getCookies(arg0).get("catan.game"));
+		command.execute(gameId);
 	}
 }

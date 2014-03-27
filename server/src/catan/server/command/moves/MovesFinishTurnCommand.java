@@ -18,8 +18,8 @@ public class MovesFinishTurnCommand implements Command{
 	public Object execute(Object obj) {
 		// TODO Auto-generated method stub
 		Model model = Games.get().getGames().get((Integer)obj);
-		model.finishTurn(playerIndex);
-		return null;
+		JsonObject updatedModel = model.finishTurn(playerIndex);
+		return (Object)updatedModel;
 	}
 
 }

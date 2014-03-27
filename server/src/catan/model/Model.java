@@ -72,17 +72,58 @@ public class Model {
 
 	public JsonObject finishTurn(int playerIndex) {
 		int nextPlayer = model.get("turnTracker").getAsJsonObject().get("currentTurn").getAsInt();
-		if (nextPlayer < (model.get("players").getAsJsonArray().size()) - 1) {
+		
+		System.out.println(model.get("players").getAsJsonArray().size());
+		
+		if(nextPlayer < (model.get("players").getAsJsonArray().size())-1)
+		{
 			nextPlayer++;
-		} else nextPlayer = 0;
+		}
+		else
+			nextPlayer = 0;
+		
+		System.out.println(nextPlayer);
+		
 		Gson g = new Gson();
-		String name = model.getAsJsonArray("players").get(playerIndex).getAsString();
+		
+		String name = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().get("name").getAsString();
 		model.getAsJsonObject("turnTracker").addProperty("currentTurn", nextPlayer);
-		JsonElement newLog = g.toJsonTree("{'source':'" + name + ",'message':" + name + "'s turn just ended}");
+		JsonElement newLog = g.fromJson("{\"source\":\""+name+"\",\"message\":\""+name+"'s turn just ended\"}", JsonElement.class);
 		model.getAsJsonObject("log").getAsJsonArray("lines").add(newLog);
+		
+		System.out.println(model.toString());
+		
 		return model;
 	}
-
+	
+	public boolean maritimeTrade (String type, int playerIndex, int ratio, String inputResource, String outputResource) {
+		return false;
+	}
+	
+	public boolean monopoly (String type, String resource, int playerIndex) {
+		return false;
+	}
+	
+	public boolean monument (String type, int playerIndex) {
+		return false;
+	}
+	
+	public boolean offerTrade ( String type, int playerIndex, ResourceList offer, int receiver) {
+		return false;
+	}
+	
+	public boolean roadBuilding ( String type, int playerIndex, EdgeLocation spot1, EdgeLocation spot2) {
+		return false;
+	}
+	
+	public boolean robPlayer ( String type, int playerIndex, int victimIndex, HexLocation location) {
+		return false;
+	}
+	
+	public boolean rollNumber ( String type,int playerIndex, int number) {
+		return false;
+	}
+	
 	public boolean yearOfPlenty(int playerIndex, String resource1, String resource2) {
 
 		// Guilty until proven innocent

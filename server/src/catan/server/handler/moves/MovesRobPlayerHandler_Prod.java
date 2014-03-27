@@ -22,6 +22,7 @@ public class MovesRobPlayerHandler_Prod implements MovesRobPlayerHandler {
 		
 		Gson gson = new Gson();
 		MovesRobPlayerCommand command = gson.fromJson(json, MovesRobPlayerCommand.class);
-		command.execute(null);
+		int gameId = Integer.parseInt(HandlerUtils.getCookies(arg0).get("catan.game"));
+		command.execute(gameId);
 	}
 }

@@ -27,14 +27,20 @@ public class MovesFinishTurnHandler_Prod implements MovesFinishTurnHandler {
 		
 		Gson gson = new Gson();
 		MovesFinishTurnCommand command = gson.fromJson(json, MovesFinishTurnCommand.class);
-		int gameId = Integer.parseInt(HandlerUtils.getCookies(arg0).get("catan.game"));
-		Model returnModel = (Model)command.execute(gameId);
 		
-		Gson g = new Gson();
-		String model = g.toJson(returnModel);
+		int gameId = Integer.parseInt(HandlerUtils.getCookies(arg0).get("catan.game"));
+		
+		System.out.println("gameId: "+gameId);
+
+		JsonObject returnModel = (JsonObject) command.execute(gameId);
+		
+//		Gson g = new Gson();
+//		String model = g.toJson(returnModel);
+		
+		System.out.println("model: "+returnModel.toString());
 		
 		try {
-			HandlerUtils.sendStringAsJSON(arg0, 200, model);
+			HandlerUtils.sendStringAsJSON(arg0, 200, returnModel.toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

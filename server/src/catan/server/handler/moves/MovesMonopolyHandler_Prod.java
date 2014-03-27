@@ -22,6 +22,6 @@ public class MovesMonopolyHandler_Prod implements MovesMonopolyHandler {
 		
 		Gson gson = new Gson();
 		MovesMonopolyCommand command = gson.fromJson(json, MovesMonopolyCommand.class);
-		command.execute();
+		command.execute(null);
 	}
 }

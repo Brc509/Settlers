@@ -10,11 +10,10 @@ public class MovesFinishTurnCommand implements Command{
 	private String type;
 	private int playerIndex;
 
-	public MovesFinishTurnCommand(){
-	}
+	public MovesFinishTurnCommand(){}
 
 	@Override
-	public Object execute() {
+	public Object execute(Object obj) {
 		// TODO Auto-generated method stub
 		return null;
 	}

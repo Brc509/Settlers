@@ -22,7 +22,7 @@ public class MovesMaritimeTradeHandler_Prod implements MovesMaritimeTradeHandler
 		
 		Gson gson = new Gson();
 		MovesMaritimeTradeCommand command = gson.fromJson(json, MovesMaritimeTradeCommand.class);
-		command.execute();		
+		command.execute(null);		
 		// TODO Auto-generated method stub
 	}
 }

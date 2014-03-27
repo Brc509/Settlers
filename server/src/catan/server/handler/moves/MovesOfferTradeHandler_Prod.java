@@ -21,6 +21,6 @@ public class MovesOfferTradeHandler_Prod implements MovesOfferTradeHandler {
 		
 		Gson gson = new Gson();
 		MovesOfferTradeCommand command = gson.fromJson(json, MovesOfferTradeCommand.class);
-		command.execute();
+		command.execute(null);
 	}
 }

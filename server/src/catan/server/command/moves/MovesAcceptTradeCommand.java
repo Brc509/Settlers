@@ -25,7 +25,7 @@ public class MovesAcceptTradeCommand implements Command{
 	}
 
 	@Override
-	public Object execute() {
+	public Object execute(Object obj) {
 		// TODO Auto-generated method stub
 		System.out.println(arg0.getRequestURI().getPath());
 		System.out.println(json.toString());

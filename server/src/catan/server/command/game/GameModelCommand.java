@@ -8,7 +8,7 @@ public class GameModelCommand implements Command{
 	public GameModelCommand() {}
 
 	@Override
-	public Object execute() {
+	public Object execute(Object obj) {
 		// TODO Auto-generated method stub
 		return null;
 	}

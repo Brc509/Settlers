@@ -28,7 +28,7 @@ public class GamesJoinHandler_Prod implements GamesJoinHandler {
 				String color = formdata.get("color");
 				int gameID = Integer.parseInt(formdata.get("id"));
 				GamesJoinCommand command = new GamesJoinCommand(HandlerUtils.getCookie(exchange).getId(), gameID, color);
-				boolean success = command.execute();
+				boolean success = command.execute(null);
 				if (success) {
 					HandlerUtils.addCookie(exchange, "catan.game", String.valueOf(gameID));
 					HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "Success! You have joined the game.");

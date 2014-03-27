@@ -11,7 +11,7 @@ public class MovesOfferTradeCommand implements Command {
 	private int receiver;
 	
 	@Override
-	public Object execute() {
+	public Object execute(Object obj) {
 		System.out.println(type + playerIndex + " " + receiver);
 		offer.testString();
 		return null;

@@ -18,6 +18,6 @@ public class MovesAcceptTradeHandler_Prod implements MovesAcceptTradeHandler {
 	    Gson g = new Gson();
 	    JsonObject json = g.fromJson(s.hasNext() ? s.next() : "", JsonObject.class);		
 		MovesAcceptTradeCommand test = new MovesAcceptTradeCommand(arg0, json);
-		test.execute();
+		test.execute(null);
 	}
 }

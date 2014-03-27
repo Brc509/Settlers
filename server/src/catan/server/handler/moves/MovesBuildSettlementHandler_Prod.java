@@ -18,6 +18,6 @@ public class MovesBuildSettlementHandler_Prod implements MovesBuildSettlementHan
 	    Gson g = new Gson();
 	    JsonObject json = g.fromJson(s.hasNext() ? s.next() : "", JsonObject.class);		
 		MovesBuildSettlementCommand test = new MovesBuildSettlementCommand(arg0, json);
-		test.execute();
+		test.execute(null);
 	}
 }

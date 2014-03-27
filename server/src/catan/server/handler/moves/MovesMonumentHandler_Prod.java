@@ -22,6 +22,6 @@ public class MovesMonumentHandler_Prod implements MovesMonumentHandler {
 		
 		Gson gson = new Gson();
 		MovesMonumentCommand command = gson.fromJson(json, MovesMonumentCommand.class);
-		command.execute();
+		command.execute(null);
 	}
 }

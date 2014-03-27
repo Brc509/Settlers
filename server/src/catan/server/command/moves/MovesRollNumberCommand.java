@@ -8,7 +8,7 @@ public class MovesRollNumberCommand implements Command {
 	private int number;
 	
 	@Override
-	public Object execute() {
+	public Object execute(Object obj) {
 		// TODO Auto-generated method stub
 		System.out.println(type + playerIndex + number);
 		return null;

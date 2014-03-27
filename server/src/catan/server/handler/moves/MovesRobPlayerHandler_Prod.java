@@ -22,6 +22,6 @@ public class MovesRobPlayerHandler_Prod implements MovesRobPlayerHandler {
 		
 		Gson gson = new Gson();
 		MovesRobPlayerCommand command = gson.fromJson(json, MovesRobPlayerCommand.class);
-		command.execute();
+		command.execute(null);
 	}
 }

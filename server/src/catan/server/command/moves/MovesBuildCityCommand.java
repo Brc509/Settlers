@@ -16,7 +16,7 @@ public class MovesBuildCityCommand implements Command {
 	public MovesBuildCityCommand() {}
 	
 	@Override
-	public Model execute() {
+	public Model execute(Object obj) {
 
 		Model thisModel = Games.get().getGames().get(gameID);
 		thisModel.buildCity(playerIndex, vertexLocation.x, vertexLocation.y, vertexLocation.direction, free);

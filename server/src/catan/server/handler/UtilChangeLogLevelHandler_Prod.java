@@ -23,7 +23,7 @@ public class UtilChangeLogLevelHandler_Prod implements UtilChangeLogLevelHandler
 			String queryStr = HandlerUtils.inputStreamToString(exchange.getRequestBody());
 			Map<String, String> params = HandlerUtils.decodeQueryString(queryStr);
 			UtilChangeLogLevelCommand command = new UtilChangeLogLevelCommand(params.get("logLevel"));
-			String response = command.execute();
+			String response = command.execute(null);
 			HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, response);
 		} else {
 			if (Server.isDebugEnabled()) System.out.println("  Bad request to /util/changeLogLevel.");

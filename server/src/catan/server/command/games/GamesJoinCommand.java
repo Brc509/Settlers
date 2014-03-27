@@ -28,7 +28,7 @@ public class GamesJoinCommand implements Command {
 	}
 
 	@Override
-	public Boolean execute() {
+	public Boolean execute(Object obj) {
 		boolean success = true;
 		int orderNumber = 0;
 		

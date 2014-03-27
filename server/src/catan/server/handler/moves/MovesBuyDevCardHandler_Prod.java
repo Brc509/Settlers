@@ -18,6 +18,6 @@ public class MovesBuyDevCardHandler_Prod implements MovesBuyDevCardHandler {
 	    Gson g = new Gson();
 	    JsonObject json = g.fromJson(s.hasNext() ? s.next() : "", JsonObject.class);		
 		MovesBuyDevCardCommand test = new MovesBuyDevCardCommand(arg0, json);
-		test.execute();
+		test.execute(null);
 	}
 }

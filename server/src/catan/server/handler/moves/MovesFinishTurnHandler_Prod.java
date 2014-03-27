@@ -25,6 +25,6 @@ public class MovesFinishTurnHandler_Prod implements MovesFinishTurnHandler {
 		
 		Gson gson = new Gson();
 		MovesFinishTurnCommand command = gson.fromJson(json, MovesFinishTurnCommand.class);
-		command.execute();	
+		command.execute(null);	
 	}
 }

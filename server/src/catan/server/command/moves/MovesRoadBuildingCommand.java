@@ -15,7 +15,7 @@ public class MovesRoadBuildingCommand implements Command {
 	}
 
 	@Override
-	public Object execute() {
+	public Object execute(Object obj) {
 		// TODO Auto-generated method stub
 		System.out.println(type + playerIndex + spot1.x + spot1.y + spot1.direction + spot2.x + spot2.y + spot2.direction);
 		return null;

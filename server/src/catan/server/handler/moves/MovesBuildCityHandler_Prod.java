@@ -28,6 +28,6 @@ public class MovesBuildCityHandler_Prod implements MovesBuildCityHandler {
 		
 		// Execute the command and return the response back to the user
 		mbcc.print();
-		Model toReturn = mbcc.execute();
+		Model toReturn = mbcc.execute(null);
 	}
 }

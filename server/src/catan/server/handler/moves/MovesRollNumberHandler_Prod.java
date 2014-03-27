@@ -22,6 +22,6 @@ public class MovesRollNumberHandler_Prod implements MovesRollNumberHandler {
 		
 		Gson gson = new Gson();
 		MovesRollNumberCommand command = gson.fromJson(json, MovesRollNumberCommand.class);
-		command.execute();
+		command.execute(null);
 	}
 }

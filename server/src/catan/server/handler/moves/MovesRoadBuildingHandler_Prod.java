@@ -22,6 +22,6 @@ public class MovesRoadBuildingHandler_Prod implements MovesRoadBuildingHandler {
 		
 		Gson gson = new Gson();
 		MovesRoadBuildingCommand command = gson.fromJson(json, MovesRoadBuildingCommand.class);
-		command.execute();
+		command.execute(null);
 	}
 }

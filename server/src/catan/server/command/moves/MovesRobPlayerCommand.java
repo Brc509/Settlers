@@ -15,8 +15,11 @@ public class MovesRobPlayerCommand implements Command {
 	}
 	
 	@Override
-	public Object execute() {
+	public Object execute(Object obj) {
 		System.out.println(type + playerIndex + victimIndex + location.x + location.y);
+		//Get the appropriate game
+		//Change the model however you need
+		
 		return null;
 	}
 

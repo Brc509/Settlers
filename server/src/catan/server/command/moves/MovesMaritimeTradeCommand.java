@@ -13,7 +13,7 @@ public class MovesMaritimeTradeCommand implements Command {
 	public MovesMaritimeTradeCommand () {}
 	
 	@Override
-	public Object execute() {
+	public Object execute(Object obj) {
 		// TODO Auto-generated method stub
 		System.out.println(type + playerIndex + ratio + inputResource + outputResource);
 		return null;

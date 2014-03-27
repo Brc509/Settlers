@@ -122,6 +122,16 @@ public class Model {
 		return false;
 	}
 
+	public boolean sendChat(int playerIndex, String content) {
+		boolean verdict = false;
+		if (playerIndex >= 0 && playerIndex < 4) {
+			String name = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().get("name").getAsString();
+			model.getAsJsonObject("chat").getAsJsonArray("lines").add(createEntry(name, content));
+			verdict = true;
+		}
+		return verdict;
+	}
+
 	public boolean yearOfPlenty(int playerIndex, String resource1, String resource2) {
 
 		// Guilty until proven innocent

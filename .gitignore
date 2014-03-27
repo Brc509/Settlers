@@ -146,3 +146,6 @@ server/bin/catan/server/GameListGames.class
 server/bin/catan/server/GameListPlayer.class
 server/bin/catan/model/EdgeValue.class
 server/bin/catan/model/VertexValue.class
+server/bin/catan/model/Model.class
+server/bin/catan/model/Offer.class
+server/bin/catan/model/TradeOffer.class

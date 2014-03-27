@@ -1,6 +1,6 @@
 package catan.server.command.moves;
 
-import catan.model.ClientModel;
+import catan.model.Model;
 import catan.server.Games;
 import catan.server.command.Command;
 
@@ -16,9 +16,9 @@ public class MovesBuildCityCommand implements Command {
 	public MovesBuildCityCommand() {}
 	
 	@Override
-	public ClientModel execute() {
+	public Model execute() {
 
-		ClientModel thisModel = Games.get().getGames().get(gameID);
+		Model thisModel = Games.get().getGames().get(gameID);
 		thisModel.buildCity(playerIndex, vertexLocation.x, vertexLocation.y, vertexLocation.direction, free);
 		return thisModel;
 	}

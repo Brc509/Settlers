@@ -7,6 +7,7 @@ public class Port {
 	private int ratio;
 	private VertexLocation validVertex1;
 	private VertexLocation validVertex2;
+	private String orientation = "NW";
 
 	public Port() {
 		

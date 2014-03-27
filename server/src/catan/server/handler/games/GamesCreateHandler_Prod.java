@@ -6,7 +6,7 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Map;
 
-import catan.model.ClientModel;
+import catan.model.Model;
 import catan.server.GameListGames;
 import catan.server.GameListPlayer;
 import catan.server.Games;
@@ -35,11 +35,15 @@ public class GamesCreateHandler_Prod implements GamesCreateHandler {
 			String gameCreateInfo = HandlerUtils.inputStreamToString(headers);
 			Map<String,String> gameCreateInfoMap = HandlerUtils.decodeQueryString(gameCreateInfo);
 			
-			ClientModel cm = new ClientModel();
-			cm.name = gameCreateInfoMap.get("name");
+			String name = gameCreateInfoMap.get("name");
+			Boolean randomNumbers = Boolean.parseBoolean(gameCreateInfoMap.get("randomNumbers"));
+			Boolean randomTiles = Boolean.parseBoolean(gameCreateInfoMap.get("randomTiles"));
+			Boolean randomPorts = Boolean.parseBoolean(gameCreateInfoMap.get("randomPorts"));
+			
+			Model model = new Model(name, randomNumbers ,randomTiles, randomPorts);
 				
 			Games catanGames = Games.get();
-			catanGames.addGame(cm);
+			catanGames.addGame(model);
 			
 			Gson gson = new Gson();
 			
@@ -48,7 +52,7 @@ public class GamesCreateHandler_Prod implements GamesCreateHandler {
 				glp.add(new GameListPlayer());
 			}
 			
-			GameListGames g = new GameListGames(cm.name, catanGames.getGames().size(), glp);
+			GameListGames g = new GameListGames(name, catanGames.getGames().size(), glp);
 			
 			String jsonString = gson.toJson(g);
 			

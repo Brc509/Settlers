@@ -5,7 +5,7 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Map;
 
-import catan.model.ClientModel;
+import catan.model.Model;
 import catan.model.Player;
 import catan.server.GameListGames;
 import catan.server.GameListPlayer;
@@ -35,32 +35,20 @@ public class GamesListHandler_Prod implements GamesListHandler {
 			ArrayList<GameListGames> games = new ArrayList<GameListGames>();
 			Games theGames = Games.get();
 			
-			Map<Integer, ClientModel> gameList = theGames.getGames();
+			Map<Integer, Model> gameList = theGames.getGames();
 			
-			for(int i = 1; i < gameList.size()+1; i++){
-				
-				ArrayList<GameListPlayer> thePlayers = new ArrayList<GameListPlayer>();
-				ClientModel model = gameList.get(i);
-				Player players[] = model.getPlayers();
-				
-                for (int z = 0; z < players.length; z++) {
-                	GameListPlayer playa;
-                	if(players[z].getPlayerID() == null){
-                		playa = new GameListPlayer();
-                	}else{
-                		playa = new GameListPlayer(players[z].getColor(), players[z].getName(), players[z].getPlayerID());
-                	}
-					thePlayers.add(playa);
+			String jsonString = "[";
+			int gameNum = 1;
+			for (Map.Entry<Integer, Model> e : gameList.entrySet()) {
+				Model game = e.getValue();
+				jsonString += game.getGameInfo(e.getKey());
+				if (gameNum < gameList.size()) {
+					jsonString += ",";
 				}
-
-				GameListGames game = new GameListGames(model.name, i, thePlayers);
-				games.add(game);
-
+				gameNum++;
 			}
-
-			Gson gson = new Gson();
-			String jsonString = gson.toJson(games);
-
+			jsonString += "]";
+			
 			if (Server.isDebugEnabled()) System.out.println("  /games/list");
 			HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, jsonString);
 		} else {

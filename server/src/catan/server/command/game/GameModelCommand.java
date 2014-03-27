@@ -1,6 +1,6 @@
 package catan.server.command.game;
 
-import catan.model.ClientModel;
+import catan.model.Model;
 import catan.server.command.Command;
 
 public class GameModelCommand implements Command{
@@ -10,7 +10,6 @@ public class GameModelCommand implements Command{
 	@Override
 	public Object execute() {
 		// TODO Auto-generated method stub
-		ClientModel cm = new ClientModel();
 		return null;
 	}
 

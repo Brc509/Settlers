@@ -2,7 +2,7 @@ package catan.server.command.games;
 
 import java.util.List;
 
-import catan.model.ClientModel;
+import catan.model.Model;
 import catan.model.Player;
 import catan.server.Games;
 import catan.server.RegisteredUser;
@@ -33,13 +33,8 @@ public class GamesJoinCommand implements Command {
 		int orderNumber = 0;
 		
 		
-		ClientModel game = Games.get().getGames().get(gameID);
+		Model game = Games.get().getGames().get(gameID);
 		
-		for(Player p : game.getPlayers()){
-			if(p.getPlayerID() != null){
-				orderNumber++;
-			}
-		}
 		if (game != null) {
 			List<RegisteredUser> users = RegisteredUsers.get().getUsers();
 			String name = null;

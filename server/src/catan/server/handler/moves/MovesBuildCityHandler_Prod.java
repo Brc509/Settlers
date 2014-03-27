@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import catan.model.ClientModel;
+import catan.model.Model;
 import catan.server.command.moves.MovesBuildCityCommand;
 import catan.server.handler.HandlerUtils;
 
@@ -28,6 +28,6 @@ public class MovesBuildCityHandler_Prod implements MovesBuildCityHandler {
 		
 		// Execute the command and return the response back to the user
 		mbcc.print();
-		ClientModel toReturn = mbcc.execute();
+		Model toReturn = mbcc.execute();
 	}
 }

@@ -68,38 +68,34 @@ public class MovesBuildSettlementCommand implements Command{
 			updatedModel.get("bank").getAsJsonObject().addProperty("wheat", wheat2+1);
 		}
 		
-		JsonElement[] hexes = {updatedModel.get("map").getAsJsonObject().get("hexGrid").getAsJsonObject().get("hexes")
-					.getAsJsonArray()};
+		int corner = -1;
+		String direction = vertexLocation.direction;
 		
-		for(int i=0;i<hexes.length;i++)
-		{
-			if(hexes[i].getAsJsonObject().get("x").getAsInt()==vertexLocation.x)
-			{
-				if(hexes[i].getAsJsonObject().get("y").getAsInt()==vertexLocation.y)
-				{
-					int corner = -1;
-					if(vertexLocation.direction=="NE")
-						corner = 0;
-					else if(vertexLocation.direction=="NW")
-						corner = 1;
-					else if(vertexLocation.direction=="E")
-						corner = 2;
-					else if(vertexLocation.direction=="SW")
-						corner = 3;
-					else if(vertexLocation.direction=="SE")
-						corner = 4;
-					else if(vertexLocation.direction=="W")
-						corner = 5;
-					
-					hexes[i].getAsJsonObject().get("vertexes").getAsJsonArray().get(corner)
-							.getAsJsonObject().get("value").getAsJsonObject()
-							.addProperty("worth", 1);
-					hexes[i].getAsJsonObject().get("vertexes").getAsJsonArray().get(corner)
-							.getAsJsonObject().get("value").getAsJsonObject()
-							.addProperty("ownerID", playerIndex);
-				}
-			}
-		}
+		if(direction.equals("NE"))
+			corner = 0;
+		if(direction.equals("NW"))
+			corner = 1;
+		if(direction.equals("E"))
+			corner = 2;
+		if(direction.equals("SW"))
+			corner = 3;
+		if(direction.equals("SE"))
+			corner = 4;
+		if(direction.equals("W"))
+			corner = 5;
+		
+		System.out.println(playerIndex+" "+vertexLocation.x+" "+vertexLocation.y+" "+corner
+				+" "+vertexLocation.direction+" "+direction+" NE");
+		
+		updatedModel.get("map").getAsJsonObject().get("hexGrid").getAsJsonObject().get("hexes")
+					.getAsJsonArray().get(vertexLocation.y+3).getAsJsonArray().get(vertexLocation.x+3)
+					.getAsJsonObject().get("vertexes").getAsJsonArray().get(corner).getAsJsonObject()
+					.get("value").getAsJsonObject().addProperty("worth", 1);
+		
+		updatedModel.get("map").getAsJsonObject().get("hexGrid").getAsJsonObject().get("hexes")
+					.getAsJsonArray().get(vertexLocation.y+3).getAsJsonArray().get(vertexLocation.x+3)
+					.getAsJsonObject().get("vertexes").getAsJsonArray().get(corner).getAsJsonObject()
+					.get("value").getAsJsonObject().addProperty("ownerID", playerIndex);
 		
 		return (Object)updatedModel;
 	}

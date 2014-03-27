@@ -130,8 +130,14 @@ public class Model {
 		}
 		return verdict;
 	}
-
-	public boolean rollNumber(String type, int playerIndex, int number) {
+	
+	public boolean rollNumber ( String type, int playerIndex, int number) {
+		JsonArray numbers = model.getAsJsonObject("map").getAsJsonObject("numbers").getAsJsonArray(Integer.toString(number));
+		for (final JsonElement hexLocation : numbers) {
+			System.out.println("hexLocation = " + hexLocation);
+			JsonObject x = hexLocation.getAsJsonObject();
+			System.out.println("x : " + x);
+		}
 		return false;
 	}
 

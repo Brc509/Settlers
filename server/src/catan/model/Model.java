@@ -115,7 +115,20 @@ public class Model {
 	}
 
 	public boolean robPlayer(String type, int playerIndex, int victimIndex, HexLocation location) {
-		return false;
+		boolean verdict = false;
+		if (playerIndex >= 0 && playerIndex < 4 && victimIndex >= 0 && victimIndex < 4) {
+			// This method is also used by soldier().
+			boolean movedRobberAndRobbed = moveRobberAndRob(playerIndex, victimIndex, location);
+			if (movedRobberAndRobbed) {
+				// Add the log entry
+				JsonArray players = model.getAsJsonArray("players");
+				String name = players.get(playerIndex).getAsJsonObject().get("name").getAsString();
+				String victimName = players.get(victimIndex).getAsJsonObject().get("name").getAsString();
+				addLogEntry(name, name + " rolled a 7 and robbed " + victimName + ".");
+				verdict = true;
+			}
+		}
+		return verdict;
 	}
 
 	public boolean rollNumber(String type, int playerIndex, int number) {
@@ -134,7 +147,66 @@ public class Model {
 
 	public boolean soldier(int playerIndex, int victimIndex, HexLocation location) {
 		boolean verdict = false;
-		// TODO
+		if (playerIndex >= 0 && playerIndex < 4 && victimIndex >= 0 && victimIndex < 4) {
+
+			JsonArray players = model.getAsJsonArray("players");
+			JsonObject player = players.get(playerIndex).getAsJsonObject();
+
+			// Make sure player has a Soldier card to play
+			JsonObject oldDevCards = player.getAsJsonObject("oldDevCards");
+			int oldPlayerSoldier = oldDevCards.get("soldier").getAsInt();
+			if (oldPlayerSoldier > 0) {
+
+				// Move the robber and rob the victim
+				boolean movedRobberAndRobbed = moveRobberAndRob(playerIndex, victimIndex, location);
+				if (movedRobberAndRobbed) {
+
+					// Move the Soldier card back to the deck
+					oldDevCards.addProperty("soldier", oldPlayerSoldier - 1);
+					JsonObject deck = model.getAsJsonObject("deck");
+					int oldDeckSoldier = deck.get("soldier").getAsInt();
+					deck.addProperty("soldier", oldDeckSoldier + 1);
+
+					// Add the log entry
+					String name = player.get("name").getAsString();
+					String victimName = players.get(victimIndex).getAsJsonObject().get("name").getAsString();
+					addLogEntry(name, name + " played a Soldier card and robbed " + victimName + ".");
+
+					verdict = true;
+				}
+			}
+		}
+		return verdict;
+	}
+
+	private boolean moveRobberAndRob(int playerIndex, int victimIndex, HexLocation location) {
+		boolean verdict = false;
+
+		JsonObject robber = model.getAsJsonObject("map").getAsJsonObject("robber");
+
+		// Make sure robber is moved from last location
+		int oldX = robber.get("x").getAsInt();
+		int oldY = robber.get("y").getAsInt();
+		if (!(oldX == Integer.parseInt(location.getX()) && oldY == Integer.parseInt(location.getY()))) {
+
+			// Make sure victim is valid for new location
+			int newX = Integer.parseInt(location.getX());
+			int newY = Integer.parseInt(location.getY());
+			JsonObject newHex = model.getAsJsonObject("map").getAsJsonObject("hexGrid").getAsJsonArray("hexes").get(newX).getAsJsonArray().get(newY).getAsJsonObject();
+			JsonArray vertexes = newHex.getAsJsonArray("vertexes");
+			boolean foundVictim = false;
+			for (JsonElement e : vertexes) {
+				JsonObject vertexValue = e.getAsJsonObject().getAsJsonObject("value");
+				int ownerID = vertexValue.get("ownerID").getAsInt();
+				if (ownerID == victimIndex) {
+					foundVictim = true;
+					break;
+				}
+			}
+			if (foundVictim) {
+				// TODO Transfer a random resource from victim to player
+			}
+		}
 		return verdict;
 	}
 

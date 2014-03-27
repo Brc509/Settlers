@@ -1,9 +1,13 @@
 package catan.server.handler.moves;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 
 import catan.server.command.moves.MovesBuildSettlementCommand;
 import catan.server.command.moves.MovesFinishTurnCommand;
+import catan.server.command.moves.MovesMaritimeTradeCommand;
+import catan.server.handler.HandlerUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -13,11 +17,14 @@ public class MovesFinishTurnHandler_Prod implements MovesFinishTurnHandler {
 
 	@Override
 	public void handle(HttpExchange arg0) throws IOException {
-		// TODO Auto-generated method stub
-	    java.util.Scanner s = new java.util.Scanner(arg0.getRequestBody()).useDelimiter("\\A");
-	    Gson g = new Gson();
-	    JsonObject json = g.fromJson(s.hasNext() ? s.next() : "", JsonObject.class);		
-		MovesFinishTurnCommand test = new MovesFinishTurnCommand(arg0, json);
-		test.execute();
+		
+		Map<String, String> cookies = HandlerUtils.getCookies(arg0);
+		
+		InputStream is = arg0.getRequestBody();
+		String json = HandlerUtils.inputStreamToString(is);
+		
+		Gson gson = new Gson();
+		MovesFinishTurnCommand command = gson.fromJson(json, MovesFinishTurnCommand.class);
+		command.execute();	
 	}
 }

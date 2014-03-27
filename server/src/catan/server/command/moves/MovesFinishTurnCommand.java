@@ -7,14 +7,10 @@ import com.sun.net.httpserver.HttpExchange;
 
 public class MovesFinishTurnCommand implements Command{
 	
-	HttpExchange arg0;
-	JsonObject json;
+	private String type;
+	private int playerIndex;
 
-	public MovesFinishTurnCommand(HttpExchange arg0,JsonObject json){
-		// TODO Auto-generated constructor stub
-		this.arg0 = arg0;
-		this.json = json;
-		//execute();
+	public MovesFinishTurnCommand(){
 	}
 
 	@Override

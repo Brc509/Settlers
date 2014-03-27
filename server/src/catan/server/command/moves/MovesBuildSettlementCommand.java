@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import catan.model.ClientModel;
+import catan.model.Model;
 import catan.server.Cookie;
 import catan.server.Games;
 import catan.server.command.Command;
@@ -26,14 +27,12 @@ public class MovesBuildSettlementCommand implements Command{
 	}
 
 	@Override
-	public Object execute(){
+	public Object execute(Object obj){
 		// TODO Auto-generated method stub
-		Games allGames = Games.get();
 		Map<String, String> cookies = HandlerUtils.getCookies(arg0);
 		Cookie playerCookie = HandlerUtils.getCookie(arg0);
-		Map<Integer, ClientModel> games = allGames.getGames();
 
-		ClientModel currModel = games.get(cookies.get("catan.game"));
+		Model currModel = Games.get().getGames().get(cookies.get("catan.game"));
 		
 		currModel.buildCity(playerCookie.getId(),
 				json.get("vertexLocation").getAsJsonObject().get("x").getAsInt(),

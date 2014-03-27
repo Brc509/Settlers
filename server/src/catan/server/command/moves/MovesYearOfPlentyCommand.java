@@ -1,5 +1,7 @@
 package catan.server.command.moves;
 
+import catan.model.Model;
+import catan.server.Games;
 import catan.server.command.Command;
 
 /**
@@ -9,13 +11,16 @@ import catan.server.command.Command;
  */
 public class MovesYearOfPlentyCommand implements Command {
 
-	public MovesYearOfPlentyCommand() {
-		// TODO
-	}
+	private String type;
+	private int playerIndex;
+	private String resource1;
+	private String resource2;
+
+	public MovesYearOfPlentyCommand() {}
 
 	@Override
-	public Object execute(Object obj) {
-		// TODO Auto-generated method stub
-		return null;
+	public Boolean execute(Object obj) {
+		Model game = Games.get().getGames().get(obj);
+		return game.yearOfPlenty(playerIndex, resource1, resource2);
 	}
 }

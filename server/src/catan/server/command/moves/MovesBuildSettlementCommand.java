@@ -1,7 +1,15 @@
 package catan.server.command.moves;
 
-import catan.server.command.Command;
+import java.io.IOException;
+import java.util.Map;
 
+import catan.model.ClientModel;
+import catan.server.Cookie;
+import catan.server.Games;
+import catan.server.command.Command;
+import catan.server.handler.HandlerUtils;
+
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -20,6 +28,29 @@ public class MovesBuildSettlementCommand implements Command{
 	@Override
 	public Object execute(){
 		// TODO Auto-generated method stub
+		Games allGames = Games.get();
+		Map<String, String> cookies = HandlerUtils.getCookies(arg0);
+		Cookie playerCookie = HandlerUtils.getCookie(arg0);
+		Map<Integer, ClientModel> games = allGames.getGames();
+
+		ClientModel currModel = games.get(cookies.get("catan.game"));
+		
+		currModel.buildCity(playerCookie.getId(),
+				json.get("vertexLocation").getAsJsonObject().get("x").getAsInt(),
+				json.get("vertexLocation").getAsJsonObject().get("y").getAsInt(),
+				json.get("vertexLocation").getAsJsonObject().get("direction").getAsString(),
+				json.get("free").getAsBoolean());
+		
+		Gson g = new Gson();
+		String model = g.toJson(currModel);
+		
+		try {
+			HandlerUtils.sendStringAsJSON(arg0, 200, model);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return null;
 	}
 

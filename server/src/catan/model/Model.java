@@ -217,4 +217,9 @@ public class Model {
 	private JsonElement createEntry(String source, String message) {
 		return gson.fromJson("{\"source\":\"" + source + "\",\"message\":\"" + message + "\"}", JsonElement.class);
 	}
+	
+	public JsonObject buildSettlement(int playerIndex)
+	{
+		return model;
+	}
 }

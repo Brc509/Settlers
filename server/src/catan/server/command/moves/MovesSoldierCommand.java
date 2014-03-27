@@ -1,5 +1,9 @@
 package catan.server.command.moves;
 
+import catan.model.HexLocation;
+import catan.model.Model;
+import catan.server.Games;
+import catan.server.Server;
 import catan.server.command.Command;
 
 /**
@@ -9,13 +13,17 @@ import catan.server.command.Command;
  */
 public class MovesSoldierCommand implements Command {
 
-	public MovesSoldierCommand() {
-		// TODO
-	}
+	private String type;
+	private int playerIndex;
+	private int victimIndex;
+	private HexLocation location;
+
+	public MovesSoldierCommand() {}
 
 	@Override
-	public Object execute(Object obj) {
-		// TODO Auto-generated method stub
-		return null;
+	public Boolean execute(Object obj) {
+		if (Server.isDebugEnabled()) System.out.println("  Attempting to execute command \"" + type + "\".");
+		Model game = Games.get().getGames().get(obj);
+		return game.soldier(playerIndex, victimIndex, location);
 	}
 }

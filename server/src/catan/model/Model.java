@@ -132,6 +132,12 @@ public class Model {
 		return verdict;
 	}
 
+	public boolean soldier(int playerIndex, int victimIndex, HexLocation location) {
+		boolean verdict = false;
+		// TODO
+		return verdict;
+	}
+
 	public boolean yearOfPlenty(int playerIndex, String resource1, String resource2) {
 
 		// Guilty until proven innocent
@@ -217,9 +223,8 @@ public class Model {
 	private JsonElement createEntry(String source, String message) {
 		return gson.fromJson("{\"source\":\"" + source + "\",\"message\":\"" + message + "\"}", JsonElement.class);
 	}
-	
-	public JsonObject buildSettlement(int playerIndex)
-	{
+
+	public JsonObject buildSettlement(int playerIndex) {
 		return model;
 	}
 }

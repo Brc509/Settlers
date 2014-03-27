@@ -134,13 +134,29 @@ public class Model {
 	public boolean rollNumber ( String type, int playerIndex, int number) {
 		JsonArray numbers = model.getAsJsonObject("map").getAsJsonObject("numbers").getAsJsonArray(Integer.toString(number));
 		JsonArray hexes =  model.getAsJsonObject("map").getAsJsonObject("hexGrid").getAsJsonArray("hexes");
+		
 		for (final JsonElement hexLocation : numbers) {
 			JsonObject location = gson.fromJson(hexLocation, JsonObject.class);
 			int x =  location.get("x").getAsInt() + 3;
 			int y =  location.get("y").getAsInt() + 3;
 			System.out.println("x,y : " + x + "," + y);
 			System.out.println("The hex" + ((JsonObject)((JsonArray) hexes.get(y)).get(x)).getAsJsonArray("vertexes"));
+			JsonArray vertexes = ((JsonObject)((JsonArray) hexes.get(y)).get(x)).getAsJsonArray("vertexes");
+			for (final JsonElement vertex : vertexes) {
+				JsonElement value = ((JsonObject) vertex).get("value");
+				int ownerId = ((JsonObject)value).get("ownerID").getAsInt();
+				if (ownerId != -1) {
+					System.out.println(ownerId);
+				}
+				else {
+					System.out.println("Nothing: " + ownerId);
+				}
+				
+			}
 		}
+		
+		//TODO reward all of the players that are on the vertexes
+		//TODO advance the turntracker.  (However that works...)
 		return false;
 	}
 

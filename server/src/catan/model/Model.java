@@ -174,6 +174,10 @@ public class Model {
 					int oldDeckYearOfPlenty = deck.get("yearOfPlenty").getAsInt();
 					deck.addProperty("yearOfPlenty", oldDeckYearOfPlenty + 1);
 
+					// Add the log entry
+					String name = player.get("name").getAsString();
+					addLogEntry(name, name + " played a Year of Plenty card.");
+
 					// Innocent
 					verdict = true;
 				}

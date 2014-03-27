@@ -1,5 +1,7 @@
 package catan.server.command.moves;
 
+import catan.model.Model;
+import catan.server.Games;
 import catan.server.command.Command;
 
 import com.google.gson.JsonObject;
@@ -15,6 +17,8 @@ public class MovesFinishTurnCommand implements Command{
 	@Override
 	public Object execute(Object obj) {
 		// TODO Auto-generated method stub
+		Model model = Games.get().getGames().get((Integer)obj);
+		model.finishTurn(playerIndex);
 		return null;
 	}
 

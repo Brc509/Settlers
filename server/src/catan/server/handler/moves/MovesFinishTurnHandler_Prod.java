@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+import catan.model.Model;
+import catan.server.Games;
 import catan.server.command.moves.MovesBuildSettlementCommand;
 import catan.server.command.moves.MovesFinishTurnCommand;
 import catan.server.command.moves.MovesMaritimeTradeCommand;
@@ -25,6 +27,17 @@ public class MovesFinishTurnHandler_Prod implements MovesFinishTurnHandler {
 		
 		Gson gson = new Gson();
 		MovesFinishTurnCommand command = gson.fromJson(json, MovesFinishTurnCommand.class);
-		command.execute(null);	
+		int gameId = Integer.parseInt(HandlerUtils.getCookies(arg0).get("catan.game"));
+		Model returnModel = (Model)command.execute(gameId);
+		
+		Gson g = new Gson();
+		String model = g.toJson(returnModel);
+		
+		try {
+			HandlerUtils.sendStringAsJSON(arg0, 200, model);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

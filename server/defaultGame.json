@@ -1,10 +1,10 @@
 {
 deck: {
-yearOfPlenty: 2,
-monopoly: 2,
+yearOfPlenty: 12,
+monopoly: 12,
 soldier: 14,
-roadBuilding: 2,
-monument: 5
+roadBuilding: 12,
+monument: 15
 },
 map: {
 hexGrid: {
@@ -3177,11 +3177,11 @@ players: [
 {
 MAX_GAME_POINTS: 10,
 resources: {
-brick: 0,
-wood: 1,
-sheep: 1,
-wheat: 1,
-ore: 0
+brick: 10,
+wood: 11,
+sheep: 11,
+wheat: 11,
+ore: 10
 },
 oldDevCards: {
 yearOfPlenty: 0,
@@ -3191,11 +3191,11 @@ roadBuilding: 0,
 monument: 0
 },
 newDevCards: {
-yearOfPlenty: 0,
-monopoly: 0,
-soldier: 0,
-roadBuilding: 0,
-monument: 0
+yearOfPlenty: 10,
+monopoly: 10,
+soldier: 10,
+roadBuilding: 10,
+monument: 10
 },
 roads: 13,
 cities: 4,
@@ -3215,11 +3215,11 @@ color: "orange"
 {
 MAX_GAME_POINTS: 10,
 resources: {
-brick: 1,
-wood: 0,
-sheep: 1,
-wheat: 0,
-ore: 2
+brick: 11,
+wood: 10,
+sheep: 11,
+wheat: 10,
+ore: 12
 },
 oldDevCards: {
 yearOfPlenty: 0,
@@ -3229,11 +3229,11 @@ roadBuilding: 0,
 monument: 0
 },
 newDevCards: {
-yearOfPlenty: 0,
-monopoly: 0,
-soldier: 0,
-roadBuilding: 0,
-monument: 0
+yearOfPlenty: 10,
+monopoly: 10,
+soldier: 10,
+roadBuilding: 10,
+monument: 10
 },
 roads: 13,
 cities: 4,
@@ -3253,11 +3253,11 @@ color: "blue"
 {
 MAX_GAME_POINTS: 10,
 resources: {
-brick: 1,
-wood: 1,
-sheep: 1,
-wheat: 1,
-ore: 0
+brick: 11,
+wood: 11,
+sheep: 11,
+wheat: 11,
+ore: 10
 },
 oldDevCards: {
 yearOfPlenty: 0,
@@ -3267,11 +3267,11 @@ roadBuilding: 0,
 monument: 0
 },
 newDevCards: {
-yearOfPlenty: 0,
-monopoly: 0,
-soldier: 0,
-roadBuilding: 0,
-monument: 0
+yearOfPlenty: 10,
+monopoly: 10,
+soldier: 10,
+roadBuilding: 10,
+monument: 10
 },
 roads: 13,
 cities: 4,
@@ -3291,11 +3291,11 @@ color: "red"
 {
 MAX_GAME_POINTS: 10,
 resources: {
-brick: 0,
-wood: 1,
-sheep: 1,
-wheat: 0,
-ore: 1
+brick: 10,
+wood: 11,
+sheep: 11,
+wheat: 10,
+ore: 11
 },
 oldDevCards: {
 yearOfPlenty: 0,
@@ -3305,11 +3305,11 @@ roadBuilding: 0,
 monument: 0
 },
 newDevCards: {
-yearOfPlenty: 0,
-monopoly: 0,
-soldier: 0,
-roadBuilding: 0,
-monument: 0
+yearOfPlenty: 10,
+monopoly: 10,
+soldier: 10,
+roadBuilding: 10,
+monument: 10
 },
 roads: 13,
 cities: 4,

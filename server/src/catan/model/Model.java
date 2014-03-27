@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class Model {
@@ -69,6 +70,23 @@ public class Model {
 		return false;
 	}
 
+	public JsonObject finishTurn(int playerIndex)
+	{
+		int nextPlayer = model.get("turnTracker").getAsJsonObject().get("currentTurn").getAsInt();
+		if(nextPlayer < (model.get("players").getAsJsonArray().size())-1)
+		{
+			nextPlayer++;
+		}
+		else
+			nextPlayer = 0;
+		Gson g = new Gson();
+		String name = model.getAsJsonArray("players").get(playerIndex).getAsString();
+		model.getAsJsonObject("turnTracker").addProperty("currentTurn", nextPlayer);
+		JsonElement newLog = g.toJsonTree("{'source':'"+name+",'message':"+name+"'s turn just ended}");
+		model.getAsJsonObject("log").getAsJsonArray("lines").add(newLog);
+		return model;
+	}
+	
 	public boolean yearOfPlenty(int playerIndex, String resource1, String resource2) {
 		boolean success = false;
 		if (playerIndex >= 0 && playerIndex < 4 && resourceNames.contains(resource1) && resourceNames.contains(resource2)) {

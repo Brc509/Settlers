@@ -133,10 +133,13 @@ public class Model {
 	
 	public boolean rollNumber ( String type, int playerIndex, int number) {
 		JsonArray numbers = model.getAsJsonObject("map").getAsJsonObject("numbers").getAsJsonArray(Integer.toString(number));
+		JsonArray hexes =  model.getAsJsonObject("map").getAsJsonObject("hexGrid").getAsJsonArray("hexes");
 		for (final JsonElement hexLocation : numbers) {
-			System.out.println("hexLocation = " + hexLocation);
-			JsonObject x = hexLocation.getAsJsonObject();
-			System.out.println("x : " + x);
+			JsonObject location = gson.fromJson(hexLocation, JsonObject.class);
+			int x =  location.get("x").getAsInt() + 3;
+			int y =  location.get("y").getAsInt() + 3;
+			System.out.println("x,y : " + x + "," + y);
+			System.out.println("The hex" + ((JsonObject)((JsonArray) hexes.get(y)).get(x)).getAsJsonArray("vertexes"));
 		}
 		return false;
 	}

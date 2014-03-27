@@ -3,6 +3,7 @@ package catan.model;
 import java.io.FileReader;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class Model {
@@ -64,6 +65,23 @@ public class Model {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public JsonObject finishTurn(int playerIndex)
+	{
+		int nextPlayer = model.get("turnTracker").getAsJsonObject().get("currentTurn").getAsInt();
+		if(nextPlayer < (model.get("players").getAsJsonArray().size())-1)
+		{
+			nextPlayer++;
+		}
+		else
+			nextPlayer = 0;
+		Gson g = new Gson();
+		String name = model.getAsJsonArray("players").get(playerIndex).getAsString();
+		model.getAsJsonObject("turnTracker").addProperty("currentTurn", nextPlayer);
+		JsonElement newLog = g.toJsonTree("{'source':'"+name+",'message':"+name+"'s turn just ended}");
+		model.getAsJsonObject("log").getAsJsonArray("lines").add(newLog);
+		return model;
 	}
 	
 }

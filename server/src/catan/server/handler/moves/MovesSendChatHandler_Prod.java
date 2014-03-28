@@ -5,7 +5,7 @@ import java.net.HttpURLConnection;
 
 import catan.server.Games;
 import catan.server.Server;
-import catan.server.command.moves.MovesSendChatCommand;
+import catan.server.command.moves.SendChatCommand;
 import catan.server.handler.HandlerUtils;
 
 import com.google.gson.Gson;
@@ -26,7 +26,7 @@ public class MovesSendChatHandler_Prod implements MovesSendChatHandler {
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
 			if (HandlerUtils.authorizeUser(exchange)) {
 				String requestBody = HandlerUtils.inputStreamToString(exchange.getRequestBody());
-				MovesSendChatCommand command = gson.fromJson(requestBody, MovesSendChatCommand.class);
+				SendChatCommand command = gson.fromJson(requestBody, SendChatCommand.class);
 				int gameID = Integer.parseInt(HandlerUtils.getCookies(exchange).get("catan.game"));
 				boolean success = command.execute(gameID);
 				if (success) {

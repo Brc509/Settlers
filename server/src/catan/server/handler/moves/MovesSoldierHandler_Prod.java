@@ -5,7 +5,7 @@ import java.net.HttpURLConnection;
 
 import catan.server.Games;
 import catan.server.Server;
-import catan.server.command.moves.MovesSoldierCommand;
+import catan.server.command.moves.SoldierCommand;
 import catan.server.handler.HandlerUtils;
 
 import com.google.gson.Gson;
@@ -26,7 +26,7 @@ public class MovesSoldierHandler_Prod implements MovesSoldierHandler {
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
 			if (HandlerUtils.authorizeUser(exchange)) {
 				String requestBody = HandlerUtils.inputStreamToString(exchange.getRequestBody());
-				MovesSoldierCommand command = gson.fromJson(requestBody, MovesSoldierCommand.class);
+				SoldierCommand command = gson.fromJson(requestBody, SoldierCommand.class);
 				int gameID = Integer.parseInt(HandlerUtils.getCookies(exchange).get("catan.game"));
 				boolean success = command.execute(gameID);
 				if (success) {

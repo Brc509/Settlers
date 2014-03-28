@@ -2,8 +2,8 @@ package catan.server.handler.moves;
 
 import java.io.IOException;
 
-import catan.server.command.moves.MovesBuyDevCardCommand;
-import catan.server.command.moves.MovesFinishTurnCommand;
+import catan.server.command.moves.BuyDevCardCommand;
+import catan.server.command.moves.FinishTurnCommand;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -17,7 +17,7 @@ public class MovesBuyDevCardHandler_Prod implements MovesBuyDevCardHandler {
 	    java.util.Scanner s = new java.util.Scanner(arg0.getRequestBody()).useDelimiter("\\A");
 	    Gson g = new Gson();
 	    JsonObject json = g.fromJson(s.hasNext() ? s.next() : "", JsonObject.class);		
-		MovesBuyDevCardCommand test = new MovesBuyDevCardCommand(arg0, json);
+		BuyDevCardCommand test = new BuyDevCardCommand(arg0, json);
 		test.execute(null);
 	}
 }

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import catan.server.command.moves.MovesMonumentCommand;
+import catan.server.command.moves.MonumentCommand;
 import catan.server.handler.HandlerUtils;
 
 import com.google.gson.Gson;
@@ -21,7 +21,7 @@ public class MovesMonumentHandler_Prod implements MovesMonumentHandler {
 		String json = HandlerUtils.inputStreamToString(is);
 		
 		Gson gson = new Gson();
-		MovesMonumentCommand command = gson.fromJson(json, MovesMonumentCommand.class);
+		MonumentCommand command = gson.fromJson(json, MonumentCommand.class);
 		int gameId = Integer.parseInt(HandlerUtils.getCookies(arg0).get("catan.game"));
 		command.execute(gameId);
 	}

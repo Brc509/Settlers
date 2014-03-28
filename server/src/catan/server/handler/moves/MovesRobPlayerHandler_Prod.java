@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import catan.server.command.moves.MovesOfferTradeCommand;
-import catan.server.command.moves.MovesRobPlayerCommand;
+import catan.server.command.moves.OfferTradeCommand;
+import catan.server.command.moves.RobPlayerCommand;
 import catan.server.handler.HandlerUtils;
 
 import com.google.gson.Gson;
@@ -21,7 +21,7 @@ public class MovesRobPlayerHandler_Prod implements MovesRobPlayerHandler {
 		String json = HandlerUtils.inputStreamToString(is);
 		
 		Gson gson = new Gson();
-		MovesRobPlayerCommand command = gson.fromJson(json, MovesRobPlayerCommand.class);
+		RobPlayerCommand command = gson.fromJson(json, RobPlayerCommand.class);
 		int gameId = Integer.parseInt(HandlerUtils.getCookies(arg0).get("catan.game"));
 		command.execute(gameId);
 	}

@@ -5,8 +5,8 @@ import java.io.InputStream;
 import java.util.Map;
 
 import catan.model.Model;
-import catan.server.command.moves.MovesBuildCityCommand;
-import catan.server.command.moves.MovesBuildSettlementCommand;
+import catan.server.command.moves.BuildCityCommand;
+import catan.server.command.moves.BuildSettlementCommand;
 import catan.server.handler.HandlerUtils;
 
 import com.google.gson.Gson;
@@ -24,7 +24,7 @@ public class MovesBuildCityHandler_Prod implements MovesBuildCityHandler {
 		String json = HandlerUtils.inputStreamToString(is);
 		
 		Gson gson = new Gson();
-		MovesBuildCityCommand command = gson.fromJson(json, MovesBuildCityCommand.class);
+		BuildCityCommand command = gson.fromJson(json, BuildCityCommand.class);
 		
 		int gameId = Integer.parseInt(HandlerUtils.getCookies(arg0).get("catan.game"));
 		

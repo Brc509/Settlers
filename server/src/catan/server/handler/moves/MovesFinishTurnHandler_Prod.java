@@ -6,9 +6,9 @@ import java.util.Map;
 
 import catan.model.Model;
 import catan.server.Games;
-import catan.server.command.moves.MovesBuildSettlementCommand;
-import catan.server.command.moves.MovesFinishTurnCommand;
-import catan.server.command.moves.MovesMaritimeTradeCommand;
+import catan.server.command.moves.BuildSettlementCommand;
+import catan.server.command.moves.FinishTurnCommand;
+import catan.server.command.moves.MaritimeTradeCommand;
 import catan.server.handler.HandlerUtils;
 
 import com.google.gson.Gson;
@@ -26,7 +26,7 @@ public class MovesFinishTurnHandler_Prod implements MovesFinishTurnHandler {
 		String json = HandlerUtils.inputStreamToString(is);
 		
 		Gson gson = new Gson();
-		MovesFinishTurnCommand command = gson.fromJson(json, MovesFinishTurnCommand.class);
+		FinishTurnCommand command = gson.fromJson(json, FinishTurnCommand.class);
 		
 		int gameId = Integer.parseInt(HandlerUtils.getCookies(arg0).get("catan.game"));
 		

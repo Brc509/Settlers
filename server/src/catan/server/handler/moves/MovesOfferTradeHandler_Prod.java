@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import catan.server.command.moves.MovesOfferTradeCommand;
+import catan.server.command.moves.OfferTradeCommand;
 import catan.server.handler.HandlerUtils;
 
 import com.google.gson.Gson;
@@ -20,7 +20,7 @@ public class MovesOfferTradeHandler_Prod implements MovesOfferTradeHandler {
 		String json = HandlerUtils.inputStreamToString(is);
 		
 		Gson gson = new Gson();
-		MovesOfferTradeCommand command = gson.fromJson(json, MovesOfferTradeCommand.class);
+		OfferTradeCommand command = gson.fromJson(json, OfferTradeCommand.class);
 		int gameId = Integer.parseInt(HandlerUtils.getCookies(arg0).get("catan.game"));
 		command.execute(gameId);
 	}

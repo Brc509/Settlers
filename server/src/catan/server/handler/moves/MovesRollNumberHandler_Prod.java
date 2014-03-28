@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import catan.server.command.moves.MovesOfferTradeCommand;
-import catan.server.command.moves.MovesRollNumberCommand;
+import catan.server.command.moves.OfferTradeCommand;
+import catan.server.command.moves.RollNumberCommand;
 import catan.server.handler.HandlerUtils;
 
 import com.google.gson.Gson;
@@ -21,7 +21,7 @@ public class MovesRollNumberHandler_Prod implements MovesRollNumberHandler {
 		String json = HandlerUtils.inputStreamToString(is);
 		
 		Gson gson = new Gson();
-		MovesRollNumberCommand command = gson.fromJson(json, MovesRollNumberCommand.class);
+		RollNumberCommand command = gson.fromJson(json, RollNumberCommand.class);
 		int gameId = Integer.parseInt(HandlerUtils.getCookies(arg0).get("catan.game"));
 		command.execute(gameId);
 	}

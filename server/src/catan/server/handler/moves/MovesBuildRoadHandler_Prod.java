@@ -2,8 +2,8 @@ package catan.server.handler.moves;
 
 import java.io.IOException;
 
-import catan.server.command.moves.MovesBuildRoadCommand;
-import catan.server.command.moves.MovesBuyDevCardCommand;
+import catan.server.command.moves.BuildRoadCommand;
+import catan.server.command.moves.BuyDevCardCommand;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -17,7 +17,7 @@ public class MovesBuildRoadHandler_Prod implements MovesBuildRoadHandler {
 	    java.util.Scanner s = new java.util.Scanner(arg0.getRequestBody()).useDelimiter("\\A");
 	    Gson g = new Gson();
 	    JsonObject json = g.fromJson(s.hasNext() ? s.next() : "", JsonObject.class);		
-		MovesBuildRoadCommand test = new MovesBuildRoadCommand(arg0, json);
+		BuildRoadCommand test = new BuildRoadCommand(arg0, json);
 		test.execute(null);
 	}
 }

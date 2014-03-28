@@ -3,38 +3,16 @@ package catan.server;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-import catan.server.handler.FileDownloadHandlerFactory;
-import catan.server.handler.HandlerModule_Prod;
-import catan.server.handler.UserHandler;
-import catan.server.handler.UtilChangeLogLevelHandler;
-import catan.server.handler.game.GameAddAIHandler;
-import catan.server.handler.game.GameCommandsHandler;
-import catan.server.handler.game.GameListAIHandler;
-import catan.server.handler.game.GameModelHandler;
-import catan.server.handler.game.GameResetHandler;
-import catan.server.handler.games.GamesCreateHandler;
-import catan.server.handler.games.GamesJoinHandler;
-import catan.server.handler.games.GamesListHandler;
-import catan.server.handler.moves.MovesAcceptTradeHandler;
-import catan.server.handler.moves.MovesBuildCityHandler;
-import catan.server.handler.moves.MovesBuildRoadHandler;
-import catan.server.handler.moves.MovesBuildSettlementHandler;
-import catan.server.handler.moves.MovesBuyDevCardHandler;
-import catan.server.handler.moves.MovesDiscardCardsHandler;
-import catan.server.handler.moves.MovesFinishTurnHandler;
-import catan.server.handler.moves.MovesMaritimeTradeHandler;
-import catan.server.handler.moves.MovesMonopolyHandler;
-import catan.server.handler.moves.MovesMonumentHandler;
-import catan.server.handler.moves.MovesOfferTradeHandler;
-import catan.server.handler.moves.MovesRoadBuildingHandler;
-import catan.server.handler.moves.MovesRobPlayerHandler;
-import catan.server.handler.moves.MovesRollNumberHandler;
-import catan.server.handler.moves.MovesSendChatHandler;
-import catan.server.handler.moves.MovesSoldierHandler;
-import catan.server.handler.moves.MovesYearOfPlentyHandler;
+// HANDLERS
+import catan.server.handler.*;
+import catan.server.handler.game.*;
+import catan.server.handler.moves.*;
 
+// GOOGLE 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+
+// HTTP
 import com.sun.net.httpserver.HttpServer;
 
 public class Server {
@@ -111,32 +89,34 @@ public class Server {
 		server.createContext("/user", new UserHandler());
 //		server.createContext("/user/login", injector.getInstance(UserLoginHandler.class));
 //		server.createContext("/user/register", injector.getInstance(UserRegisterHandler.class));
-		server.createContext("/games/list", injector.getInstance(GamesListHandler.class));
-		server.createContext("/games/create", injector.getInstance(GamesCreateHandler.class));
-		server.createContext("/games/join", injector.getInstance(GamesJoinHandler.class));
+		server.createContext("/games", new GameHandler());
+//		server.createContext("/games/list", injector.getInstance(GamesListHandler.class));
+//		server.createContext("/games/create", injector.getInstance(GamesCreateHandler.class));
+//		server.createContext("/games/join", injector.getInstance(GamesJoinHandler.class));
 		server.createContext("/game/model", injector.getInstance(GameModelHandler.class));
 		server.createContext("/game/reset", injector.getInstance(GameResetHandler.class));
 		server.createContext("/game/commands", injector.getInstance(GameCommandsHandler.class));
 		server.createContext("/game/addAI", injector.getInstance(GameAddAIHandler.class));
 		server.createContext("/game/listAI", injector.getInstance(GameListAIHandler.class));
 		server.createContext("/util/changeLogLevel", injector.getInstance(UtilChangeLogLevelHandler.class));
-		server.createContext("/moves/sendChat", injector.getInstance(MovesSendChatHandler.class));
-		server.createContext("/moves/rollNumber", injector.getInstance(MovesRollNumberHandler.class));
-		server.createContext("/moves/robPlayer", injector.getInstance(MovesRobPlayerHandler.class));
-		server.createContext("/moves/finishTurn", injector.getInstance(MovesFinishTurnHandler.class));
-		server.createContext("/moves/buyDevCard", injector.getInstance(MovesBuyDevCardHandler.class));
-		server.createContext("/moves/Year_of_Plenty", injector.getInstance(MovesYearOfPlentyHandler.class));
-		server.createContext("/moves/Road_Building", injector.getInstance(MovesRoadBuildingHandler.class));
-		server.createContext("/moves/Soldier", injector.getInstance(MovesSoldierHandler.class));
-		server.createContext("/moves/Monopoly", injector.getInstance(MovesMonopolyHandler.class));
-		server.createContext("/moves/Monument", injector.getInstance(MovesMonumentHandler.class));
-		server.createContext("/moves/buildRoad", injector.getInstance(MovesBuildRoadHandler.class));
-		server.createContext("/moves/buildSettlement", injector.getInstance(MovesBuildSettlementHandler.class));
-		server.createContext("/moves/buildCity", injector.getInstance(MovesBuildCityHandler.class));
-		server.createContext("/moves/offerTrade", injector.getInstance(MovesOfferTradeHandler.class));
-		server.createContext("/moves/acceptTrade", injector.getInstance(MovesAcceptTradeHandler.class));
-		server.createContext("/moves/maritimeTrade", injector.getInstance(MovesMaritimeTradeHandler.class));
-		server.createContext("/moves/discardCards", injector.getInstance(MovesDiscardCardsHandler.class));
+		server.createContext("/moves", new MovesHandler());
+//		server.createContext("/moves/sendChat", injector.getInstance(MovesSendChatHandler.class));
+//		server.createContext("/moves/rollNumber", injector.getInstance(MovesRollNumberHandler.class));
+//		server.createContext("/moves/robPlayer", injector.getInstance(MovesRobPlayerHandler.class));
+//		server.createContext("/moves/finishTurn", injector.getInstance(MovesFinishTurnHandler.class));
+//		server.createContext("/moves/buyDevCard", injector.getInstance(MovesBuyDevCardHandler.class));
+//		server.createContext("/moves/Year_of_Plenty", injector.getInstance(MovesYearOfPlentyHandler.class));
+//		server.createContext("/moves/Road_Building", injector.getInstance(MovesRoadBuildingHandler.class));
+//		server.createContext("/moves/Soldier", injector.getInstance(MovesSoldierHandler.class));
+//		server.createContext("/moves/Monopoly", injector.getInstance(MovesMonopolyHandler.class));
+//		server.createContext("/moves/Monument", injector.getInstance(MovesMonumentHandler.class));
+//		server.createContext("/moves/buildRoad", injector.getInstance(MovesBuildRoadHandler.class));
+//		server.createContext("/moves/buildSettlement", injector.getInstance(MovesBuildSettlementHandler.class));
+//		server.createContext("/moves/buildCity", injector.getInstance(MovesBuildCityHandler.class));
+//		server.createContext("/moves/offerTrade", injector.getInstance(MovesOfferTradeHandler.class));
+//		server.createContext("/moves/acceptTrade", injector.getInstance(MovesAcceptTradeHandler.class));
+//		server.createContext("/moves/maritimeTrade", injector.getInstance(MovesMaritimeTradeHandler.class));
+//		server.createContext("/moves/discardCards", injector.getInstance(MovesDiscardCardsHandler.class));
 		if (debugEnabled) System.out.println("Done.");
 	}
 

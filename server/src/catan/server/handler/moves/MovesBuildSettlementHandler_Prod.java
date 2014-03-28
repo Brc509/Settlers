@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import catan.server.command.moves.MovesBuildCityCommand;
-import catan.server.command.moves.MovesBuildSettlementCommand;
-import catan.server.command.moves.MovesFinishTurnCommand;
+import catan.server.command.moves.BuildCityCommand;
+import catan.server.command.moves.BuildSettlementCommand;
+import catan.server.command.moves.FinishTurnCommand;
 import catan.server.handler.HandlerUtils;
 
 import com.google.gson.Gson;
@@ -24,7 +24,7 @@ public class MovesBuildSettlementHandler_Prod implements MovesBuildSettlementHan
 		String json = HandlerUtils.inputStreamToString(is);
 		
 		Gson gson = new Gson();
-		MovesBuildSettlementCommand command = gson.fromJson(json, MovesBuildSettlementCommand.class);
+		BuildSettlementCommand command = gson.fromJson(json, BuildSettlementCommand.class);
 		
 		int gameId = Integer.parseInt(HandlerUtils.getCookies(arg0).get("catan.game"));
 		

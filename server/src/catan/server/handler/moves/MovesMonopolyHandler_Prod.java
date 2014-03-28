@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import catan.server.command.moves.MovesMaritimeTradeCommand;
-import catan.server.command.moves.MovesMonopolyCommand;
+import catan.server.command.moves.MaritimeTradeCommand;
+import catan.server.command.moves.MonopolyCommand;
 import catan.server.handler.HandlerUtils;
 
 import com.google.gson.Gson;
@@ -21,7 +21,7 @@ public class MovesMonopolyHandler_Prod implements MovesMonopolyHandler {
 		String json = HandlerUtils.inputStreamToString(is);
 		
 		Gson gson = new Gson();
-		MovesMonopolyCommand command = gson.fromJson(json, MovesMonopolyCommand.class);
+		MonopolyCommand command = gson.fromJson(json, MonopolyCommand.class);
 		command.execute(null);
 	}
 }

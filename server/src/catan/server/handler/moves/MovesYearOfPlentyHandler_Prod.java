@@ -5,7 +5,7 @@ import java.net.HttpURLConnection;
 
 import catan.server.Games;
 import catan.server.Server;
-import catan.server.command.moves.MovesYearOfPlentyCommand;
+import catan.server.command.moves.YearOfPlentyCommand;
 import catan.server.handler.HandlerUtils;
 
 import com.google.gson.Gson;
@@ -26,7 +26,7 @@ public class MovesYearOfPlentyHandler_Prod implements MovesYearOfPlentyHandler {
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
 			if (HandlerUtils.authorizeUser(exchange)) {
 				String requestBody = HandlerUtils.inputStreamToString(exchange.getRequestBody());
-				MovesYearOfPlentyCommand command = gson.fromJson(requestBody, MovesYearOfPlentyCommand.class);
+				YearOfPlentyCommand command = gson.fromJson(requestBody, YearOfPlentyCommand.class);
 				int gameID = Integer.parseInt(HandlerUtils.getCookies(exchange).get("catan.game"));
 				boolean success = command.execute(gameID);
 				if (success) {

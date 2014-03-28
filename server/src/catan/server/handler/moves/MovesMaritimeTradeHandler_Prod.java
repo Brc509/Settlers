@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.logging.Handler;
 
-import catan.server.command.moves.MovesMaritimeTradeCommand;
+import catan.server.command.moves.MaritimeTradeCommand;
 import catan.server.handler.HandlerUtils;
 
 import com.google.gson.Gson;
@@ -21,7 +21,7 @@ public class MovesMaritimeTradeHandler_Prod implements MovesMaritimeTradeHandler
 		String json = HandlerUtils.inputStreamToString(is);
 		
 		Gson gson = new Gson();
-		MovesMaritimeTradeCommand command = gson.fromJson(json, MovesMaritimeTradeCommand.class);
+		MaritimeTradeCommand command = gson.fromJson(json, MaritimeTradeCommand.class);
 		int gameId = Integer.parseInt(HandlerUtils.getCookies(exchange).get("catan.game"));
 		command.execute(gameId);		
 		// TODO Auto-generated method stub

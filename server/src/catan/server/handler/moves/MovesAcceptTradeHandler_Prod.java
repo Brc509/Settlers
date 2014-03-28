@@ -2,7 +2,7 @@ package catan.server.handler.moves;
 
 import java.io.IOException;
 
-import catan.server.command.moves.MovesAcceptTradeCommand;
+import catan.server.command.moves.AcceptTradeCommand;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -17,7 +17,7 @@ public class MovesAcceptTradeHandler_Prod implements MovesAcceptTradeHandler {
 	    java.util.Scanner s = new java.util.Scanner(arg0.getRequestBody()).useDelimiter("\\A");
 	    Gson g = new Gson();
 	    JsonObject json = g.fromJson(s.hasNext() ? s.next() : "", JsonObject.class);		
-		MovesAcceptTradeCommand test = new MovesAcceptTradeCommand(arg0, json);
+		AcceptTradeCommand test = new AcceptTradeCommand(arg0, json);
 		test.execute(null);
 	}
 }

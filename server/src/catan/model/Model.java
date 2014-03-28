@@ -127,32 +127,7 @@ public class Model {
 	}
 	
 	public boolean rollNumber ( String type, int playerIndex, int number) {
-		JsonArray numbers = getNumbers(number);
-		JsonArray hexes = getHexes();
-		
-		for (final JsonElement hexLocation : numbers) {
-			JsonObject location = gson.fromJson(hexLocation, JsonObject.class);
-			int x =  location.get("x").getAsInt();
-			int y =  location.get("y").getAsInt();
-			JsonArray vertexes = getVertexes(hexes, x, y);
-			for (final JsonElement vertex : vertexes) {
-				JsonElement value = ((JsonObject) vertex).get("value");
-				int ownerId = ((JsonObject)value).get("ownerID").getAsInt();
-				int worth = ((JsonObject)value).get("worth").getAsInt();
-				if (ownerId != -1) {
-					System.out.println("Reward player: " + ownerId + " with " + worth + " of (resource?)");
-					System.out.println(getPlayerByIndex(playerIndex));
-					//TODO reward all of the players that are on the vertexes
-				}
-				else {
-					System.out.println("Nothing: " + ownerId);
-				}
-			}
-		}
-		
-		//TODO advance the turntracker: status changes to discarding, robbing, or playing
-		//TODO add this command to the log
-		return false;
+		return true;
 	}
 
 	public boolean sendChat(int playerIndex, String content) {
@@ -310,12 +285,12 @@ public class Model {
 	// AWESOME HELPER METHODS
 	// ------------------------------
 	
-	private JsonArray getNumbers (int number) {
+	public JsonArray getNumbers (int number) {
 		JsonArray numbers = model.getAsJsonObject("map").getAsJsonObject("numbers").getAsJsonArray(Integer.toString(number));
 		return numbers;
 	}
 	
-	private JsonArray getHexes () {
+	public JsonArray getHexes () {
 		JsonArray hexes =  model.getAsJsonObject("map").getAsJsonObject("hexGrid").getAsJsonArray("hexes");
 		return hexes;
 	}

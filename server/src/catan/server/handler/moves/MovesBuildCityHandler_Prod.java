@@ -6,9 +6,11 @@ import java.util.Map;
 
 import catan.model.Model;
 import catan.server.command.moves.MovesBuildCityCommand;
+import catan.server.command.moves.MovesBuildSettlementCommand;
 import catan.server.handler.HandlerUtils;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 
 public class MovesBuildCityHandler_Prod implements MovesBuildCityHandler {
@@ -16,18 +18,27 @@ public class MovesBuildCityHandler_Prod implements MovesBuildCityHandler {
 	@Override
 	public void handle(HttpExchange arg0) throws IOException {
 
-		// Get the cookies and the json needed for the action to occur
 		Map<String, String> cookies = HandlerUtils.getCookies(arg0);
-		Gson gson = new Gson();
+		
 		InputStream is = arg0.getRequestBody();
 		String json = HandlerUtils.inputStreamToString(is);
 		
-		// Create the command class and give it the gameID
-		MovesBuildCityCommand mbcc = gson.fromJson(json, MovesBuildCityCommand.class);
-		mbcc.setGameID(0);
+		Gson gson = new Gson();
+		MovesBuildCityCommand command = gson.fromJson(json, MovesBuildCityCommand.class);
 		
-		// Execute the command and return the response back to the user
-		mbcc.print();
-		Model toReturn = mbcc.execute(null);
+		int gameId = Integer.parseInt(HandlerUtils.getCookies(arg0).get("catan.game"));
+		
+		System.out.println("gameId: "+gameId);
+
+		JsonObject returnModel = (JsonObject) command.execute(gameId);
+		
+		System.out.println("model: "+returnModel.toString());
+		
+		try {
+			HandlerUtils.sendStringAsJSON(arg0, 200, returnModel.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

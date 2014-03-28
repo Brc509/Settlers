@@ -132,15 +132,14 @@ public class Model {
 	}
 	
 	public boolean rollNumber ( String type, int playerIndex, int number) {
-		JsonArray numbers = model.getAsJsonObject("map").getAsJsonObject("numbers").getAsJsonArray(Integer.toString(number));
-		JsonArray hexes =  model.getAsJsonObject("map").getAsJsonObject("hexGrid").getAsJsonArray("hexes");
+		JsonArray numbers = getNumbers(number);
+		JsonArray hexes = getHexes();
 		
 		for (final JsonElement hexLocation : numbers) {
 			JsonObject location = gson.fromJson(hexLocation, JsonObject.class);
 			int x =  location.get("x").getAsInt() + 3;
 			int y =  location.get("y").getAsInt() + 3;
 			System.out.println("x,y : " + x + "," + y);
-			System.out.println("The hex" + ((JsonObject)((JsonArray) hexes.get(y)).get(x)).getAsJsonArray("vertexes"));
 			JsonArray vertexes = ((JsonObject)((JsonArray) hexes.get(y)).get(x)).getAsJsonArray("vertexes");
 			for (final JsonElement vertex : vertexes) {
 				JsonElement value = ((JsonObject) vertex).get("value");
@@ -156,7 +155,7 @@ public class Model {
 		}
 		
 		//TODO reward all of the players that are on the vertexes
-		//TODO advance the turntracker.  (However that works...)
+		//TODO advance the turntracker: status changes to discarding, robbing, or playing
 		return false;
 	}
 
@@ -311,6 +310,36 @@ public class Model {
 	@Override
 	public String toString() {
 		return model.toString();
+	}
+	
+	// ------------------------------
+	// AWESOME HELPER METHODS
+	// ------------------------------
+	
+	private JsonArray getNumbers (int number) {
+		JsonArray numbers = model.getAsJsonObject("map").getAsJsonObject("numbers").getAsJsonArray(Integer.toString(number));
+		return numbers;
+	}
+	
+	private JsonArray getHexes () {
+		JsonArray hexes =  model.getAsJsonObject("map").getAsJsonObject("hexGrid").getAsJsonArray("hexes");
+		return hexes;
+	}
+	
+	private JsonObject getVertex () {
+		return null;
+	}
+	
+	private JsonArray getHexVertexes () {
+		return null;
+	}
+	
+	private JsonObject getEdge () {
+		return null;
+	}
+	
+	private JsonObject[] getEdgesHexes () {
+		return null;
 	}
 
 	private void addLogEntry(String source, String message) {

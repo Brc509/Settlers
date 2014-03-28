@@ -43,11 +43,13 @@ public class UserHandler implements HttpHandler {
 			if (endpoint.equals("/user/login")) {
 
 				// Login the user
+				Server.println("  " + endpoint);
 				user = login(exchange, users, username, password);
 
 			} else if (endpoint.equals("/user/register")) {
 
 				// Register the user
+				Server.println("  " + endpoint);
 				user = register(exchange, users, username, password);
 
 			} else {
@@ -62,6 +64,7 @@ public class UserHandler implements HttpHandler {
 			if (user != null) {
 				Cookie cookie = new Cookie(user.getName(), user.getPassword(), user.getPlayerID());
 				String cookieStr = URLEncoder.encode(gson.toJson(cookie), "UTF-8");
+				Server.println("  Successful login: \"" + user.getName() + "\", \"" + user.getPassword() + "\", " + user.getPlayerID() + ".");
 				HandlerUtils.addCookie(exchange, "catan.user", cookieStr);
 				HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "Success");
 			} else {

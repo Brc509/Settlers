@@ -22,7 +22,7 @@ public class UserLoginHandler_Prod implements UserLoginHandler {
 
 		RegisteredUsers rUsers = RegisteredUsers.get();
 
-		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
+		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
 
 			InputStream headers = exchange.getRequestBody();
@@ -61,9 +61,9 @@ public class UserLoginHandler_Prod implements UserLoginHandler {
 				HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_BAD_REQUEST, "Incorrect Username or Password");
 			}
 
-			if (Server.isDebugEnabled()) System.out.println("  /user/login");
+			Server.println("  /user/login");
 		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request to /user/login.");
+			Server.println("  Bad request to /user/login.");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}

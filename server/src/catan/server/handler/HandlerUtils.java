@@ -45,7 +45,7 @@ public class HandlerUtils {
 		try {
 			String encodedCookieStr = getCookies(exchange).get("catan.user");
 			String decodedCookieStr = URLDecoder.decode(encodedCookieStr, "UTF-8");
-			if (Server.isDebugEnabled()) System.out.println("Decoded cookie: \"" + decodedCookieStr + "\".");
+			Server.println("Decoded cookie: \"" + decodedCookieStr + "\".");
 			cookie = gson.fromJson(decodedCookieStr, Cookie.class);
 		} catch (JsonSyntaxException | UnsupportedEncodingException e) {}
 		return cookie;
@@ -58,7 +58,7 @@ public class HandlerUtils {
 	 * @return A <code>Map</code> where the keys are cookie names and the values are cookie values. If the client did not send any cookies, an empty <code>Map</code> is returned.
 	 */
 	public static Map<String, String> getCookies(HttpExchange exchange) {
-		if (Server.isDebugEnabled()) System.out.println("Parsing cookies...");
+		Server.println("Parsing cookies...");
 		Map<String, String> cookies = new TreeMap<>();
 		if (exchange != null) {
 			String cookieStr = exchange.getRequestHeaders().getFirst("Cookie");
@@ -71,7 +71,7 @@ public class HandlerUtils {
 				}
 			}
 		}
-		if (Server.isDebugEnabled()) System.out.println("Done.");
+		Server.println("Done.");
 		return cookies;
 	}
 
@@ -87,7 +87,7 @@ public class HandlerUtils {
 			if (name != null && value != null && !name.isEmpty() && !value.isEmpty()) {
 				String cookie = name + "=" + value + "; Path=/";
 				exchange.getResponseHeaders().add("Set-Cookie", cookie);
-				if (Server.isDebugEnabled()) System.out.println("Cookie added: \"" + cookie + "\".");
+				Server.println("Cookie added: \"" + cookie + "\".");
 			}
 		}
 	}
@@ -273,7 +273,7 @@ public class HandlerUtils {
 	private static void sendInputStream(HttpExchange exchange, int responseCode, InputStream data, long length) throws IOException {
 		if (exchange != null) {
 			if (data != null) {
-//				if (Server.isDebugEnabled()) System.out.println("  Sending stream to client...");
+//				Server.println("  Sending stream to client...");
 				if (length == 0) {
 					sendEmptyBody(exchange, responseCode);
 				} else {
@@ -303,7 +303,7 @@ public class HandlerUtils {
 					}
 					// Close the connection
 					exchange.getResponseBody().close();
-//					if (Server.isDebugEnabled()) System.out.println("  Done.");
+//					Server.println("  Done.");
 				}
 			} else {
 				sendEmptyBody(exchange, responseCode);

@@ -4,14 +4,17 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 // HANDLERS
-import catan.server.handler.*;
-import catan.server.handler.game.*;
-import catan.z.oldCode.server.handler.moves.*;
+import catan.server.handler.FileDownloadHandlerFactory;
+import catan.server.handler.GameHandler;
+import catan.server.handler.GamesHandler;
+import catan.server.handler.HandlerModule_Prod;
+import catan.server.handler.MovesHandler;
+import catan.server.handler.UserHandler;
+import catan.server.handler.UtilChangeLogLevelHandler;
 
 // GOOGLE 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
 // HTTP
 import com.sun.net.httpserver.HttpServer;
 
@@ -30,6 +33,10 @@ public class Server {
 
 	public static void setDebugEnabled(boolean debugEnabled) {
 		Server.debugEnabled = debugEnabled;
+	}
+
+	public static void println(String str) {
+		if (debugEnabled) System.out.println(str);
 	}
 
 	// Instance constants
@@ -86,20 +93,21 @@ public class Server {
 		server.createContext("/", fdhFactory.create("/", "gameplay"));
 		server.createContext("/docs", fdhFactory.create("/docs", "docs"));
 		// Initialize API handlers
-		server.createContext("/user", new UserHandler());
+		server.createContext("/user/", new UserHandler());
 //		server.createContext("/user/login", injector.getInstance(UserLoginHandler.class));
 //		server.createContext("/user/register", injector.getInstance(UserRegisterHandler.class));
-		server.createContext("/games", new GameHandler());
+		server.createContext("/games/", new GamesHandler());
 //		server.createContext("/games/list", injector.getInstance(GamesListHandler.class));
 //		server.createContext("/games/create", injector.getInstance(GamesCreateHandler.class));
 //		server.createContext("/games/join", injector.getInstance(GamesJoinHandler.class));
-		server.createContext("/game/model", injector.getInstance(GameModelHandler.class));
-		server.createContext("/game/reset", injector.getInstance(GameResetHandler.class));
-		server.createContext("/game/commands", injector.getInstance(GameCommandsHandler.class));
-		server.createContext("/game/addAI", injector.getInstance(GameAddAIHandler.class));
-		server.createContext("/game/listAI", injector.getInstance(GameListAIHandler.class));
+		server.createContext("/game/", new GameHandler());
+//		server.createContext("/game/model", injector.getInstance(GameModelHandler.class));
+//		server.createContext("/game/reset", injector.getInstance(GameResetHandler.class));
+//		server.createContext("/game/commands", injector.getInstance(GameCommandsHandler.class));
+//		server.createContext("/game/addAI", injector.getInstance(GameAddAIHandler.class));
+//		server.createContext("/game/listAI", injector.getInstance(GameListAIHandler.class));
 		server.createContext("/util/changeLogLevel", injector.getInstance(UtilChangeLogLevelHandler.class));
-		server.createContext("/moves", new MovesHandler());
+		server.createContext("/moves/", new MovesHandler());
 //		server.createContext("/moves/sendChat", injector.getInstance(MovesSendChatHandler.class));
 //		server.createContext("/moves/rollNumber", injector.getInstance(MovesRollNumberHandler.class));
 //		server.createContext("/moves/robPlayer", injector.getInstance(MovesRobPlayerHandler.class));

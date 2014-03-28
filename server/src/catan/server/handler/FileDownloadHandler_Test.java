@@ -30,13 +30,13 @@ public class FileDownloadHandler_Test implements FileDownloadHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
-		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + " (Context: \"" + context + "\", Root: \"" + root + "\"):");
+		Server.println("\n" + this.getClass().getSimpleName() + " (Context: \"" + context + "\", Root: \"" + root + "\"):");
 		String relativePath = exchange.getRequestURI().getPath().substring(context.length());
 		if (exchange.getRequestMethod().toUpperCase().equals("GET")) {
-			if (Server.isDebugEnabled()) System.out.println("  " + relativePath);
+			Server.println("  " + relativePath);
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_OK);
 		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request to " + relativePath + ".");
+			Server.println("  Bad request to " + relativePath + ".");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}

@@ -12,12 +12,12 @@ public class MovesMonopolyHandler_Test implements MovesMonopolyHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
-		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
+		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
-			if (Server.isDebugEnabled()) System.out.println("  /moves/Monopoly");
+			Server.println("  /moves/Monopoly");
 			HandlerUtils.sendSampleModel(exchange, HttpURLConnection.HTTP_OK);
 		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request to /moves/Monopoly.");
+			Server.println("  Bad request to /moves/Monopoly.");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}

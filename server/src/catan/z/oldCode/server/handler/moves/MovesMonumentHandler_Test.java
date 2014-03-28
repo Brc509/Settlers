@@ -12,12 +12,12 @@ public class MovesMonumentHandler_Test implements MovesMonumentHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
-		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
+		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
-			if (Server.isDebugEnabled()) System.out.println("  /moves/Monument");
+			Server.println("  /moves/Monument");
 			HandlerUtils.sendSampleModel(exchange, HttpURLConnection.HTTP_OK);
 		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request to /moves/Monument.");
+			Server.println("  Bad request to /moves/Monument.");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}

@@ -15,12 +15,12 @@ public class GamesListHandler_Test implements GamesListHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
-		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
+		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("GET")) {
-			if (Server.isDebugEnabled()) System.out.println("  /games/list");
+			Server.println("  /games/list");
 			HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, SAMPLE);
 		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request to /games/list.");
+			Server.println("  Bad request to /games/list.");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}

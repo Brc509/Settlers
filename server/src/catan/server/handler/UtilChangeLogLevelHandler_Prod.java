@@ -18,7 +18,7 @@ public class UtilChangeLogLevelHandler_Prod implements UtilChangeLogLevelHandler
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
-		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
+		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
 			String queryStr = HandlerUtils.inputStreamToString(exchange.getRequestBody());
 			Map<String, String> params = HandlerUtils.decodeQueryString(queryStr);
@@ -26,7 +26,7 @@ public class UtilChangeLogLevelHandler_Prod implements UtilChangeLogLevelHandler
 			String response = command.execute(null);
 			HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, response);
 		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request to /util/changeLogLevel.");
+			Server.println("  Bad request to /util/changeLogLevel.");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}

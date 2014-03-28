@@ -12,12 +12,12 @@ public class GameAddAIHandler_Test implements GameAddAIHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
-		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
+		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
-			if (Server.isDebugEnabled()) System.out.println("  /game/addAI");
+			Server.println("  /game/addAI");
 			HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "You have reached /game/addAI.");
 		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request to /game/addAI.");
+			Server.println("  Bad request to /game/addAI.");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}

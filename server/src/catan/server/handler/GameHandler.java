@@ -45,7 +45,7 @@ public class GameHandler implements HttpHandler {
 	}
 	
 	private void listGames (HttpExchange exchange) throws IOException {
-		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
+		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		Games games = Games.get();
 		
 		Map<Integer, Model> gameList = games.getGames();
@@ -62,7 +62,7 @@ public class GameHandler implements HttpHandler {
 		}
 		jsonString += "]";
 		
-		if (Server.isDebugEnabled()) System.out.println("  /games/list");
+		Server.println("  /games/list");
 		HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, jsonString);
 	}
 	
@@ -91,15 +91,15 @@ public class GameHandler implements HttpHandler {
 		GameListGames g = new GameListGames(name, catanGames.getGames().size(), glp);
 		
 		String jsonString = gson.toJson(g);
-		if (Server.isDebugEnabled()) System.out.println("  /games/create");
+		Server.println("  /games/create");
 		HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, jsonString);
 	}
 	
 	private void joinGame (HttpExchange exchange) throws IOException {
-		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
+		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		System.out.println("Request type: " + exchange.getRequestMethod().toUpperCase());
 		if (!HandlerUtils.authorizeUser(exchange)) {
-			if (Server.isDebugEnabled()) System.out.println("  Unauthorized request to /games/join.");
+			Server.println("  Unauthorized request to /games/join.");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_UNAUTHORIZED);
 			return;
 		}
@@ -120,7 +120,7 @@ public class GameHandler implements HttpHandler {
 		if (exchange.getRequestMethod().toUpperCase().equals(type)) {
 			return true;
 		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request to /games/list." + exchange.getRequestMethod().toUpperCase());
+			Server.println("  Bad request to /games/list." + exchange.getRequestMethod().toUpperCase());
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 			return false;
 		}

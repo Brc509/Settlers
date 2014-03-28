@@ -22,7 +22,7 @@ public class UserHandler implements HttpHandler {
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
 
-		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
+		Server.println("\n" + this.getClass().getSimpleName() + ":");
 
 		// Check the request method
 		String requestMethod = exchange.getRequestMethod().toUpperCase();
@@ -53,7 +53,7 @@ public class UserHandler implements HttpHandler {
 			} else {
 
 				// Invalid path
-				if (Server.isDebugEnabled()) System.out.println("  Path not found: \"" + endpoint + "\".");
+				Server.println("  Path not found: \"" + endpoint + "\".");
 				HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_NOT_FOUND);
 				return;
 			}
@@ -65,12 +65,12 @@ public class UserHandler implements HttpHandler {
 				HandlerUtils.addCookie(exchange, "catan.user", cookieStr);
 				HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "Success");
 			} else {
-				if (Server.isDebugEnabled()) System.out.println("  Failed: \"" + endpoint + "\".");
+				Server.println("  Failed: \"" + endpoint + "\".");
 				HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_INTERNAL_ERROR);
 			}
 
 		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request method: \"" + requestMethod + "\".");
+			Server.println("  Bad request method: \"" + requestMethod + "\".");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_METHOD);
 		}
 	}

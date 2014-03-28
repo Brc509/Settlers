@@ -22,7 +22,7 @@ public class UserRegisterHandler_Prod implements UserRegisterHandler {
 
 		RegisteredUsers rUsers = RegisteredUsers.get();
 
-		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
+		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
 
 			InputStream headers = exchange.getRequestBody();
@@ -49,7 +49,7 @@ public class UserRegisterHandler_Prod implements UserRegisterHandler {
 				HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_BAD_REQUEST, "Username already taken");
 			}
 
-			if (Server.isDebugEnabled()) System.out.println("  /user/register");
+			Server.println("  /user/register");
 
 			Cookie cookie = new Cookie(registerInfoMap.get("username"), registerInfoMap.get("password"), rUsers.getUsers().size() - 1);
 			Gson gson = new Gson();
@@ -59,7 +59,7 @@ public class UserRegisterHandler_Prod implements UserRegisterHandler {
 
 			HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "Success");
 		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request to /user/register.");
+			Server.println("  Bad request to /user/register.");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}

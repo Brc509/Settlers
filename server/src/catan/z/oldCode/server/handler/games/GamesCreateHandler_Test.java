@@ -15,12 +15,12 @@ public class GamesCreateHandler_Test implements GamesCreateHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
-		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
+		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
-			if (Server.isDebugEnabled()) System.out.println("  /games/create");
+			Server.println("  /games/create");
 			HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, SAMPLE);
 		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request to /games/create.");
+			Server.println("  Bad request to /games/create.");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}

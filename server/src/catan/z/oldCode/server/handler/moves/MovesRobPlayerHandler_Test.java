@@ -12,12 +12,12 @@ public class MovesRobPlayerHandler_Test implements MovesRobPlayerHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
-		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
+		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
-			if (Server.isDebugEnabled()) System.out.println("  /moves/robPlayer");
+			Server.println("  /moves/robPlayer");
 			HandlerUtils.sendSampleModel(exchange, HttpURLConnection.HTTP_OK);
 		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request to /moves/robPlayer.");
+			Server.println("  Bad request to /moves/robPlayer.");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}

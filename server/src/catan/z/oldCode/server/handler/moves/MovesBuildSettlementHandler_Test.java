@@ -12,12 +12,12 @@ public class MovesBuildSettlementHandler_Test implements MovesBuildSettlementHan
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
-		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
+		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
-			if (Server.isDebugEnabled()) System.out.println("  /moves/buildSettlement");
+			Server.println("  /moves/buildSettlement");
 			HandlerUtils.sendSampleModel(exchange, HttpURLConnection.HTTP_OK);
 		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request to /moves/buildSettlement.");
+			Server.println("  Bad request to /moves/buildSettlement.");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}

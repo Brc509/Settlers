@@ -20,7 +20,7 @@ public class SendChatCommand implements Command {
 
 	@Override
 	public Boolean execute(Object obj) {
-		if (Server.isDebugEnabled()) System.out.println("  Attempting to execute command \"" + type + "\".");
+		Server.println("  Attempting to execute command \"" + type + "\".");
 		Model game = Games.get().getGames().get(obj);
 		return game.sendChat(playerIndex, content);
 	}

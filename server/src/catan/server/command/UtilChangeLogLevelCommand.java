@@ -17,7 +17,7 @@ public class UtilChangeLogLevelCommand implements Command {
 
 	@Override
 	public String execute(Object obj) {
-		if (Server.isDebugEnabled()) System.out.println("  Log level changed to \"" + logLevel + "\".");
+		Server.println("  Log level changed to \"" + logLevel + "\".");
 		return "Success";
 	}
 }

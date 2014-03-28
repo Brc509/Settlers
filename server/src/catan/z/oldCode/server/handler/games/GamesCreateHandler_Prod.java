@@ -28,7 +28,7 @@ public class GamesCreateHandler_Prod implements GamesCreateHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
-		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
+		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
 			
 			InputStream headers = exchange.getRequestBody();
@@ -56,12 +56,12 @@ public class GamesCreateHandler_Prod implements GamesCreateHandler {
 			
 			String jsonString = gson.toJson(g);
 			
-			if (Server.isDebugEnabled()) System.out.println("  /games/create");
+			Server.println("  /games/create");
 			
 			HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, jsonString);
 			
 		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request to /games/create.");
+			Server.println("  Bad request to /games/create.");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}

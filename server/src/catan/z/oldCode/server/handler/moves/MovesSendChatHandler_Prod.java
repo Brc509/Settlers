@@ -22,7 +22,7 @@ public class MovesSendChatHandler_Prod implements MovesSendChatHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
-		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
+		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
 			if (HandlerUtils.authorizeUser(exchange)) {
 				String requestBody = HandlerUtils.inputStreamToString(exchange.getRequestBody());
@@ -30,18 +30,18 @@ public class MovesSendChatHandler_Prod implements MovesSendChatHandler {
 				int gameID = Integer.parseInt(HandlerUtils.getCookies(exchange).get("catan.game"));
 				boolean success = command.execute(gameID);
 				if (success) {
-					if (Server.isDebugEnabled()) System.out.println("  Successful request to /moves/sendChat.");
+					Server.println("  Successful request to /moves/sendChat.");
 					HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, Games.get().getGames().get(gameID).toString());
 				} else {
-					if (Server.isDebugEnabled()) System.out.println("  Invalid request to /moves/sendChat.");
+					Server.println("  Invalid request to /moves/sendChat.");
 					HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_INTERNAL_ERROR, "Your move to send a chat message was invalid.");
 				}
 			} else {
-				if (Server.isDebugEnabled()) System.out.println("  Unauthorized request to /moves/sendChat.");
+				Server.println("  Unauthorized request to /moves/sendChat.");
 				HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_UNAUTHORIZED);
 			}
 		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request to /moves/sendChat.");
+			Server.println("  Bad request to /moves/sendChat.");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}

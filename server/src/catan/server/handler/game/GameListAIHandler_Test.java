@@ -15,12 +15,12 @@ public class GameListAIHandler_Test implements GameListAIHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
-		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
+		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		if (exchange.getRequestMethod().toUpperCase().equals("GET")) {
-			if (Server.isDebugEnabled()) System.out.println("  /game/listAI");
+			Server.println("  /game/listAI");
 			HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, SAMPLE);
 		} else {
-			if (Server.isDebugEnabled()) System.out.println("  Bad request to /game/listAI.");
+			Server.println("  Bad request to /game/listAI.");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
 	}

@@ -5,6 +5,8 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter.DEFAULT;
+
 import catan.model.Model;
 import catan.server.GameListGames;
 import catan.server.Games;
@@ -18,9 +20,23 @@ public class GameHandler implements HttpHandler {
 	
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
-		String endPoint = exchange.getRequestURI().getPath();
-		System.out.println(endPoint);
-		// TODO switch statement
+		//TODO CHECK FOR BAD REQUESTS
+		String endpoint = exchange.getRequestURI().getPath();
+		System.out.println(endpoint);
+		switch (endpoint) {
+		case "/games/list":
+			listGames(exchange);
+			break;
+		case "/games/create":
+			createGame(exchange);
+			break;
+		case "/games/join":
+			joinGame(exchange);
+			break;
+		default: 
+			System.out.println("gameHandler. Endpoint: " + endpoint + ". Sent Bad request to user");
+			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
+		}
 	}
 	
 	private void createGame (HttpExchange exchange) {

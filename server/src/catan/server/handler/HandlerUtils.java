@@ -273,7 +273,7 @@ public class HandlerUtils {
 	private static void sendInputStream(HttpExchange exchange, int responseCode, InputStream data, long length) throws IOException {
 		if (exchange != null) {
 			if (data != null) {
-				if (Server.isDebugEnabled()) System.out.println("  Sending stream to client...");
+//				if (Server.isDebugEnabled()) System.out.println("  Sending stream to client...");
 				if (length == 0) {
 					sendEmptyBody(exchange, responseCode);
 				} else {
@@ -282,7 +282,7 @@ public class HandlerUtils {
 					// Send the data in chunks
 					int bytesToRead = (knownLength && length < BUFFER.length) ? (int) length : BUFFER.length;
 					int bytesRead;
-					long bytesWritten = 0;
+//					long bytesWritten = 0;
 					long bytesRemaining = knownLength ? length : 0;
 					while ((!knownLength || bytesRemaining > 0) && (bytesRead = data.read(BUFFER, 0, bytesToRead)) != -1) {
 						exchange.getResponseBody().write(BUFFER, 0, bytesRead);
@@ -292,18 +292,18 @@ public class HandlerUtils {
 								bytesToRead = (int) bytesRemaining;
 							}
 						}
-						if (Server.isDebugEnabled()) {
-							bytesWritten += bytesRead;
-							if (knownLength) {
-								System.out.println("    " + bytesWritten + " / " + length + " bytes sent ( " + 100 * bytesWritten / (double) length + " % ).");
-							} else {
-								System.out.println("    " + bytesWritten + " / ? bytes sent ( ? % ).");
-							}
-						}
+//						if (Server.isDebugEnabled()) {
+//							bytesWritten += bytesRead;
+//							if (knownLength) {
+//								System.out.println("    " + bytesWritten + " / " + length + " bytes sent ( " + 100 * bytesWritten / (double) length + " % ).");
+//							} else {
+//								System.out.println("    " + bytesWritten + " / ? bytes sent ( ? % ).");
+//							}
+//						}
 					}
 					// Close the connection
 					exchange.getResponseBody().close();
-					if (Server.isDebugEnabled()) System.out.println("  Done.");
+//					if (Server.isDebugEnabled()) System.out.println("  Done.");
 				}
 			} else {
 				sendEmptyBody(exchange, responseCode);

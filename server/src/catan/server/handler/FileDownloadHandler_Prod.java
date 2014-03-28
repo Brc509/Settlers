@@ -46,19 +46,19 @@ public class FileDownloadHandler_Prod implements FileDownloadHandler {
 		}
 		// Test for the proper request method
 		if (exchange.getRequestMethod().toUpperCase().equals("GET")) {
-			if (Server.isDebugEnabled()) {
-				System.out.println("  Resource requested: \"" + uri.toString() + "\".");
-				System.out.println("  Relative to root: \"" + relativePath + "\".");
-			}
+//			if (Server.isDebugEnabled()) {
+//				System.out.println("  Resource requested: \"" + uri.toString() + "\".");
+//				System.out.println("  Relative to root: \"" + relativePath + "\".");
+//			}
 			File target = new File(System.getProperty("user.dir") + "/" + root + relativePath);
 			// Test for target existence
 			if (target.exists()) {
 				if (target.isFile()) {
-					if (Server.isDebugEnabled()) System.out.println("  Resource is file.");
+//					if (Server.isDebugEnabled()) System.out.println("  Resource is file.");
 					// If the file has a trailing slash, redirect the client to the correct location
 					if (uri.getPath().endsWith("/")) {
 						String redirectStr = removeTailFromPath(uri, 1);
-						if (Server.isDebugEnabled()) System.out.println("  File has trailing slash. Redirecting client to \"" + redirectStr + "\".");
+//						if (Server.isDebugEnabled()) System.out.println("  File has trailing slash. Redirecting client to \"" + redirectStr + "\".");
 						exchange.getResponseHeaders().set("Location", redirectStr);
 						HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_MOVED_PERM);
 						return;
@@ -68,11 +68,11 @@ public class FileDownloadHandler_Prod implements FileDownloadHandler {
 					fileFound(exchange, target);
 					return;
 				} else if (target.isDirectory()) {
-					if (Server.isDebugEnabled()) System.out.println("  Resource is directory.");
+//					if (Server.isDebugEnabled()) System.out.println("  Resource is directory.");
 					// If the directory is missing a trailing slash, redirect the client to the correct location
 					if (!uri.getPath().endsWith("/")) {
 						String redirectStr = addTailToPath(uri, "/");
-						if (Server.isDebugEnabled()) System.out.println("  Directory is missing trailing slash. Redirecting client to \"" + redirectStr + "\".");
+//						if (Server.isDebugEnabled()) System.out.println("  Directory is missing trailing slash. Redirecting client to \"" + redirectStr + "\".");
 						exchange.getResponseHeaders().set("Location", redirectStr);
 						HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_MOVED_PERM);
 						return;
@@ -99,13 +99,13 @@ public class FileDownloadHandler_Prod implements FileDownloadHandler {
 	private void fileFound(HttpExchange exchange, File file) throws IOException {
 		// Generate ETag
 		String eTag = String.valueOf(file.lastModified());
-		if (Server.isDebugEnabled()) System.out.println("  ETag: \"" + eTag + "\".");
+//		if (Server.isDebugEnabled()) System.out.println("  ETag: \"" + eTag + "\".");
 		// Check for a requested ETag
 		if (exchange.getRequestHeaders().containsKey("If-None-Match")) {
 			String requestETag = exchange.getRequestHeaders().getFirst("If-None-Match");
 			// Report if the file has not been modified
 			if (requestETag.equals(eTag)) {
-				if (Server.isDebugEnabled()) System.out.println("  Client already has latest version.");
+//				if (Server.isDebugEnabled()) System.out.println("  Client already has latest version.");
 				HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_NOT_MODIFIED);
 				return;
 			}

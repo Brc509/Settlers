@@ -58,7 +58,7 @@ public class Model {
 		// TODO Auto-generated method stub
 	}
 
-	public boolean addPlayer(int orderNumber, int userID, String name, String color) {
+	public boolean setPlayer(int orderNumber, int userID, String name, String color) {
 		// TODO Auto-generated method stub
 		return false;
 	}

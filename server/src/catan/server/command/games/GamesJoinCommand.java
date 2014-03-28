@@ -3,7 +3,6 @@ package catan.server.command.games;
 import java.util.List;
 
 import catan.model.Model;
-import catan.model.Player;
 import catan.server.Games;
 import catan.server.RegisteredUser;
 import catan.server.RegisteredUsers;
@@ -29,12 +28,13 @@ public class GamesJoinCommand implements Command {
 
 	@Override
 	public Boolean execute(Object obj) {
-		boolean success = true;
+
+		boolean success = false;
+		// TODO This can't be hardcoded
 		int orderNumber = 0;
-		
-		
+
 		Model game = Games.get().getGames().get(gameID);
-		
+
 		if (game != null) {
 			List<RegisteredUser> users = RegisteredUsers.get().getUsers();
 			String name = null;
@@ -45,12 +45,12 @@ public class GamesJoinCommand implements Command {
 				}
 			}
 			if (name != null) {
-				success = game.addPlayer(orderNumber, userID, name, color);
+				success = game.setPlayer(orderNumber, userID, name, color);
 				if (Server.isDebugEnabled() && success) {
 					System.out.println("  \"" + name + "\" (" + userID + ") joined game " + gameID + " as \"" + color + "\".");
 				}
 			}
 		}
-		return true;
+		return success;
 	}
 }

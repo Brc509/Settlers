@@ -18,6 +18,7 @@ import catan.server.command.moves.MonumentCommand;
 import catan.server.command.moves.OfferTradeCommand;
 import catan.server.command.moves.RoadBuildingCommand;
 import catan.server.command.moves.RobPlayerCommand;
+import catan.server.command.moves.RollNumberCommand;
 import catan.server.command.moves.SendChatCommand;
 import catan.server.command.moves.SoldierCommand;
 import catan.server.command.moves.YearOfPlentyCommand;
@@ -37,16 +38,18 @@ public class MovesHandler implements HttpHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
+		int gameId = Integer.parseInt(HandlerUtils.getCookies(exchange).get("catan.game"));
+		String endpoint = exchange.getRequestURI().getPath();
 		String json = HandlerUtils.inputStreamToString(exchange.getRequestBody());
 		String commandType = getCommandType(json);
-		Class commandClass = null;
+		Class<? extends Command> commandClass = null;
 		
-		switch (commandType) {
+		switch (endpoint) {
 		case "/moves/sendChat":
 			commandClass = SendChatCommand.class;
 			break;
 		case "/moves/rollNumber":
-			commandClass = BuildCityCommand.class;
+			commandClass = RollNumberCommand.class;
 			break;
 		case "/moves/robPlayer":
 			commandClass = RobPlayerCommand.class;
@@ -100,7 +103,7 @@ public class MovesHandler implements HttpHandler {
 		}
 		
 		Command c = gson.fromJson(json, commandClass);
-		//Object Error = c.execute(gameId);
+		Object Error = c.execute(gameId);
 		
 		//if (error) send error response
 		//else { send back the model appropriate to the game }

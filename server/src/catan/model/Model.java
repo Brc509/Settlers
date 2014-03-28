@@ -137,10 +137,9 @@ public class Model {
 		
 		for (final JsonElement hexLocation : numbers) {
 			JsonObject location = gson.fromJson(hexLocation, JsonObject.class);
-			int x =  location.get("x").getAsInt() + 3;
-			int y =  location.get("y").getAsInt() + 3;
-			System.out.println("x,y : " + x + "," + y);
-			JsonArray vertexes = ((JsonObject)((JsonArray) hexes.get(y)).get(x)).getAsJsonArray("vertexes");
+			int x =  location.get("x").getAsInt();
+			int y =  location.get("y").getAsInt();
+			JsonArray vertexes = getVertexes(hexes, x, y);
 			for (final JsonElement vertex : vertexes) {
 				JsonElement value = ((JsonObject) vertex).get("value");
 				int ownerId = ((JsonObject)value).get("ownerID").getAsInt();
@@ -326,12 +325,11 @@ public class Model {
 		return hexes;
 	}
 	
-	private JsonObject getVertex () {
-		return null;
-	}
-	
-	private JsonArray getHexVertexes () {
-		return null;
+	private JsonArray getVertexes (JsonArray hexes, int HexX, int HexY) {
+		HexX += 3;
+		HexY += 3;
+		JsonArray vertexes = ((JsonObject)((JsonArray) hexes.get(HexY)).get(HexX)).getAsJsonArray("vertexes");
+		return vertexes;
 	}
 	
 	private JsonObject getEdge () {

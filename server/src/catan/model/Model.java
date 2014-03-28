@@ -141,6 +141,7 @@ public class Model {
 				int worth = ((JsonObject)value).get("worth").getAsInt();
 				if (ownerId != -1) {
 					System.out.println("Reward player: " + ownerId + " with " + worth + " of (resource?)");
+					System.out.println(getPlayerByIndex(playerIndex));
 					//TODO reward all of the players that are on the vertexes
 				}
 				else {

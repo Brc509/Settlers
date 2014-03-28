@@ -2,42 +2,105 @@ package catan.server.handler;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
+import java.util.List;
+import java.util.Map;
 
+import catan.server.Cookie;
+import catan.server.RegisteredUser;
+import catan.server.RegisteredUsers;
 import catan.server.Server;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 public class UserHandler implements HttpHandler {
 
+	private static final Gson gson = new Gson();
+
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
+
 		if (Server.isDebugEnabled()) System.out.println("\n" + this.getClass().getSimpleName() + ":");
+
+		// Check the request method
 		String requestMethod = exchange.getRequestMethod().toUpperCase();
 		if (requestMethod.equals("POST")) {
+
+			// Get the list of registered users
+			List<RegisteredUser> users = RegisteredUsers.get().getUsers();
+
+			// Get the incoming username and password
+			String requestBodyStr = HandlerUtils.inputStreamToString(exchange.getRequestBody());
+			Map<String, String> requestParams = HandlerUtils.decodeQueryString(requestBodyStr);
+			String username = requestParams.get("username");
+			String password = requestParams.get("password");
+
+			// Based on the request path, execute the appropriate operation
+			RegisteredUser user = null;
 			String endpoint = exchange.getRequestURI().getPath();
-			switch (endpoint) {
-				case "/user/login":
-					login(exchange);
-					break;
-				case "/user/register":
-					register(exchange);
-					break;
-				default:
-					if (Server.isDebugEnabled()) System.out.println("  Path not found: \"" + endpoint + "\".");
-					HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_NOT_FOUND);
+			if (endpoint.equals("/user/login")) {
+
+				// Login the user
+				user = login(exchange, users, username, password);
+
+			} else if (endpoint.equals("/user/register")) {
+
+				// Register the user
+				user = register(exchange, users, username, password);
+
+			} else {
+
+				// Invalid path
+				if (Server.isDebugEnabled()) System.out.println("  Path not found: \"" + endpoint + "\".");
+				HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_NOT_FOUND);
+				return;
 			}
+
+			// If the operation was successful, set the cookie and send the response
+			if (user != null) {
+				Cookie cookie = new Cookie(user.getName(), user.getPassword(), user.getPlayerID());
+				String cookieStr = URLEncoder.encode(gson.toJson(cookie), "UTF-8");
+				HandlerUtils.addCookie(exchange, "catan.user", cookieStr);
+				HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "Success");
+			} else {
+				if (Server.isDebugEnabled()) System.out.println("  Failed: \"" + endpoint + "\".");
+				HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_INTERNAL_ERROR);
+			}
+
 		} else {
 			if (Server.isDebugEnabled()) System.out.println("  Bad request method: \"" + requestMethod + "\".");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_METHOD);
 		}
 	}
 
-	private void login(HttpExchange exchange) {
-		// TODO
+	private RegisteredUser login(HttpExchange exchange, List<RegisteredUser> users, String username, String password) {
+
+		// If the user is registered, return the user
+		for (RegisteredUser user : users) {
+			if (user.getName().equals(username) && user.getPassword().equals(password)) {
+				return user;
+			}
+		}
+
+		return null;
 	}
 
-	private void register(HttpExchange exchange) {
-		// TODO
+	private RegisteredUser register(HttpExchange exchange, List<RegisteredUser> users, String username, String password) {
+
+		// Make sure the username is not already taken
+		for (RegisteredUser user : users) {
+			if (user.getName().equals(username)) {
+				return null;
+			}
+		}
+
+		// Register a new user
+		int userID = users.size();
+		RegisteredUser newUser = new RegisteredUser(username, password, userID);
+		users.add(newUser);
+
+		return newUser;
 	}
 }

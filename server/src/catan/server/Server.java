@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 
 import catan.server.handler.FileDownloadHandlerFactory;
 import catan.server.handler.HandlerModule_Prod;
+import catan.server.handler.UserHandler;
 import catan.server.handler.UtilChangeLogLevelHandler;
 import catan.server.handler.game.GameAddAIHandler;
 import catan.server.handler.game.GameCommandsHandler;
@@ -31,8 +32,6 @@ import catan.server.handler.moves.MovesRollNumberHandler;
 import catan.server.handler.moves.MovesSendChatHandler;
 import catan.server.handler.moves.MovesSoldierHandler;
 import catan.server.handler.moves.MovesYearOfPlentyHandler;
-import catan.server.handler.user.UserLoginHandler;
-import catan.server.handler.user.UserRegisterHandler;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -109,8 +108,9 @@ public class Server {
 		server.createContext("/", fdhFactory.create("/", "gameplay"));
 		server.createContext("/docs", fdhFactory.create("/docs", "docs"));
 		// Initialize API handlers
-		server.createContext("/user/login", injector.getInstance(UserLoginHandler.class));
-		server.createContext("/user/register", injector.getInstance(UserRegisterHandler.class));
+		server.createContext("/user", new UserHandler());
+//		server.createContext("/user/login", injector.getInstance(UserLoginHandler.class));
+//		server.createContext("/user/register", injector.getInstance(UserRegisterHandler.class));
 		server.createContext("/games/list", injector.getInstance(GamesListHandler.class));
 		server.createContext("/games/create", injector.getInstance(GamesCreateHandler.class));
 		server.createContext("/games/join", injector.getInstance(GamesJoinHandler.class));

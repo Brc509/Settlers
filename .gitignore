@@ -149,3 +149,7 @@ server/bin/catan/model/VertexValue.class
 server/bin/catan/model/Model.class
 server/bin/catan/model/Offer.class
 server/bin/catan/model/TradeOffer.class
+server/bin/catan/server/handler/GameHandler.class
+server/bin/catan/server/handler/GamesHandler.class
+server/bin/catan/server/handler/MovesHandler.class
+server/bin/catan/server/handler/UserHandler.class

@@ -27,10 +27,11 @@ public class Model {
 	}
 
 	private JsonObject model;
-	private String name;
+	private String gameName;
+	private int revision = 0;
 
 	public Model(String name, boolean randomTokens, boolean randomHexes, boolean randomPorts) {
-		this.name = name;
+		this.gameName = name;
 		try {
 			FileReader file = new FileReader(DEFAULTGAMEFILE);
 			model = gson.fromJson(file, JsonObject.class);
@@ -51,7 +52,7 @@ public class Model {
 	}
 
 	public String getName() {
-		return name;
+		return gameName;
 	}
 
 	public void initializeMap(boolean b, boolean c, boolean d) {
@@ -71,26 +72,21 @@ public class Model {
 	}
 
 	public JsonObject finishTurn(int playerIndex) {
-		int nextPlayer = model.get("turnTracker").getAsJsonObject().get("currentTurn").getAsInt();
+		JsonObject turnTracker = model.getAsJsonObject("turnTracker");
+		int nextPlayer = turnTracker.get("currentTurn").getAsInt();
 
 		System.out.println(model.get("players").getAsJsonArray().size());
 
 		if (nextPlayer < (model.get("players").getAsJsonArray().size()) - 1) {
 			nextPlayer++;
-		} else nextPlayer = 0;
+		} else { 
+			nextPlayer = 0; 
+		}
 
 		System.out.println(nextPlayer);
 
-		Gson g = new Gson();
-
-		model.getAsJsonObject("turnTracker").addProperty("currentTurn", nextPlayer);
-
-		String name = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().get("name").getAsString();
-		String message = name + "'s turn just ended";
-		addLogEntry(name, message);
-
-		System.out.println(model.toString());
-
+		turnTracker.addProperty("currentTurn", nextPlayer);
+		addLogEntry(playerIndex, "'s turn just ended");
 		return model;
 	}
 
@@ -122,9 +118,8 @@ public class Model {
 			if (movedRobberAndRobbed) {
 				// Add the log entry
 				JsonArray players = model.getAsJsonArray("players");
-				String name = players.get(playerIndex).getAsJsonObject().get("name").getAsString();
 				String victimName = players.get(victimIndex).getAsJsonObject().get("name").getAsString();
-				addLogEntry(name, name + " rolled a 7 and robbed " + victimName + ".");
+				addLogEntry(playerIndex, " rolled a 7 and robbed " + victimName + ".");
 				verdict = true;
 			}
 		}
@@ -143,18 +138,19 @@ public class Model {
 			for (final JsonElement vertex : vertexes) {
 				JsonElement value = ((JsonObject) vertex).get("value");
 				int ownerId = ((JsonObject)value).get("ownerID").getAsInt();
+				int worth = ((JsonObject)value).get("worth").getAsInt();
 				if (ownerId != -1) {
-					System.out.println(ownerId);
+					System.out.println("Reward player: " + ownerId + " with " + worth + " of (resource?)");
+					//TODO reward all of the players that are on the vertexes
 				}
 				else {
 					System.out.println("Nothing: " + ownerId);
 				}
-				
 			}
 		}
 		
-		//TODO reward all of the players that are on the vertexes
 		//TODO advance the turntracker: status changes to discarding, robbing, or playing
+		//TODO add this command to the log
 		return false;
 	}
 
@@ -191,9 +187,8 @@ public class Model {
 					deck.addProperty("soldier", oldDeckSoldier + 1);
 
 					// Add the log entry
-					String name = player.get("name").getAsString();
 					String victimName = players.get(victimIndex).getAsJsonObject().get("name").getAsString();
-					addLogEntry(name, name + " played a Soldier card and robbed " + victimName + ".");
+					addLogEntry(playerIndex, " played a Soldier card and robbed " + victimName + ".");
 
 					verdict = true;
 				}
@@ -286,8 +281,7 @@ public class Model {
 					deck.addProperty("yearOfPlenty", oldDeckYearOfPlenty + 1);
 
 					// Add the log entry
-					String name = player.get("name").getAsString();
-					addLogEntry(name, name + " played a Year of Plenty card.");
+					addLogEntry(playerIndex, " played a Year of Plenty card.");
 
 					// Innocent
 					verdict = true;
@@ -302,7 +296,7 @@ public class Model {
 	// *** MOVES METHODS END HERE *** //
 
 	public String getGameInfo(int id) {
-		String s = "{ \"title\": \"" + name + "\", \"id\": " + id + ", \"players\": " + model.get("players") + "}";
+		String s = "{ \"title\": \"" + gameName + "\", \"id\": " + id + ", \"players\": " + model.get("players") + "}";
 		return s;
 	}
 
@@ -332,6 +326,15 @@ public class Model {
 		return vertexes;
 	}
 	
+	private JsonObject getPlayerByIndex (int playerIndex) {
+		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
+		return player;
+	}
+	
+	private JsonObject getPlayerById (int id) {
+		return null;
+	}
+	
 	private JsonObject getEdge () {
 		return null;
 	}
@@ -340,8 +343,10 @@ public class Model {
 		return null;
 	}
 
-	private void addLogEntry(String source, String message) {
-		model.getAsJsonObject("log").getAsJsonArray("lines").add(createEntry(source, message));
+	private void addLogEntry(int playerIndex, String message) {
+		String name = getPlayerByIndex(playerIndex).get("name").getAsString();
+		message = name + message;
+		model.getAsJsonObject("log").getAsJsonArray("lines").add(createEntry(name, message));
 	}
 
 	private JsonElement createEntry(String source, String message) {

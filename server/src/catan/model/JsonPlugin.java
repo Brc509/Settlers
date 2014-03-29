@@ -86,6 +86,8 @@ public class JsonPlugin implements Model {
 			int playerID = playerObj.get("playerID").getAsInt();
 			if (playerID != -1) {
 				s += "{\"name\":\"" + name + "\",\"color\":\"" + color + "\",\"id\":" + playerID + "}";
+			} else {
+				s += "{}";
 			}
 			if (n < players.size()) {
 				s += ",";

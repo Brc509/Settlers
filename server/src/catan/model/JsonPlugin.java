@@ -235,6 +235,7 @@ public class JsonPlugin implements Model {
 		String name = getPlayerByIndex(playerIndex).getName();
 		message = name + message;
 		model.getAsJsonObject("log").getAsJsonArray("lines").add(createEntry(name, message));
+		revision ++;
 	}
 
 	@Override
@@ -242,6 +243,7 @@ public class JsonPlugin implements Model {
 
 		String name = getPlayerByIndex(playerIndex).getName();
 		model.getAsJsonObject("chat").getAsJsonArray("lines").add(createEntry(name, content));
+		revision ++;
 	}
 
 	private JsonElement createEntry(String source, String message) {

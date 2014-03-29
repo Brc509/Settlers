@@ -16,12 +16,12 @@ public class RollNumberCommand implements Command {
 	
 	@Override
 	public Object execute(Object gameId) {
-		System.out.println(type + playerIndex + number);
-		Model model = Games.get().getGames().get(gameId);
-		
+//		System.out.println(type + playerIndex + number);
+//		Model model = Games.get().getGames().get(gameId);
+//		
 //		JsonArray numbers = model.getNumbers(number);
 //		JsonArray hexes = model.getHexes();
-		
+//		
 //		for (HexLocation hexLocation : numbers) {
 //			JsonObject location = gson.fromJson(hexLocation, JsonObject.class);
 //			int x =  location.get("x").getAsInt();

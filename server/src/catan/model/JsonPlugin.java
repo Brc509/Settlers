@@ -75,8 +75,24 @@ public class JsonPlugin implements Model {
 	}
 
 	@Override
-	public String getGameInfo(int id) {
-		String s = "{ \"title\": \"" + gameName + "\", \"id\": " + id + ", \"players\": " + model.get("players") + "}";
+	public String getGamesListJSON(int id) {
+		String s = "{\"title\":\"" + gameName + "\",\"id\":" + id + ",\"players\":[";
+		JsonArray players = model.getAsJsonArray("players");
+		int n = 1;
+		for (JsonElement player : players) {
+			JsonObject playerObj = player.getAsJsonObject();
+			String name = playerObj.get("name").getAsString();
+			String color = playerObj.get("color").getAsString();
+			int playerID = playerObj.get("playerID").getAsInt();
+			if (playerID != -1) {
+				s += "{\"name\":\"" + name + "\",\"color\":\"" + color + "\",\"id\":" + playerID + "}";
+			}
+			if (n < players.size()) {
+				s += ",";
+			}
+			n++;
+		}
+		s += "]}";
 		return s;
 	}
 

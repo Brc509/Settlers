@@ -161,7 +161,7 @@ public class ModelTests {
 		}
 
 		@Override
-		public String getGameInfo(int id) {
+		public String getGamesListJSON(int id) {
 			// TODO Auto-generated method stub
 			return null;
 		}

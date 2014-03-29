@@ -14,7 +14,7 @@ public interface Model {
 
 	public String getModelJSONForRevision(int revision);
 
-	public String getGameInfo(int id);
+	public String getGamesListJSON(int id);
 
 	public String getName();
 

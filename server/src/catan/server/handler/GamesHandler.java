@@ -56,7 +56,7 @@ public class GamesHandler implements HttpHandler {
 		int gameNum = 1;
 		for (Map.Entry<Integer, Model> e : gameList.entrySet()) {
 			Model game = e.getValue();
-			jsonString += game.getGameInfo(e.getKey());
+			jsonString += game.getGamesListJSON(e.getKey());
 			if (gameNum < gameList.size()) {
 				jsonString += ",";
 			}

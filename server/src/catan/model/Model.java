@@ -35,6 +35,7 @@ public interface Model {
 	public Hex getHex(int x, int y);
 
 	public TurnTracker getTurnTracker();
+	public void setTurnTracker(TurnTracker track);
 
 	public int getSoldier();
 

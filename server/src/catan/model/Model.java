@@ -86,7 +86,7 @@ public class Model {
 		System.out.println(nextPlayer);
 
 		turnTracker.addProperty("currentTurn", nextPlayer);
-		addLogEntry(playerIndex, "'s turn just ended");
+//		addLogEntry(playerIndex, "'s turn just ended");
 		return model;
 	}
 
@@ -119,7 +119,7 @@ public class Model {
 				// Add the log entry
 				JsonArray players = model.getAsJsonArray("players");
 				String victimName = players.get(victimIndex).getAsJsonObject().get("name").getAsString();
-				addLogEntry(playerIndex, " rolled a 7 and robbed " + victimName + ".");
+//				addLogEntry(playerIndex, " rolled a 7 and robbed " + victimName + ".");
 				verdict = true;
 			}
 		}
@@ -134,7 +134,7 @@ public class Model {
 		boolean verdict = false;
 		if (playerIndex >= 0 && playerIndex < 4) {
 			String name = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().get("name").getAsString();
-			model.getAsJsonObject("chat").getAsJsonArray("lines").add(createEntry(name, content));
+//			model.getAsJsonObject("chat").getAsJsonArray("lines").add(createEntry(name, content));
 			verdict = true;
 		}
 		return verdict;
@@ -164,7 +164,7 @@ public class Model {
 
 					// Add the log entry
 					String victimName = players.get(victimIndex).getAsJsonObject().get("name").getAsString();
-					addLogEntry(playerIndex, " played a Soldier card and robbed " + victimName + ".");
+//					addLogEntry(playerIndex, " played a Soldier card and robbed " + victimName + ".");
 
 					verdict = true;
 				}
@@ -257,7 +257,7 @@ public class Model {
 					deck.addProperty("yearOfPlenty", oldDeckYearOfPlenty + 1);
 
 					// Add the log entry
-					addLogEntry(playerIndex, " played a Year of Plenty card.");
+//					addLogEntry(playerIndex, " played a Year of Plenty card.");
 
 					// Innocent
 					verdict = true;
@@ -280,56 +280,11 @@ public class Model {
 	public String toString() {
 		return model.toString();
 	}
-	
-	// ------------------------------
-	// AWESOME HELPER METHODS
-	// ------------------------------
-	
-	public JsonArray getNumbers (int number) {
-		JsonArray numbers = model.getAsJsonObject("map").getAsJsonObject("numbers").getAsJsonArray(Integer.toString(number));
-		return numbers;
-	}
-	
-	public JsonArray getHexes () {
-		JsonArray hexes =  model.getAsJsonObject("map").getAsJsonObject("hexGrid").getAsJsonArray("hexes");
-		return hexes;
-	}
-	
-	private JsonArray getVertexes (JsonArray hexes, int HexX, int HexY) {
-		HexX += 3;
-		HexY += 3;
-		JsonArray vertexes = ((JsonObject)((JsonArray) hexes.get(HexY)).get(HexX)).getAsJsonArray("vertexes");
-		return vertexes;
-	}
-	
-	private JsonObject getPlayerByIndex (int playerIndex) {
-		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
-		return player;
-	}
-	
-	private JsonObject getPlayerById (int id) {
-		return null;
-	}
-	
-	private JsonObject getEdge () {
-		return null;
-	}
-	
-	private JsonObject[] getEdgesHexes () {
-		return null;
-	}
-
-	private void addLogEntry(int playerIndex, String message) {
-		String name = getPlayerByIndex(playerIndex).get("name").getAsString();
-		message = name + message;
-		model.getAsJsonObject("log").getAsJsonArray("lines").add(createEntry(name, message));
-	}
-
-	private JsonElement createEntry(String source, String message) {
-		return gson.fromJson("{\"source\":\"" + source + "\",\"message\":\"" + message + "\"}", JsonElement.class);
-	}
 
 	public JsonObject buildSettlement(int playerIndex) {
-		return model;
+		// TODO Auto-generated method stub
+		return null;
 	}
+	
+	
 }

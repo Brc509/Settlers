@@ -101,7 +101,10 @@ var GameMenu = (function makeMenuView_Class(){
             override_submit(
                     "#join-game-form",
                     function(){console.log("Here");window.location.pathname = "/playerWaiting.html";},
-                    function(failure){alert(failure || "Server Error")}
+                    function(failure){
+                    	alert("broken fool!", failure);
+                    	// alert(failure || "Server Error")
+                	}
                 )
                 
 			return ractive;

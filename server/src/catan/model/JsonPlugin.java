@@ -31,11 +31,22 @@ public class JsonPlugin implements Model {
 	private JsonObject model;
 	private String gameName;
 	private int revision = 0;
-
+	
 	public JsonPlugin() {
 
 		try {
 			FileReader file = new FileReader(NEWGAMEFILE);
+			model = gson.fromJson(file, JsonObject.class);
+			System.out.println(model);
+			file.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public JsonPlugin(boolean defaultGame) {
+		try {
+			FileReader file = new FileReader(DEFAULTGAMEFILE);
 			model = gson.fromJson(file, JsonObject.class);
 			System.out.println(model);
 			file.close();

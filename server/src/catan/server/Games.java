@@ -15,7 +15,7 @@ public class Games {
 	private Games() {
 
 		games = new HashMap<Integer, Model>();
-		Model newGame = new JsonPlugin();
+		Model newGame = new JsonPlugin(true);
 		newGame.initGame("Default Game", false, false, false);
 		games.put(1, newGame);
 	}

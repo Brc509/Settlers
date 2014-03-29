@@ -28,13 +28,13 @@ public class GamesHandler implements HttpHandler {
 		try {
 			switch (endpoint) {
 			case "/games/list":
-				if (checkRequestMethod("GET", exchange)){ listGames(exchange); }
+				if (HandlerUtils.checkRequestMethod("GET", exchange)){ listGames(exchange); }
 				break;
 			case "/games/create":
-				if (checkRequestMethod("POST", exchange)){ createGame(exchange); }
+				if (HandlerUtils.checkRequestMethod("POST", exchange)){ createGame(exchange); }
 				break;
 			case "/games/join":
-				if (checkRequestMethod("POST", exchange)){ joinGame(exchange); }
+				if (HandlerUtils.checkRequestMethod("POST", exchange)){ joinGame(exchange); }
 				break;
 			default: 
 				System.out.println("gameHandler. Endpoint: " + endpoint + ". Sent Bad Request");
@@ -116,16 +116,6 @@ public class GamesHandler implements HttpHandler {
 			HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "Success! You have joined the game.");
 		} else {
 			HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_INTERNAL_ERROR, "Failed to join game.");
-		}
-	}
-	
-	private boolean checkRequestMethod (String type, HttpExchange exchange) throws IOException {
-		if (exchange.getRequestMethod().toUpperCase().equals(type)) {
-			return true;
-		} else {
-			Server.println("  Bad request to /games/list." + exchange.getRequestMethod().toUpperCase());
-			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
-			return false;
 		}
 	}
 }

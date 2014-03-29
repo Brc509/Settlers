@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -113,6 +114,23 @@ public class HandlerUtils {
 			}
 		}
 		return authorized;
+	}
+	
+	/**
+	 * Checks if request type is correct.  Sends bad request if not correct.
+	 * @param type
+	 * @param exchange
+	 * @return true if correct; false if incorrect
+	 * @throws IOException
+	 */
+	public static boolean checkRequestMethod (String type, HttpExchange exchange) throws IOException {
+		if (exchange.getRequestMethod().toUpperCase().equals(type)) {
+			return true;
+		} else {
+			Server.println("  Bad request to /games/list." + exchange.getRequestMethod().toUpperCase());
+			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
+			return false;
+		}
 	}
 
 	/**

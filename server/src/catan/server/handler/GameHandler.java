@@ -1,7 +1,11 @@
 package catan.server.handler;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.util.Map;
 
+import catan.model.Model;
+import catan.server.Games;
 import catan.server.Server;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -19,9 +23,32 @@ public class GameHandler implements HttpHandler {
 		String endpoint = exchange.getRequestURI().getPath();
 		if (endpoint.equals("/game/model") && requestMethod.equals("GET")) {
 
-			String query = exchange.getRequestURI().getQuery();
-			System.out.println(query);
+			Server.println("  /game/model");
+			int gameID = Integer.parseInt(HandlerUtils.getCookies(exchange).get("catan.game"));
+			Model game = Games.get().getGames().get(gameID);
+
+			// Find the specified revision (if any)
+			Integer revision = null;
+			String queryStr = exchange.getRequestURI().getQuery();
+			if (queryStr != null) {
+				Map<String, String> queryParams = HandlerUtils.decodeQueryString(exchange.getRequestURI().getQuery());
+				if (queryParams.containsKey("revision")) {
+					try {
+						revision = Integer.parseInt(queryParams.get("revision"));
+					} catch (NumberFormatException e) {
+						Server.println("  Client specified invalid revision.");
+					}
+				}
+			}
+
+			// Send the appropriate response
+			if (revision != null) {
+				Server.println("  Client has revision " + revision + ".");
+				HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, game.getModelJSONForRevision(revision));
+			} else {
+				Server.println("  Client did not specify revision.");
+				HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, game.getModelJSON());
+			}
 		}
 	}
-
 }

@@ -1,6 +1,5 @@
 package catan.test;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
@@ -11,7 +10,6 @@ import org.junit.Test;
 
 import catan.model.Hex;
 import catan.model.HexLocation;
-import catan.model.JsonPlugin;
 import catan.model.Model;
 import catan.model.Number;
 import catan.model.Player;
@@ -144,14 +142,14 @@ public class ModelTests {
 //			super("TestGame", false, false, false);
 		}
 
+		@Override
 		public JsonObject getModel() {
 //			return super.getModel();
 			return null;
 		}
 
 		@Override
-		public boolean setPlayer(int orderNumber, int userID, String name,
-				String color) {
+		public boolean setPlayer(int orderNumber, int userID, String name, String color) {
 			// TODO Auto-generated method stub
 			return false;
 		}
@@ -159,7 +157,7 @@ public class ModelTests {
 		@Override
 		public void initializeMap(boolean b, boolean c, boolean d) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
@@ -189,7 +187,7 @@ public class ModelTests {
 		@Override
 		public void addLogEntry(int playerIndex, String message) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
@@ -219,7 +217,7 @@ public class ModelTests {
 		@Override
 		public void initGame(String string, boolean b, boolean c, boolean d) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
@@ -237,7 +235,25 @@ public class ModelTests {
 		@Override
 		public void addChatEntry(int playerIndex, String content) {
 			// TODO Auto-generated method stub
-			
+
+		}
+
+		@Override
+		public String getModelJSON() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public String getModelJSONForRevision(int revision) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void setTurnTracker(TurnTracker track) {
+			// TODO Auto-generated method stub
+
 		}
 	}
 }

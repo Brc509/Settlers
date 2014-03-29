@@ -64,7 +64,7 @@ public class JsonPlugin implements Model {
 	@Override
 	public String getModelJSONForRevision(int revision) {
 		if (revision == this.revision) {
-			return "true";
+			return "\"true\"";
 		}
 		return getModelJSON();
 	}
@@ -223,5 +223,11 @@ public class JsonPlugin implements Model {
 	public int getSoldier() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public void setTurnTracker(TurnTracker track) {
+		// TODO Auto-generated method stub
+
 	}
 }

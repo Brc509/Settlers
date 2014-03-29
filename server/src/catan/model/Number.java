@@ -1,6 +1,10 @@
 package catan.model;
 
-public class Number {
-	//TODO make this the numbers from the model (or tokens what ever you call them)
+import java.util.ArrayList;
 
+public class Number {
+	
+	int number;
+	ArrayList<HexLocation> locations;
+	public Number() {}
 }

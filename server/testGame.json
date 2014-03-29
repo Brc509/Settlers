@@ -3283,7 +3283,7 @@
       largestArmy: false,
       playedDevCard: false,
       discarded: false,
-      playerID: 10,
+      playerID: 2,
       orderNumber: 2,
       name: "Pete",
       color: "red"
@@ -3321,7 +3321,7 @@
       largestArmy: false,
       playedDevCard: false,
       discarded: false,
-      playerID: 11,
+      playerID: 3,
       orderNumber: 3,
       name: "Mark",
       color: "green"

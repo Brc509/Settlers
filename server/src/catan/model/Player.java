@@ -21,13 +21,40 @@ public class Player {
 	private int victoryPoints;
 	private Integer MAX_GAME_POINTS;
 	
+	public String toString() {
+		
+		String returnString = "{\n";
+		returnString += "cities: " + cities + "\n"; 
+		returnString += "color: " + color + "\n";
+		returnString += "discarded: " + discarded + "\n";
+		returnString += "largestArmy: " + largestArmy + "\n";
+		returnString += "longestRoad: " + longestRoad + "\n";
+		returnString += "monuments: " + monuments + "\n";
+		returnString += "name: " + name + "\n";
+		returnString += "newDevCards\n" + newDevCards.toString() + "\n";
+		returnString += "oldDevCards\n" + oldDevCards.toString() + "\n";
+		returnString += "orderNumber: " + orderNumber + "\n";
+		returnString += "playedDevCard: " + playedDevCard + "\n";
+		returnString += "playerID: " + playerID + "\n";
+		returnString += "resources\n" + resources.toString() + "\n";
+		returnString += "roads: " + roads + "\n";
+		returnString += "settlements: " + settlements + "\n";
+		returnString += "soldiers: " + soldiers + "\n";
+		returnString += "victoryPoints: " + victoryPoints + "\n";
+		returnString += "MAX_GAME_POINTS: " + MAX_GAME_POINTS + "\n";
+		returnString += "}\n";
+		return returnString;
+	}
+	
 	/**
 	 * Constructs a new player
 	 * @param order The index number of this player (0-3)
 	 */
-	public Player(){
+	public Player() {
+		
 		playerID = null;
 	}
+	
 	public Player(int order, int id, String color, String name) {
 		
 		this.color = color;

@@ -14,7 +14,17 @@ public class ResourceList {
 	 */
 	public ResourceList() {}
 
-
+	public String  toString() {
+		
+		String returnString = "{\n";
+		returnString += "\tbrick: " + brick + "\n";
+		returnString += "\tore: " + ore + "\n";
+		returnString += "\tsheep: " + sheep + "\n";
+		returnString += "\twheat: " + wheat + "\n";
+		returnString += "\twood: " + wood + "\n";
+		returnString += "}";
+		return returnString;
+	}
 	
 	/**
 	 * Initialize the resource list with pre-defined resource values

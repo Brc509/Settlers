@@ -78,4 +78,16 @@ public class DevCardList {
 	public void setYearOfPlenty(int yearOfPlenty) {
 		this.yearOfPlenty = yearOfPlenty;
 	}
+	
+	public String toString() {
+		
+		String returnString = "{\n";
+		returnString += "\tmonopoly: " + monopoly + "\n";
+		returnString += "\tmonument: " + monument + "\n";
+		returnString += "\troadBuilding: " + roadBuilding + "\n";
+		returnString += "\tsoldier: " + soldier + "\n";
+		returnString += "\tyearOfPlenty: " + yearOfPlenty + "\n";
+		returnString += "}";
+		return returnString;
+	}
 }

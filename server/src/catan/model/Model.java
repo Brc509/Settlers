@@ -43,4 +43,6 @@ public interface Model {
 	public void setTurnTracker(TurnTracker track);
 
 	public void updatePlayer(int playerIndex, Player player);
+
+	void rollNumber(int number);
 }

@@ -1,24 +1,20 @@
 package catan.server.command.moves;
 
+import catan.model.EdgeLocation;
 import catan.server.command.Command;
 
-import com.google.gson.JsonObject;
-import com.sun.net.httpserver.HttpExchange;
+public class BuildRoadCommand implements Command {
 
-public class BuildRoadCommand implements Command{
-	
-	HttpExchange arg0;
-	JsonObject json;
+	private String type;
+	private int playerIndex;
+	private EdgeLocation roadLocation;
+	private boolean free;
 
-	public BuildRoadCommand(HttpExchange arg0,JsonObject json){
-		// TODO Auto-generated constructor stub
-		this.arg0 = arg0;
-		this.json = json;
-		//execute();
-	}
+	public BuildRoadCommand() {}
 
 	@Override
 	public Object execute(Object obj) {
+		int gameID = (Integer) obj;
 		// TODO Auto-generated method stub
 		return null;
 	}

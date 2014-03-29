@@ -33,8 +33,8 @@ public class BuildCityCommand implements Command {
 		{
 			ResourceList playerList = currPlayer.getResources();
 			
-			playerList.setOre(playerList.getOre()+3);
-			playerList.setWheat(playerList.getWheat()+2);
+			playerList.setOre(playerList.getOre()-3);
+			playerList.setWheat(playerList.getWheat()-2);
 			
 			int ore = model.getModel().get("bank").getAsJsonObject().get("ore").getAsInt();
 			model.getModel().get("bank").getAsJsonObject().addProperty("ore", ore+3);

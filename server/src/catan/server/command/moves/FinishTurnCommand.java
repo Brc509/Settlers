@@ -1,6 +1,7 @@
 package catan.server.command.moves;
 
 import catan.model.Model;
+import catan.model.Player;
 import catan.model.TurnTracker;
 import catan.server.Games;
 import catan.server.command.Command;
@@ -23,6 +24,11 @@ public class FinishTurnCommand implements Command{
 		
 		track.setCurrentTurn((track.getCurrentTurn()+1)%4);
 		model.setTurnTracker(track);
+		
+		Player finishPlayer = model.getPlayerByIndex(playerIndex);
+		String message = finishPlayer.getName()+"'s turn has ended.";
+		
+		model.addLogEntry(playerIndex, message);
 
 		return null;
 	}

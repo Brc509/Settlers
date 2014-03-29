@@ -110,7 +110,8 @@ public class GamesHandler implements HttpHandler {
 		Map<String, String> formdata = HandlerUtils.decodeQueryString(formdataStr);
 		String color = formdata.get("color");
 		int gameID = Integer.parseInt(formdata.get("id"));
-		GamesJoinCommand command = new GamesJoinCommand(HandlerUtils.getCookie(exchange).getId(), gameID, color);
+		String name = HandlerUtils.getCookie(exchange).getUsername();
+		GamesJoinCommand command = new GamesJoinCommand(HandlerUtils.getCookie(exchange).getId(), gameID, color, name);
 		if (command.execute(null)) {
 			HandlerUtils.addCookie(exchange, "catan.game", String.valueOf(gameID));
 			HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_OK, "Success! You have joined the game.");

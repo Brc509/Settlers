@@ -20,7 +20,7 @@ public interface Model {
 
 	public Player getPlayerByIndex(int playerIndex);
 
-	public Number[] getNumbers(int number);
+	public Hex[][] getHexes();
 
 	public Player[] getPlayers();
 
@@ -43,4 +43,6 @@ public interface Model {
 	public DevCardList getDeck();
 	
 	public void updatePlayer(int playerIndex, Player player);
+
+	void rollNumber(int number);
 }

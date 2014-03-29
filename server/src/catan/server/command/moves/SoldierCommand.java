@@ -72,16 +72,16 @@ public class SoldierCommand implements Command {
 		HexLocation robber = game.getRobberPosition();
 	
 		// Make sure robber is moved from last location
-		int oldX = Integer.parseInt(robber.getX());
-		int oldY = Integer.parseInt(robber.getY());
+		String oldX = robber.getX();
+		String oldY = robber.getY();
 		
 		// If the new robber location doesn't exactly match the old robber location (it shouldn't)
-		if (!(oldX == Integer.parseInt(location.getX()) && oldY == Integer.parseInt(location.getY()))) {
+		if (!(oldX.equals(location.getX()) && oldY == location.getY())) {
 	
 			// Make sure victim is valid for new location
-			int newX = Integer.parseInt(location.getX());
-			int newY = Integer.parseInt(location.getY());
-			Hex newHex = game.getHex(newX, newY);
+			String newX = location.getX();
+			String newY = location.getY();
+			Hex newHex = game.getHex(new HexLocation(newX, newY));
 			Vertex[] vertexes = newHex.getVertexes();
 			boolean foundVictim = false;
 			for (Vertex v : vertexes) {

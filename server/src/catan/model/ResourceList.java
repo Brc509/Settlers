@@ -1,5 +1,9 @@
 package catan.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class ResourceList {
 
 	private int brick = 0;
@@ -86,5 +90,56 @@ public class ResourceList {
 
 	public void setWood(int wood) {
 		this.wood = wood;
+	}
+	
+	public String getRandomResource() {
+		
+		List<String> resources = new ArrayList<>();
+		for (int i = 0; i < brick; i++)
+			resources.add("brick");
+		for (int i = 0; i < ore; i++)
+			resources.add("ore");
+		for (int i = 0; i < sheep; i++)
+			resources.add("sheep");
+		for (int i = 0; i < wheat; i++)
+			resources.add("wheat");
+		for (int i = 0; i < wood; i++)
+			resources.add("wood");
+		
+		return resources.get(new Random().nextInt(resources.size()));
+	}
+	
+	public boolean decrementResource(String resourceName) {
+		
+		if (resourceName.equals("brick") && brick > 0)
+			brick--;
+		else if (resourceName.equals("ore") && ore > 0)
+			ore--;
+		else if (resourceName.equals("sheep") && sheep > 0)
+			sheep--;
+		else if (resourceName.equals("wheat") && wheat > 0)
+			wheat--;
+		else if (resourceName.equals("wood") && wood > 0)
+			wood--;
+		else
+			return false;
+		return true;
+	}
+	
+	public boolean incrementResource(String resourceName) {
+		
+		if (resourceName.equals("brick"))
+			brick++;
+		else if (resourceName.equals("ore"))
+			ore++;
+		else if (resourceName.equals("sheep"))
+			sheep++;
+		else if (resourceName.equals("wheat"))
+			wheat++;
+		else if (resourceName.equals("wood"))
+			wood++;
+		else
+			return false;
+		return true;
 	}
 }

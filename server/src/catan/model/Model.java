@@ -22,8 +22,6 @@ public interface Model {
 
 	public Number[] getNumbers(int number);
 
-	public Hex[][] getHexes();
-
 	public Player[] getPlayers();
 
 	public void addLogEntry(int playerIndex, String message);
@@ -32,12 +30,17 @@ public interface Model {
 
 	public HexLocation getRobberPosition();
 
-	public Hex getHex(int x, int y);
+	public Hex getHex(HexLocation location);
+	
+	public void setHex(HexLocation location, Hex hex);
 
 	public TurnTracker getTurnTracker();
+	
 	public void setTurnTracker(TurnTracker track);
 
-	public int getSoldier();
-
 	public void initGame(String string, boolean b, boolean c, boolean d);
+	
+	public DevCardList getDeck();
+	
+	public void updatePlayer(int playerIndex, Player player);
 }

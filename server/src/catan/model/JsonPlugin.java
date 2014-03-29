@@ -180,9 +180,8 @@ public class JsonPlugin implements Model {
 		JsonArray numbers = model.getAsJsonObject("map").getAsJsonObject("numbers").getAsJsonArray(Integer.toString(number));
 		return null;
 	}
-
-	@Override
-	public Hex[][] getHexes() {
+	
+	private Hex[][] getHexes() {
 
 		JsonArray jsonHexes = model.getAsJsonObject("map").getAsJsonObject("hexGrid").getAsJsonArray("hexes");
 		Type hexesType = new TypeToken<Hex[][]>() {}.getType();
@@ -209,23 +208,14 @@ public class JsonPlugin implements Model {
 	}
 
 	@Override
-	public Hex getHex(int x, int y) {
+	public Hex getHex(HexLocation location) {
 
-		Hex[][] hexes = getHexes();
-		for (int i = 0; i < hexes.length; i++) {
-
-			for (int j = 0; j < hexes[i].length; j++) {
-
-				HexLocation loc = hexes[i][j].getLocation();
-				if (Integer.parseInt(loc.getX()) == x && Integer.parseInt(loc.getY()) == y) return hexes[i][j];
-			}
-		}
+		//TODO
 		return null;
 	}
 
 	@Override
 	public TurnTracker getTurnTracker() {
-
 		JsonObject jsonTurnTracker = model.getAsJsonObject("turnTracker");
 		return gson.fromJson(jsonTurnTracker, TurnTracker.class);
 	}
@@ -249,15 +239,27 @@ public class JsonPlugin implements Model {
 	}
 
 	@Override
-	public int getSoldier() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public void setTurnTracker(TurnTracker track) {
 		JsonObject jsonTurnTracker = model.getAsJsonObject("turnTracker");
 		jsonTurnTracker.addProperty("status", track.getStatus());
 		jsonTurnTracker.addProperty("currentTurn", track.getCurrentTurn());
+	}
+	
+	@Override
+	public DevCardList getDeck() {
+		JsonObject jsonDeck = model.getAsJsonObject("deck");
+		return gson.fromJson(jsonDeck, DevCardList.class);
+	}
+
+	@Override
+	public void updatePlayer(int playerIndex, Player player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setHex(HexLocation location, Hex hex) {
+		// TODO Auto-generated method stub
+		
 	}
 }

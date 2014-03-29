@@ -1,17 +1,17 @@
-//package catan.server.command.moves;
-//
-//import com.google.gson.JsonArray;
-//import com.google.gson.JsonElement;
-//import com.google.gson.JsonObject;
-//
-//import catan.model.HexLocation;
-//import catan.model.Model;
-//import catan.model.Vertex;
-//import catan.model.VertexValue;
-//import catan.server.Games;
-//import catan.server.command.Command;
-//
-//public class RobPlayerCommand implements Command {
+package catan.server.command.moves;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import catan.model.HexLocation;
+import catan.model.Model;
+import catan.model.Vertex;
+import catan.model.VertexValue;
+import catan.server.Games;
+import catan.server.command.Command;
+
+public class RobPlayerCommand implements Command {
 //
 //	private String type;
 //	private int playerIndex;
@@ -72,4 +72,4 @@
 //		return verdict;
 //	}
 //
-//}
+}

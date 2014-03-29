@@ -9,7 +9,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-public class JsonPlugin implements Plugin {
+public class JsonPlugin implements Model {
 	
 	private static final String NEWGAMEFILE = "server/newGame.json";
 	private static final String DEFAULTGAMEFILE = "server/defaultGame.json";
@@ -41,6 +41,34 @@ public class JsonPlugin implements Plugin {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public JsonObject getModel() {
+		return model;
+	}
+
+	@Override
+	public String getName() {
+		return gameName;
+	}
+	
+	@Override
+	public String getGameInfo(int id) {
+		String s = "{ \"title\": \"" + gameName + "\", \"id\": " + id + ", \"players\": " + model.get("players") + "}";
+		return s;
+	}
+	
+	@Override 
+	public boolean setPlayer(int orderNumber, int userID, String name, String color) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	@Override
+	public void initializeMap(boolean b, boolean c, boolean d) {
+		// TODO Auto-generated method stub
+	}
+
 
 	@Override
 	public Player getPlaleryByIndex(int playerIndex) {
@@ -97,7 +125,7 @@ public class JsonPlugin implements Plugin {
 		return null;
 	}
 
-	private void addLogEntry(int playerIndex, String message) {
+	public void addLogEntry(int playerIndex, String message) {
 		String name = getPlayerByIndex(playerIndex).get("name").getAsString();
 		message = name + message;
 		model.getAsJsonObject("log").getAsJsonArray("lines").add(createEntry(name, message));
@@ -115,5 +143,40 @@ public class JsonPlugin implements Plugin {
 	public Player[] getPlayers() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public String toString() {
+		return model.toString();
+	}
+
+	@Override
+	public HexLocation getRobberPosition() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Hex getHex(int x, int y) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TurnTracker getTurnTracker() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void createChatEntry(String name, String content) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getSoldier() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

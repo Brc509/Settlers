@@ -224,4 +224,10 @@ public class JsonPlugin implements Model {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public void setTurnTracker(TurnTracker track) {
+		// TODO Auto-generated method stub
+		
+	}
 }

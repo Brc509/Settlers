@@ -239,5 +239,23 @@ public class ModelTests {
 			// TODO Auto-generated method stub
 			
 		}
+
+		@Override
+		public String getModelJSON() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public String getModelJSONForRevision(int revision) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void setTurnTracker(TurnTracker track) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 }

@@ -64,7 +64,7 @@ public class JsonPlugin implements Model {
 	@Override
 	public String getModelJSONForRevision(int revision) {
 		if (revision == this.revision) {
-			return "true";
+			return "\"true\"";
 		}
 		return getModelJSON();
 	}

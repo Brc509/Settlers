@@ -35,7 +35,7 @@ public class JsonPlugin implements Model {
 	public JsonPlugin() {
 
 		try {
-			FileReader file = new FileReader(DEFAULTGAMEFILE);
+			FileReader file = new FileReader(NEWGAMEFILE);
 			model = gson.fromJson(file, JsonObject.class);
 			System.out.println(model);
 			file.close();

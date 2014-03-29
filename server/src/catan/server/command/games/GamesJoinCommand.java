@@ -3,6 +3,7 @@ package catan.server.command.games;
 import java.util.List;
 
 import catan.model.Model;
+import catan.model.Player;
 import catan.server.Games;
 import catan.server.RegisteredUser;
 import catan.server.RegisteredUsers;
@@ -31,10 +32,18 @@ public class GamesJoinCommand implements Command {
 
 		boolean success = false;
 		// TODO This can't be hardcoded
-		int orderNumber = 0;
-
+		
 		Model game = Games.get().getGames().get(gameID);
-
+		Player[] players = game.getPlayers();
+		
+		int orderNumber = 0;
+		for(Player p : players){
+			String name = p.getName();
+			if(!p.getName().equals("") && p.getPlayerID() >= 0){
+				orderNumber++;
+			}
+		}
+		
 		if (game != null) {
 			List<RegisteredUser> users = RegisteredUsers.get().getUsers();
 			String name = null;

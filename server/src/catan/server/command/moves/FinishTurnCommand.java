@@ -24,11 +24,8 @@ public class FinishTurnCommand implements Command{
 		
 		track.setCurrentTurn((track.getCurrentTurn()+1)%4);
 		model.setTurnTracker(track);
-		
-		Player finishPlayer = model.getPlayerByIndex(playerIndex);
-		String message = finishPlayer.getName()+"'s turn has ended.";
-		
-		model.addLogEntry(playerIndex, message);
+				
+		model.addLogEntry(playerIndex, "'s turn has ended.");
 
 		return null;
 	}

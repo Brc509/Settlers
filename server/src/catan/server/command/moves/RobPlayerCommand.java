@@ -12,15 +12,15 @@ import catan.server.Games;
 import catan.server.command.Command;
 
 public class RobPlayerCommand implements Command {
-//
-//	private String type;
-//	private int playerIndex;
-//	private int victimIndex;
-//	private HexLocation location;
-//	private Model model;
-//	
-//	@Override
-//	public Object execute(Object gameId) {
+
+	private String type;
+	private int playerIndex;
+	private int victimIndex;
+	private HexLocation location;
+	private Model model;
+	
+	@Override
+	public Object execute(Object gameId) {
 //		System.out.println(type + playerIndex + victimIndex + location.toString());
 //		model = Games.get().getGames().get(gameId);
 //		model.robPlayer(type, playerIndex, victimIndex, location);
@@ -70,6 +70,7 @@ public class RobPlayerCommand implements Command {
 //			}
 //		}
 //		return verdict;
-//	}
-//
+		return null;
+	}
+
 }

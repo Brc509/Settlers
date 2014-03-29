@@ -78,7 +78,8 @@ public class GamesHandler implements HttpHandler {
 		Boolean randomTiles = Boolean.parseBoolean(gameCreateInfoMap.get("randomTiles"));
 		Boolean randomPorts = Boolean.parseBoolean(gameCreateInfoMap.get("randomPorts"));
 		
-		Model model = new JsonPlugin(name, randomNumbers ,randomTiles, randomPorts);
+		Model model = new JsonPlugin();
+		model.initGame(name, randomNumbers ,randomTiles, randomPorts);
 			
 		Games catanGames = Games.get();
 		catanGames.addGame(model);

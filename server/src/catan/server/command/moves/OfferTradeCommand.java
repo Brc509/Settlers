@@ -17,7 +17,6 @@ public class OfferTradeCommand implements Command {
 		System.out.println(type + playerIndex + " " + receiver);
 		offer.testString();
 		Model model = Games.get().getGames().get(gameId);
-		model.offerTrade(type, playerIndex, offer, receiver);
 		return null;
 	}
 }

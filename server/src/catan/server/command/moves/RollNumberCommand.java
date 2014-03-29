@@ -18,7 +18,6 @@ public class RollNumberCommand implements Command {
 	public Object execute(Object gameId) {
 		System.out.println(type + playerIndex + number);
 		Model model = Games.get().getGames().get(gameId);
-		model.rollNumber(type, playerIndex, number);
 		
 //		JsonArray numbers = model.getNumbers(number);
 //		JsonArray hexes = model.getHexes();

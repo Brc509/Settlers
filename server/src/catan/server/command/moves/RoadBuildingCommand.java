@@ -16,7 +16,6 @@ public class RoadBuildingCommand implements Command {
 		// TODO Auto-generated method stub
 		System.out.println(type + playerIndex + spot1.toString() + spot2.toString());
 		Model model = Games.get().getGames().get(gameId);
-		model.roadBuilding(type, playerIndex, spot1, spot2);
 		return null;
 	}
 

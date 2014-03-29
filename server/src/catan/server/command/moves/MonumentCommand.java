@@ -13,7 +13,6 @@ public class MonumentCommand implements Command {
 		// TODO Auto-generated method stub
 		System.out.println(type + playerIndex);
 		Model model = Games.get().getGames().get(gameId);
-		model.monument(type, playerIndex);
 		return null;
 	}
 

@@ -13,7 +13,6 @@ public class MonopolyCommand implements Command{
 	public Object execute(Object gameId) {
 		System.out.println(type + resource + playerIndex);
 		Model model = Games.get().getGames().get(gameId);
-		model.monopoly(type, resource, playerIndex);
 		return null;
 	}
 }

@@ -1,36 +1,35 @@
-//package catan.server.command.moves;
-//
-//import com.google.gson.JsonArray;
-//import com.google.gson.JsonObject;
-//
-//import catan.model.DevCardList;
-//import catan.model.HexLocation;
-//import catan.model.Model;
-//import catan.model.Vertex;
-//import catan.model.VertexValue;
-//import catan.server.Games;
-//import catan.server.Server;
-//import catan.server.command.Command;
-//
-///**
-// * When executed, plays a Knight development card.
-// * 
-// * @author Spencer Bench
-// */
-//public class SoldierCommand implements Command {
-//
-//	private String type;
-//	private int playerIndex;
-//	private int victimIndex;
-//	private HexLocation location;
-//
-//	public SoldierCommand() {}
-//
-//	@Override
-//	public Boolean execute(Object obj) {
-//		Server.println("  Attempting to execute command \"" + type + "\".");
-//		Model game = Games.get().getGames().get(obj);
-//		return game.soldier(playerIndex, victimIndex, location);
+package catan.server.command.moves;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import catan.model.DevCardList;
+import catan.model.HexLocation;
+import catan.model.Model;
+import catan.model.Vertex;
+import catan.model.VertexValue;
+import catan.server.Games;
+import catan.server.Server;
+import catan.server.command.Command;
+
+/**
+ * When executed, plays a Knight development card.
+ * 
+ * @author Spencer Bench
+ */
+public class SoldierCommand implements Command {
+
+	private String type;
+	private int playerIndex;
+	private int victimIndex;
+	private HexLocation location;
+
+	public SoldierCommand() {}
+
+	@Override
+	public Boolean execute(Object obj) {
+		Server.println("  Attempting to execute command \"" + type + "\".");
+		Model game = Games.get().getGames().get(obj);
 //		
 //		boolean verdict = false;
 //		if (playerIndex >= 0 && playerIndex < 4 && victimIndex >= 0 && victimIndex < 4) {
@@ -96,6 +95,7 @@
 //		}
 //	}
 //	return verdict;
-//}
-//
-//}
+		return null;
+}
+
+}

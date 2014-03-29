@@ -29,40 +29,40 @@ public class GamesCreateHandler_Prod implements GamesCreateHandler {
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
 		Server.println("\n" + this.getClass().getSimpleName() + ":");
-		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
-			
-			InputStream headers = exchange.getRequestBody();
-			String gameCreateInfo = HandlerUtils.inputStreamToString(headers);
-			Map<String,String> gameCreateInfoMap = HandlerUtils.decodeQueryString(gameCreateInfo);
-			
-			String name = gameCreateInfoMap.get("name");
-			Boolean randomNumbers = Boolean.parseBoolean(gameCreateInfoMap.get("randomNumbers"));
-			Boolean randomTiles = Boolean.parseBoolean(gameCreateInfoMap.get("randomTiles"));
-			Boolean randomPorts = Boolean.parseBoolean(gameCreateInfoMap.get("randomPorts"));
-			
-			Model model = new Model(name, randomNumbers ,randomTiles, randomPorts);
-				
-			Games catanGames = Games.get();
-			catanGames.addGame(model);
-			
-			Gson gson = new Gson();
-			
-			ArrayList<GameListPlayer> glp = new ArrayList<GameListPlayer>();
-			for(int i = 0; i < 4; i++){
-				glp.add(new GameListPlayer());
-			}
-			
-			GameListGames g = new GameListGames(name, catanGames.getGames().size(), glp);
-			
-			String jsonString = gson.toJson(g);
-			
-			Server.println("  /games/create");
-			
-			HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, jsonString);
-			
-		} else {
-			Server.println("  Bad request to /games/create.");
-			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
-		}
+//		if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
+//			
+//			InputStream headers = exchange.getRequestBody();
+//			String gameCreateInfo = HandlerUtils.inputStreamToString(headers);
+//			Map<String,String> gameCreateInfoMap = HandlerUtils.decodeQueryString(gameCreateInfo);
+//			
+//			String name = gameCreateInfoMap.get("name");
+//			Boolean randomNumbers = Boolean.parseBoolean(gameCreateInfoMap.get("randomNumbers"));
+//			Boolean randomTiles = Boolean.parseBoolean(gameCreateInfoMap.get("randomTiles"));
+//			Boolean randomPorts = Boolean.parseBoolean(gameCreateInfoMap.get("randomPorts"));
+//			
+//			Model model = new Model(name, randomNumbers ,randomTiles, randomPorts);
+//				
+//			Games catanGames = Games.get();
+//			catanGames.addGame(model);
+//			
+//			Gson gson = new Gson();
+//			
+//			ArrayList<GameListPlayer> glp = new ArrayList<GameListPlayer>();
+//			for(int i = 0; i < 4; i++){
+//				glp.add(new GameListPlayer());
+//			}
+//			
+//			GameListGames g = new GameListGames(name, catanGames.getGames().size(), glp);
+//			
+//			String jsonString = gson.toJson(g);
+//			
+//			Server.println("  /games/create");
+//			
+//			HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, jsonString);
+//			
+//		} else {
+//			Server.println("  Bad request to /games/create.");
+//			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
+//		}
 	}
 }

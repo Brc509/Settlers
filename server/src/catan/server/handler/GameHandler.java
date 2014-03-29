@@ -3,6 +3,8 @@ package catan.server.handler;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
+import catan.model.Model;
+import catan.server.Games;
 import catan.server.Server;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -45,8 +47,10 @@ public class GameHandler implements HttpHandler {
 		
 	}
 	
-	private void getModel (HttpExchange exchange) {
-		
+	private void getModel (HttpExchange exchange) throws IOException {
+		int gameId = Integer.parseInt(HandlerUtils.getCookies(exchange).get("catan.game"));
+		Model model = Games.get().getGames().get(gameId);
+		HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, model.toString());
 	}
 	
 	private boolean checkRequestMethod (String type, HttpExchange exchange) throws IOException {

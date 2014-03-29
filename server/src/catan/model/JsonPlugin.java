@@ -82,7 +82,6 @@ public class JsonPlugin implements Model {
 
 	@Override
 	public boolean setPlayer(int orderNumber, int userID, String name, String color) {
-
 		boolean verdict = false;
 		if (0 <= orderNumber && orderNumber <= 3) {
 
@@ -93,6 +92,15 @@ public class JsonPlugin implements Model {
 			verdict = true;
 		}
 		return verdict;
+		//Is it guaranteed that the players will be in the order of their orderNumber?
+		/*
+		JsonArray players = model.getAsJsonArray("players");
+		for (JsonElement player : players) {
+			if (((JsonObject) player).get("playerID").getAsInt() == userID)
+				System.out.println("setPLAYER " + userID);
+		}
+		return false;
+		*/
 	}
 
 	@Override

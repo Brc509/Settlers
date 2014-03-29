@@ -9,8 +9,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import catan.model.Hex;
+import catan.model.HexLocation;
 import catan.model.JsonPlugin;
 import catan.model.Model;
+import catan.model.Number;
+import catan.model.Player;
+import catan.model.TurnTracker;
 
 import com.google.gson.JsonObject;
 
@@ -133,7 +138,7 @@ public class ModelTests {
 		return game.getModel().getAsJsonArray("players").get(playerIndex).getAsJsonObject();
 	}
 
-	private class TestGame extends JsonPlugin {
+	private class TestGame implements Model {
 
 		public TestGame() {
 //			super("TestGame", false, false, false);
@@ -142,6 +147,97 @@ public class ModelTests {
 		public JsonObject getModel() {
 //			return super.getModel();
 			return null;
+		}
+
+		@Override
+		public boolean setPlayer(int orderNumber, int userID, String name,
+				String color) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public void initializeMap(boolean b, boolean c, boolean d) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public String getGameInfo(int id) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public String getName() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Number[] getNumbers(int number) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Player[] getPlayers() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void addLogEntry(int playerIndex, String message) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public HexLocation getRobberPosition() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Hex getHex(int x, int y) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public TurnTracker getTurnTracker() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public int getSoldier() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public void initGame(String string, boolean b, boolean c, boolean d) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Player getPlayerByIndex(int playerIndex) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Hex[][] getHexes() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void addChatEntry(int playerIndex, String content) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 }

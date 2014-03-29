@@ -17,6 +17,11 @@ public class GameHandler implements HttpHandler {
 		// Based on the request path, execute the appropriate operation
 		String requestMethod = exchange.getRequestMethod().toUpperCase();
 		String endpoint = exchange.getRequestURI().getPath();
+		if (endpoint.equals("/game/model") && requestMethod.equals("GET")) {
+
+			String query = exchange.getRequestURI().getQuery();
+			System.out.println(query);
+		}
 	}
 
 }

@@ -1,9 +1,10 @@
 package catan.server.handler;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 
+import catan.model.Model;
+import catan.server.Games;
 import catan.server.command.Command;
 import catan.server.command.moves.AcceptTradeCommand;
 import catan.server.command.moves.BuildCityCommand;
@@ -25,16 +26,13 @@ import catan.server.command.moves.YearOfPlentyCommand;
 
 // GSON
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 public class MovesHandler implements HttpHandler {
-	
-	private Gson gson = new Gson ();
+
+	private Gson gson = new Gson();
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
@@ -43,7 +41,7 @@ public class MovesHandler implements HttpHandler {
 		String json = HandlerUtils.inputStreamToString(exchange.getRequestBody());
 		String commandType = getCommandType(json);
 		Class<? extends Command> commandClass = null;
-		
+
 		switch (endpoint) {
 		case "/moves/sendChat":
 			commandClass = SendChatCommand.class;
@@ -96,20 +94,23 @@ public class MovesHandler implements HttpHandler {
 		case "/moves/discardCards":
 			commandClass = DiscardCardsCommand.class;
 			break;
-		default: 
+		default:
 			System.out.println("MovesHandler. commandType: " + commandType + ". Sent Bad Request");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
-			return;  //DON'T DO ANYTHING ELSE
+			return; //DON'T DO ANYTHING ELSE
 		}
-		
+
 		Command c = gson.fromJson(json, commandClass);
-		Object Error = c.execute(gameId);
-		
+		Object error = c.execute(gameId);
+
 		//if (error) send error response
 		//else { send back the model appropriate to the game }
+		// TODO
+		Model game = Games.get().getGames().get(gameId);
+		HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, game.getModelJSON());
 	}
-	
-	private String getCommandType (String json) {
+
+	private String getCommandType(String json) {
 		JsonObject command = gson.fromJson(json, JsonObject.class);
 		String type = command.get("type").getAsString();
 		System.out.println("MovesHandler:COMMAND TYPE = " + type);

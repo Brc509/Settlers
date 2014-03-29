@@ -224,4 +224,11 @@ public class JsonPlugin implements Model {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public void setTurnTracker(TurnTracker track) {
+		JsonObject jsonTurnTracker = model.getAsJsonObject("turnTracker");
+		jsonTurnTracker.addProperty("status", track.getStatus());
+		jsonTurnTracker.addProperty("currentTurn", track.getCurrentTurn());
+	}
 }

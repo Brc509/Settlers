@@ -72,7 +72,7 @@ public class Model {
 	}
 
 	public JsonObject finishTurn(int playerIndex) {
-		return null;
+        return null;
 	}
 
 	public boolean maritimeTrade(String type, int playerIndex, int ratio, String inputResource, String outputResource) {
@@ -96,8 +96,9 @@ public class Model {
 	}
 
 	public boolean robPlayer(String type, int playerIndex, int victimIndex, HexLocation location) {
-		return false;
-	}
+        return false;
+    }
+		
 	
 	public boolean rollNumber ( String type, int playerIndex, int number) {
 		return true;
@@ -144,8 +145,9 @@ public class Model {
 
 	public boolean yearOfPlenty(int playerIndex, String resource1, String resource2) {
 
-		return false;
-	}
+        return false;
+    }
+
 
 	// *** MOVES METHODS END HERE *** //
 
@@ -158,56 +160,11 @@ public class Model {
 	public String toString() {
 		return model.toString();
 	}
-	
-	// ------------------------------
-	// AWESOME HELPER METHODS
-	// ------------------------------
-	
-	public JsonArray getNumbers (int number) {
-		JsonArray numbers = model.getAsJsonObject("map").getAsJsonObject("numbers").getAsJsonArray(Integer.toString(number));
-		return numbers;
-	}
-	
-	public JsonArray getHexes () {
-		JsonArray hexes =  model.getAsJsonObject("map").getAsJsonObject("hexGrid").getAsJsonArray("hexes");
-		return hexes;
-	}
-	
-	private JsonArray getVertexes (JsonArray hexes, int HexX, int HexY) {
-		HexX += 3;
-		HexY += 3;
-		JsonArray vertexes = ((JsonObject)((JsonArray) hexes.get(HexY)).get(HexX)).getAsJsonArray("vertexes");
-		return vertexes;
-	}
-	
-	private JsonObject getPlayerByIndex (int playerIndex) {
-		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
-		return player;
-	}
-	
-	private JsonObject getPlayerById (int id) {
-		return null;
-	}
-	
-	private JsonObject getEdge () {
-		return null;
-	}
-	
-	private JsonObject[] getEdgesHexes () {
-		return null;
-	}
-
-	private void addLogEntry(int playerIndex, String message) {
-		String name = getPlayerByIndex(playerIndex).get("name").getAsString();
-		message = name + message;
-		model.getAsJsonObject("log").getAsJsonArray("lines").add(createEntry(name, message));
-	}
-
-	private JsonElement createEntry(String source, String message) {
-		return gson.fromJson("{\"source\":\"" + source + "\",\"message\":\"" + message + "\"}", JsonElement.class);
-	}
 
 	public JsonObject buildSettlement(int playerIndex) {
-		return model;
+		// TODO Auto-generated method stub
+		return null;
 	}
+	
+	
 }

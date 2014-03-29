@@ -35,7 +35,7 @@ public class JsonPlugin implements Model {
 	public JsonPlugin() {
 
 		try {
-			FileReader file = new FileReader(DEFAULTGAMEFILE);
+			FileReader file = new FileReader(NEWGAMEFILE);
 			model = gson.fromJson(file, JsonObject.class);
 			System.out.println(model);
 			file.close();
@@ -243,6 +243,8 @@ public class JsonPlugin implements Model {
 
 	@Override
 	public void setTurnTracker(TurnTracker track) {
-		// TODO Auto-generated method stub
+		JsonObject jsonTurnTracker = model.getAsJsonObject("turnTracker");
+		jsonTurnTracker.addProperty("status", track.getStatus());
+		jsonTurnTracker.addProperty("currentTurn", track.getCurrentTurn());
 	}
 }

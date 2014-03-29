@@ -28,23 +28,35 @@ public class GameHandler implements HttpHandler {
 			}
 			break;
 		case "/game/reset":
+			if (HandlerUtils.checkRequestMethod("POST", exchange)) {
+				// TODO Reset game
+			}
 			break;
 		case "/game/commands":
+			String requestMethod = exchange.getRequestMethod().toUpperCase();
+			if (requestMethod.equals("GET")) {
+				// TODO Get commands
+			} else if (requestMethod.equals("POST")) {
+				// TODO Execute list of commands
+			} else {
+				Server.println("  Bad request to \"/game/commands\": \"" + exchange.getRequestMethod().toUpperCase() + "\".");
+				HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
+			}
 			break;
 		case "/game/AddAI":
+			if (HandlerUtils.checkRequestMethod("POST", exchange)) {
+				HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_INTERNAL_ERROR, "AI is not implemented.");
+			}
 			break;
 		case "/game/listAI":
+			if (HandlerUtils.checkRequestMethod("GET", exchange)) {
+				HandlerUtils.sendString(exchange, HttpURLConnection.HTTP_INTERNAL_ERROR, "AI is not implemented.");
+			}
 			break;
 		default:
 			System.out.println("gameHandler. Endpoint: " + endpoint + ". Sent Bad Request");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 		}
-		//game/model
-		//game/reset
-		//game/commands
-		//game/AddAI
-		//game/listAI
-
 	}
 
 	private void gameModel(HttpExchange exchange) throws IOException {

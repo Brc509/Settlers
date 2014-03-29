@@ -23,6 +23,7 @@ public class FinishTurnCommand implements Command{
 		TurnTracker track = model.getTurnTracker();
 		
 		track.setCurrentTurn((track.getCurrentTurn()+1)%4);
+		track.setStatus("Rolling");
 		model.setTurnTracker(track);
 				
 		model.addLogEntry(playerIndex, "'s turn has ended.");

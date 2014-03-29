@@ -20,8 +20,19 @@ public class SendChatCommand implements Command {
 
 	@Override
 	public Boolean execute(Object obj) {
-		Server.println("  Attempting to execute command \"" + type + "\".");
-		Model game = Games.get().getGames().get(obj);
-		return game.sendChat(playerIndex, content);
+//		Server.println("  Attempting to execute command \"" + type + "\".");
+//		Model game = Games.get().getGames().get(obj);
+////		return game.sendChat(playerIndex, content);
+//		
+//		boolean verdict = false;
+//		if (playerIndex >= 0 && playerIndex < 4) {
+//			String name = model.getPlayers()[playerIndex].getName();
+////			model.getAsJsonObject("chat").getAsJsonArray("lines").add(createEntry(name, content));
+//			model.createChatEntry(name, content);
+//			verdict = true;
+//		}
+//		return verdict;
+//	}
+		return false;
 	}
 }

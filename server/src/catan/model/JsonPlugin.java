@@ -30,8 +30,8 @@ public class JsonPlugin implements Model {
 	private String gameName;
 	private int revision = 0;
 
-	public JsonPlugin(String name, boolean randomTokens, boolean randomHexes, boolean randomPorts) {
-		this.gameName = name;
+	public JsonPlugin() {
+		
 		try {
 			FileReader file = new FileReader(DEFAULTGAMEFILE);
 			model = gson.fromJson(file, JsonObject.class);
@@ -40,6 +40,10 @@ public class JsonPlugin implements Model {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void initGame (String name, boolean randomTokens, boolean randomHexes, boolean randomPorts) {
+		this.gameName = name;
 	}
 	
 	@Override

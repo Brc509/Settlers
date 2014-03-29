@@ -3,7 +3,7 @@ package catan.model;
 import com.google.gson.JsonObject;
 
 public interface Model {
-	
+		
 	public boolean setPlayer(int orderNumber, int userID, String name, String color);
 	public void initializeMap(boolean b, boolean c, boolean d);
 	public JsonObject getModel();
@@ -21,6 +21,7 @@ public interface Model {
 	public TurnTracker getTurnTracker();
 	public void createChatEntry(String name, String content);
 	public int getSoldier();
+	public void initGame(String string, boolean b, boolean c, boolean d);
 
 
 }

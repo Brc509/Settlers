@@ -315,4 +315,28 @@ public class JsonPlugin implements Model {
 	public void setDeck(DevCardList deck) {
 		model.add("deck", gson.toJsonTree(deck));
 	}
+
+	@Override
+	public DevCardList getPlayerNewDevCards(int playerIndex) {
+		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
+		return gson.fromJson(player.get("newDevCards"), DevCardList.class);
+	}
+
+	@Override
+	public DevCardList getPlayerOldDevCards(int playerIndex) {
+		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
+		return gson.fromJson(player.get("oldDevCards"), DevCardList.class);
+	}
+
+	@Override
+	public void setPlayerNewDevCards(int playerIndex, DevCardList newDevCards) {
+		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
+		player.add("newDevCards", gson.toJsonTree(newDevCards));
+	}
+
+	@Override
+	public void setPlayerOldDevCards(int playerIndex, DevCardList oldDevCards) {
+		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
+		player.add("oldDevCards", gson.toJsonTree(oldDevCards));
+	}
 }

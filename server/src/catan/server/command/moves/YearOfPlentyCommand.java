@@ -1,5 +1,6 @@
 package catan.server.command.moves;
 
+import catan.model.DevCardList;
 import catan.model.Model;
 import catan.model.ResourceList;
 import catan.server.Games;
@@ -49,6 +50,9 @@ public class YearOfPlentyCommand implements Command {
 				bank.setWood(bank.getWood() - 1);
 			}
 		}
+
+		DevCardList deck = game.getDeck();
+		deck.setYearOfPlenty(deck.getYearOfPlenty() + 1);
 
 		return null;
 //		Server.println("  Attempting to execute command \"" + type + "\".");

@@ -28,11 +28,13 @@ public interface Model {
 
 	public String getName();
 
-	public Number[] getNumbers(int number);
-
 	public Player getPlayerByIndex(int playerIndex);
 
 	public ResourceList getPlayerResources(int playerIndex);
+
+	public DevCardList getPlayerNewDevCards(int playerIndex);
+
+	public DevCardList getPlayerOldDevCards(int playerIndex);
 
 	public Player[] getPlayers();
 
@@ -51,6 +53,10 @@ public interface Model {
 	public boolean setPlayer(int orderNumber, int userID, String name, String color);
 
 	public void setPlayerResources(int playerIndex, ResourceList resources);
+
+	public void setPlayerNewDevCards(int playerIndex, DevCardList newDevCards);
+
+	public void setPlayerOldDevCards(int playerIndex, DevCardList oldDevCards);
 
 	public void setTurnTracker(TurnTracker track);
 

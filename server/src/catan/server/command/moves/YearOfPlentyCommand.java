@@ -4,6 +4,7 @@ import catan.model.DevCardList;
 import catan.model.Model;
 import catan.model.ResourceList;
 import catan.server.Games;
+import catan.server.Server;
 import catan.server.command.Command;
 
 /**
@@ -23,15 +24,19 @@ public class YearOfPlentyCommand implements Command {
 	@Override
 	public Boolean execute(Object obj) {
 
-		int gameID = (Integer) obj;
+		Server.println("Executing command: \"" + type + "\".");
+
 		resource1 = resource1.toLowerCase();
 		resource2 = resource2.toLowerCase();
 		String[] rNames = { resource1, resource2 };
 
+		// Get original player resources and bank
+		int gameID = (Integer) obj;
 		Model game = Games.get().getGames().get(gameID);
 		ResourceList pResources = game.getPlayerResources(playerIndex);
 		ResourceList bank = game.getBank();
 
+		// Transfer resources from bank to player
 		for (String rName : rNames) {
 			if (rName.equals("brick")) {
 				pResources.setBrick(pResources.getBrick() + 1);
@@ -51,10 +56,21 @@ public class YearOfPlentyCommand implements Command {
 			}
 		}
 
+		// Subtract Year of Plenty card from player's old dev cards
+		DevCardList pOldDevCards = game.getPlayerOldDevCards(playerIndex);
+		pOldDevCards.setYearOfPlenty(pOldDevCards.getYearOfPlenty() - 1);
+		game.setPlayerOldDevCards(playerIndex, pOldDevCards);
+
+		// Add Year of Plenty card to deck
 		DevCardList deck = game.getDeck();
 		deck.setYearOfPlenty(deck.getYearOfPlenty() + 1);
+		game.setDeck(deck);
+
+		// Add a log entry
+		game.addLogEntry(playerIndex, " played a Year of Plenty card.");
 
 		return null;
+
 //		Server.println("  Attempting to execute command \"" + type + "\".");
 //		Model game = Games.get().getGames().get(obj);
 //		return game.yearOfPlenty(playerIndex, resource1, resource2);

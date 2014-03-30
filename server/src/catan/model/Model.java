@@ -1,5 +1,7 @@
 package catan.model;
 
+import java.util.ArrayList;
+
 import com.google.gson.JsonObject;
 
 public interface Model {
@@ -46,7 +48,7 @@ public interface Model {
 
 	public void initializeMap(boolean randomTokens, boolean randomHexes, boolean randomPorts);
 
-	void rollNumber(int number);
+	public ArrayList <Hex> rollNumber(int number);
 
 	public void setHex(HexLocation location, Hex hex);
 
@@ -59,8 +61,6 @@ public interface Model {
 	public void setPlayerOldDevCards(int playerIndex, DevCardList oldDevCards);
 
 	public void setTurnTracker(TurnTracker track);
-
-	public void updatePlayer(int playerIndex, Player player);
 
 	VertexLocation[] getAllHexesForVertex(VertexLocation location);
 

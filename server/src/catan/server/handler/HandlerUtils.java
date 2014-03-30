@@ -46,7 +46,7 @@ public class HandlerUtils {
 		try {
 			String encodedCookieStr = getCookies(exchange).get("catan.user");
 			String decodedCookieStr = URLDecoder.decode(encodedCookieStr, "UTF-8");
-			Server.println("Decoded cookie: \"" + decodedCookieStr + "\".");
+//			Server.println("Decoded cookie: \"" + decodedCookieStr + "\".");
 			cookie = gson.fromJson(decodedCookieStr, Cookie.class);
 		} catch (JsonSyntaxException | UnsupportedEncodingException e) {}
 		return cookie;
@@ -59,7 +59,7 @@ public class HandlerUtils {
 	 * @return A <code>Map</code> where the keys are cookie names and the values are cookie values. If the client did not send any cookies, an empty <code>Map</code> is returned.
 	 */
 	public static Map<String, String> getCookies(HttpExchange exchange) {
-		Server.println("Parsing cookies...");
+//		Server.println("Parsing cookies...");
 		Map<String, String> cookies = new TreeMap<>();
 		if (exchange != null) {
 			String cookieStr = exchange.getRequestHeaders().getFirst("Cookie");
@@ -67,12 +67,12 @@ public class HandlerUtils {
 				cookies = decodeQueryString(cookieStr, "\\s*;\\s*", "\\s*=\\s*");
 				if (Server.isDebugEnabled()) {
 					for (Map.Entry<String, String> e : cookies.entrySet()) {
-						System.out.println("  \"" + e.getKey() + "\" = \"" + e.getValue() + "\".");
+//						System.out.println("  \"" + e.getKey() + "\" = \"" + e.getValue() + "\".");
 					}
 				}
 			}
 		}
-		Server.println("Done.");
+//		Server.println("Done.");
 		return cookies;
 	}
 
@@ -88,7 +88,7 @@ public class HandlerUtils {
 			if (name != null && value != null && !name.isEmpty() && !value.isEmpty()) {
 				String cookie = name + "=" + value + "; Path=/";
 				exchange.getResponseHeaders().add("Set-Cookie", cookie);
-				Server.println("Cookie added: \"" + cookie + "\".");
+//				Server.println("Cookie added: \"" + cookie + "\".");
 			}
 		}
 	}
@@ -129,7 +129,7 @@ public class HandlerUtils {
 		if (requestMethod.equals(type)) {
 			return true;
 		} else {
-			Server.println("  Bad request method for \"" + exchange.getRequestURI().getPath() + "\": \"" + requestMethod + "\".");
+//			Server.println("  Bad request method for \"" + exchange.getRequestURI().getPath() + "\": \"" + requestMethod + "\".");
 			HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_METHOD);
 			return false;
 		}

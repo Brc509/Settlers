@@ -102,8 +102,8 @@ public class SoldierCommand implements Command {
 				player.getResources().incrementResource(robResource);
 				victim.getResources().decrementResource(robResource);
 				
-				game.updatePlayer(playerIndex, player);
-				game.updatePlayer(victimIndex, victim);
+				game.setPlayerResources(playerIndex, player.getResources());
+				game.setPlayerResources(victimIndex, player.getResources());
 			}
 		}
 		return verdict;

@@ -158,4 +158,20 @@ public class ResourceList {
 			return false;
 		return true;
 	}
+	
+	public boolean decrementResource(String resourceName, int amount) {
+		if (resourceName.equals("brick") && brick >= amount)
+			brick -= amount;
+		else if (resourceName.equals("ore") && ore >= amount)
+			ore -= amount;
+		else if (resourceName.equals("sheep") && sheep >= amount)
+			sheep -= amount;
+		else if (resourceName.equals("wheat") && wheat >= amount)
+			wheat -= amount;
+		else if (resourceName.equals("wood") && wood >= amount)
+			wood -= amount;
+		else
+			return false;
+		return true;
+	}
 }

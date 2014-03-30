@@ -367,7 +367,7 @@ public class JsonPlugin implements Model {
 		JsonElement resourcesElement = gson.toJsonTree(resources);
 		model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().add("resources", resourcesElement);
 	}
-
+	
 	@Override
 	public ResourceList getBank() {
 		return gson.fromJson(model.get("bank"), ResourceList.class);

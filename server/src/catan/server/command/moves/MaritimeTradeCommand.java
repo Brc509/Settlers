@@ -1,6 +1,8 @@
 package catan.server.command.moves;
 
 import catan.model.Model;
+import catan.model.Player;
+import catan.model.ResourceList;
 import catan.server.Games;
 import catan.server.command.Command;
 
@@ -15,13 +17,27 @@ public class MaritimeTradeCommand implements Command {
 	public MaritimeTradeCommand () {}
 	
 	@Override
-	public Object execute(Object gameId) {
+	public Boolean execute(Object gameId) {
 		
-		System.out.println(type + playerIndex + ratio + inputResource + outputResource);
 		Model model = Games.get().getGames().get(gameId);
 		
+		Player player = model.getPlayerByIndex(playerIndex);
+		if (player.getResources().decrementResource(inputResource, ratio)) {
+			
+			// Add output resource to the player
+			player.getResources().incrementResource(outputResource);
+			model.setPlayerResources(playerIndex, player.getResources());
+			
+			ResourceList bank = model.getBank();
+			bank.decrementResource(outputResource);
+			bank.incrementResource(inputResource, ratio);
+			model.setBank(bank);
+			
+			model.addLogEntry(playerIndex, " performed Maritime Trade.");
+			
+			return null;
+		}
 		
-		
-		return null;
+		return false;
 	}
 }

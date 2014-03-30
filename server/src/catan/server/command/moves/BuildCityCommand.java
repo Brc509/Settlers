@@ -35,9 +35,18 @@ public class BuildCityCommand implements Command {
 		if(!free)
 		{
 			ResourceList playerList = currPlayer.getResources();
+			System.out.println(playerList);
 			
-			playerList.setOre(playerList.getOre()-3);
-			playerList.setWheat(playerList.getWheat()-2);
+			int playerOre = model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject()
+						.get("resources").getAsJsonObject().get("ore").getAsInt();
+			model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject()
+						.get("resources").getAsJsonObject().addProperty("ore", playerOre-3);
+			int playerWheat = model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject()
+						.get("resources").getAsJsonObject().get("wheat").getAsInt();
+			model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject()
+						.get("resources").getAsJsonObject().addProperty("wheat", playerWheat-2);
+			
+			System.out.println(playerList);
 			
 			int ore = model.getModel().get("bank").getAsJsonObject().get("ore").getAsInt();
 			model.getModel().get("bank").getAsJsonObject().addProperty("ore", ore+3);

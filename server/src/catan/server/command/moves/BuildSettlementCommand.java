@@ -46,10 +46,22 @@ public class BuildSettlementCommand implements Command{
 		{
 			ResourceList playerList = currPlayer.getResources();
 			
-			playerList.setBrick(playerList.getBrick()-1);
-			playerList.setWood(playerList.getWood()-1);
-			playerList.setSheep(playerList.getSheep()-1);
-			playerList.setWheat(playerList.getWheat()-1);
+			int playerBrick = model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject()
+					.get("resources").getAsJsonObject().get("brick").getAsInt();
+			model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject()
+					.get("resources").getAsJsonObject().addProperty("brick", playerBrick-1);
+			int playerWood = model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject()
+					.get("resources").getAsJsonObject().get("wood").getAsInt();
+			model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject()
+					.get("resources").getAsJsonObject().addProperty("wood", playerWood-1);
+			int playerSheep = model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject()
+					.get("resources").getAsJsonObject().get("sheep").getAsInt();
+			model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject()
+					.get("resources").getAsJsonObject().addProperty("sheep", playerSheep-1);
+			int playerWheat = model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject()
+					.get("resources").getAsJsonObject().get("wheat").getAsInt();
+			model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject()
+					.get("resources").getAsJsonObject().addProperty("wheat", playerWheat-1);
 			
 			int brick = model.getModel().get("bank").getAsJsonObject().get("brick").getAsInt();
 			model.getModel().get("bank").getAsJsonObject().addProperty("brick", brick+1);

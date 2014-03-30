@@ -11,10 +11,16 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import catan.model.JsonPlugin;
+import catan.server.Games;
+import catan.server.command.games.GamesJoinCommand;
 import catan.server.handler.MovesHandler;
+import catan.server.handler.user.UserLoginHandler_Prod;
 
+import com.google.gson.JsonObject;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
@@ -22,31 +28,40 @@ import com.sun.net.httpserver.HttpPrincipal;
 
 public class MovesHandlerTests {
 	private HttpExchange exchange;
-	private MovesHandler handler;
+	private MovesHandler movesHandler;
+	private UserLoginHandler_Prod userHandler;
+
 	@Before 
 	public void beforeTest() {
 		exchange = new MockExchange();
-		handler = new MovesHandler();
+		movesHandler = new MovesHandler();
+		userHandler = new UserLoginHandler_Prod();
+		Games.get().getGames().put(1, new JsonPlugin(JsonPlugin.DEFAULTGAMEFILE));
+
+	}
+	
+
+	@Test
+	public void gamesGoodJoin(){
+		
+		GamesJoinCommand gjc = new GamesJoinCommand(0, 1, "orange", "Sam");
+		boolean didJoin = gjc.execute(gjc);
+		assertTrue(didJoin);
+		
+
 	}
 	
 	@Test
-	public void test() throws IOException {
-		handler.handle(exchange);
+	public void gamesBadJoin(){
+		
+		GamesJoinCommand gjc = new GamesJoinCommand(0, 1, "orange", "Samantha");
+		boolean didJoin = gjc.execute(gjc);
+		assertFalse(didJoin);
 	}
 	
 	@Test
 	public void rollNumber() {
-		try {
-			((MockExchange) exchange).setRequestBody("this is a test");
-			((MockExchange) exchange).setUri(new URL("localhost:3000/moves/rollnumber").toURI());
-			handler.handle(exchange);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 
 }

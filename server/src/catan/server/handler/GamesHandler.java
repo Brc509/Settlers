@@ -69,6 +69,7 @@ public class GamesHandler implements HttpHandler {
 	}
 	
 	private void createGame (HttpExchange exchange) throws IOException {			
+		
 		InputStream headers = exchange.getRequestBody();
 		String gameCreateInfo = HandlerUtils.inputStreamToString(headers);
 		Map<String,String> gameCreateInfoMap = HandlerUtils.decodeQueryString(gameCreateInfo);

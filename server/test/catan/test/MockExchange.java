@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.util.ArrayList;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpContext;
@@ -16,6 +17,8 @@ public class MockExchange extends HttpExchange{
 	
 	private String requestBody = "";
 	private URI uri;
+	private String requestMethod = "";
+	private ArrayList<String> cookies;
 	
 	public void setUri (URI uri) {
 		this.uri = uri;
@@ -87,7 +90,11 @@ public class MockExchange extends HttpExchange{
 	@Override
 	public String getRequestMethod() {
 		// TODO Auto-generated method stub
-		return null;
+		return requestMethod;
+	}
+	
+	public void setRequestMethod(String method) {
+		this.requestMethod = method;
 	}
 
 	@Override
@@ -101,12 +108,8 @@ public class MockExchange extends HttpExchange{
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
-	@Override
-	public Headers getResponseHeaders() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+	
 
 	@Override
 	public void sendResponseHeaders(int arg0, long arg1) throws IOException {
@@ -124,6 +127,12 @@ public class MockExchange extends HttpExchange{
 	public void setStreams(InputStream arg0, OutputStream arg1) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Headers getResponseHeaders() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

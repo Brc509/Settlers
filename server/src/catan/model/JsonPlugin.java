@@ -13,8 +13,8 @@ import com.google.gson.reflect.TypeToken;
 
 public class JsonPlugin implements Model {
 
-	private static final String NEWGAMEFILE = "server/newGame.json";
-	private static final String DEFAULTGAMEFILE = "server/defaultGame.json";
+	public static final String NEWGAMEFILE = "server/newGame.json";
+	public static final String DEFAULTGAMEFILE = "server/defaultGame.json";
 	private static final Gson gson = new Gson();
 
 	private static final Set<String> resourceNames;
@@ -34,8 +34,12 @@ public class JsonPlugin implements Model {
 
 	public JsonPlugin() {
 
+		this(NEWGAMEFILE);
+	}
+	
+	public JsonPlugin(String gameFile) {
 		try {
-			FileReader file = new FileReader(NEWGAMEFILE);
+			FileReader file = new FileReader(gameFile);
 			model = gson.fromJson(file, JsonObject.class);
 			System.out.println(model);
 			file.close();

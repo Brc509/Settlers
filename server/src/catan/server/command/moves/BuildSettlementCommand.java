@@ -79,7 +79,7 @@ public class BuildSettlementCommand implements Command{
 			// (x, y-1, "SW")(x-1, y, "E") too
 			setHex(getHex(vertexLocation.x, vertexLocation.y,direction,hexes), corner, playerIndex);
 			setHex(getHex(vertexLocation.x, vertexLocation.y-1,"SW",hexes), getCornerValue("SW"), playerIndex);
-			setHex(getHex(vertexLocation.x-11, vertexLocation.y,"E",hexes), getCornerValue("E"), playerIndex);
+			setHex(getHex(vertexLocation.x-1, vertexLocation.y,"E",hexes), getCornerValue("E"), playerIndex);
 		}
 		if(direction.equals("E"))
 		{
@@ -93,7 +93,7 @@ public class BuildSettlementCommand implements Command{
 			// (x, y+1, "NW")(x-1, y+1, "E") too
 			setHex(getHex(vertexLocation.x, vertexLocation.y,direction,hexes), corner, playerIndex);
 			setHex(getHex(vertexLocation.x, vertexLocation.y+1,"NW",hexes), getCornerValue("NW"), playerIndex);
-			setHex(getHex(vertexLocation.x-11, vertexLocation.y+1,"E",hexes), getCornerValue("E"), playerIndex);
+			setHex(getHex(vertexLocation.x-1, vertexLocation.y+1,"E",hexes), getCornerValue("E"), playerIndex);
 		}
 		if(direction.equals("SE"))
 		{
@@ -110,17 +110,22 @@ public class BuildSettlementCommand implements Command{
 			setHex(getHex(vertexLocation.x-1, vertexLocation.y+1,"NE",hexes), getCornerValue("NE"), playerIndex);
 		}
 		
+		model.addLogEntry(playerIndex, "has built a settlement.");
+		
 		return null;
 	}
 	
 	public void setHex(JsonObject hex, int corner, int player)
 	{
-		hex.getAsJsonObject().get("vertexes").getAsJsonArray().get(corner)
-							.getAsJsonObject().get("value").getAsJsonObject()
-							.addProperty("worth", 1);
-		hex.getAsJsonObject().get("vertexes").getAsJsonArray().get(corner)
-							.getAsJsonObject().get("value").getAsJsonObject()
-							.addProperty("ownerID", player);
+		if(hex != null)
+		{
+			hex.getAsJsonObject().get("vertexes").getAsJsonArray().get(corner)
+								.getAsJsonObject().get("value").getAsJsonObject()
+								.addProperty("worth", 1);
+			hex.getAsJsonObject().get("vertexes").getAsJsonArray().get(corner)
+								.getAsJsonObject().get("value").getAsJsonObject()
+								.addProperty("ownerID", player);
+		}
 	}
 	
 	public JsonObject getHex(int x, int y, String direction, JsonArray hexes)

@@ -239,6 +239,19 @@ public class JsonPlugin implements Model {
 		int index2 = Integer.parseInt(location.getX()) + 3 - offsets[index1];     // [3, 2, 1, 0, 0, 0, 0]
 		return getHexes()[index1][index2];
 	}
+	
+	@Override
+	public EdgeLocation getEquivalentEdge(EdgeLocation thisEdge) {
+		
+		HexLocation otherHexLocation = getNeighborLocation(thisEdge.getX(), thisEdge.getY(), thisEdge.getDirectionIndex());
+		int otherDirection = getOppositeDirection(thisEdge.getDirectionIndex());
+		return new EdgeLocation(otherHexLocation.getXInt(), otherHexLocation.getYInt(), otherDirection);
+	}
+
+	private int getOppositeDirection(int direction){
+	
+		return positiveModulo((direction + 3),6);
+	}
 
 	@Override
 	public VertexLocation[] getAllHexesForVertex(VertexLocation location) {

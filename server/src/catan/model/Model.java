@@ -63,4 +63,6 @@ public interface Model {
 	public void updatePlayer(int playerIndex, Player player);
 
 	VertexLocation[] getAllHexesForVertex(VertexLocation location);
+
+	EdgeLocation getEquivalentEdge(EdgeLocation thisEdge);
 }

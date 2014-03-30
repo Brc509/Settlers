@@ -4,11 +4,29 @@ public class EdgeLocation {
 	private int x;
 	private int y;
 	private String direction;
+	private transient final String[] EDGE_STRINGS = new String[] {"NW","N","NE","SE","S","SW"};
+	
+	public EdgeLocation(int x, int y, int direction) {
+		
+		this.x = x;
+		this.y = y;
+		this.direction = EDGE_STRINGS[direction];
+	}
 	
 	@Override
 	public String toString() {
 		return "EdgeLocation [x=" + x + ", y=" + y + ", direction=" + direction
 				+ "]";
+	}
+	
+	public int getDirectionIndex() {
+		
+		for (int i = 0; i < EDGE_STRINGS.length; i++) {
+			
+			if (EDGE_STRINGS[i].equals(direction))
+				return i;
+		}
+		return -1;
 	}
 
 	public int getX() {

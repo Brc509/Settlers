@@ -42,20 +42,23 @@ public class YearOfPlentyCommand implements Command {
 				pResources.setBrick(pResources.getBrick() + 1);
 				bank.setBrick(bank.getBrick() - 1);
 			} else if (rName.equals("ore")) {
-				pResources.setBrick(pResources.getOre() + 1);
+				pResources.setOre(pResources.getOre() + 1);
 				bank.setOre(bank.getOre() - 1);
 			} else if (rName.equals("sheep")) {
-				pResources.setBrick(pResources.getSheep() + 1);
+				pResources.setSheep(pResources.getSheep() + 1);
 				bank.setSheep(bank.getSheep() - 1);
 			} else if (rName.equals("wheat")) {
-				pResources.setBrick(pResources.getWheat() + 1);
+				pResources.setWheat(pResources.getWheat() + 1);
 				bank.setWheat(bank.getWheat() - 1);
 			} else if (rName.equals("wood")) {
-				pResources.setBrick(pResources.getWood() + 1);
+				pResources.setWood(pResources.getWood() + 1);
 				bank.setWood(bank.getWood() - 1);
 			}
 		}
 
+		game.setPlayerResources(playerIndex, pResources);
+		game.setBank(bank);
+		
 		// Subtract Year of Plenty card from player's old dev cards
 		DevCardList pOldDevCards = game.getPlayerOldDevCards(playerIndex);
 		pOldDevCards.setYearOfPlenty(pOldDevCards.getYearOfPlenty() - 1);

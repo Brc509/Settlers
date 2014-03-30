@@ -18,7 +18,7 @@ public class ResourceList {
 	 */
 	public ResourceList() {}
 
-	public String  toString() {
+	public String toString() {
 		
 		String returnString = "{\n";
 		returnString += "\tbrick: " + brick + "\n";

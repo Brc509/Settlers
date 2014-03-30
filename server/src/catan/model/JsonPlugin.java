@@ -235,8 +235,8 @@ public class JsonPlugin implements Model {
 	@Override
 	public Hex getHex(HexLocation location) {
 
-		int index2 = Integer.parseInt(location.getY()) + 3;
-		int index1 = Integer.parseInt(location.getX()) + 3 - offsets[index2];
+		int index1 = Integer.parseInt(location.getY()) + 3;                        
+		int index2 = Integer.parseInt(location.getX()) + 3 - offsets[index1];     // [3, 2, 1, 0, 0, 0, 0]
 		return getHexes()[index1][index2];
 	}
 
@@ -245,38 +245,50 @@ public class JsonPlugin implements Model {
 		VertexLocation[] locations = new VertexLocation[3];
 		locations[0] = location; // this location
 		
+		// Get one adjacent hex that shares this vertex
+		HexLocation loc1 = getNeighborLocation(location.getX(), location.getY(), positiveModulo(location.getDirectionIndex() - 1, 6));
+		locations[1] = new VertexLocation(loc1.getXInt(), loc1.getYInt(), positiveModulo(location.getDirectionIndex() + 2, 6));
+		
+		// Get the other adjacent hex that shares this vertex
+		HexLocation loc2 = getNeighborLocation(location.getX(), location.getY(), location.getDirectionIndex());
+		locations[2] = new VertexLocation(loc2.getXInt(), loc2.getYInt(), positiveModulo(location.getDirectionIndex() + 4, 6));
 		
 		return locations;
 	}
 	
 	private HexLocation getNeighborLocation(int x, int y, int hexDirection) {
 		
-		/*	int deltaX = 0;
-			int deltaY = 0;
-		    switch (hexDirection) {
-				case HexDirection.SE:
-					deltaX = 1; deltaY = 0;
-					break;
-				case HexDirection.S:
-					deltaX = 0; deltaY = 1;
-					break;
-				case HexDirection.SW:
-					deltaX = -1; deltaY = 1;
-					break;
-				case HexDirection.NW:
-					deltaX = -1; deltaY = 0;
-					break;
-				case HexDirection.N:
-					deltaX = 0; deltaY = -1;
-					break;
-				case HexDirection.NE:
-					deltaX = 1; deltaY = -1;
-					break;
-				default:
-					System.out.println("Invalid direction!");
-			}
-			return new HexLocation(deltaX + x, deltaY + y);*/
-		return null;
+		int deltaX = 0;
+		int deltaY = 0;
+		//["NW","N","NE","SE","S","SW"]
+	    switch (hexDirection) {
+			case 0: // NW
+				deltaX = -1; deltaY = 0;
+				break;
+			case 1: // N
+				deltaX = 0; deltaY = -1;
+				break;
+			case 2: // NE
+				deltaX = 1; deltaY = -1;
+				break;
+			case 3: // SE
+				deltaX = 1; deltaY = 0;
+				break;
+			case 4: // S
+				deltaX = 0; deltaY = 1;
+				break;
+			case 5: // SW
+				deltaX = -1; deltaY = 1;
+				break;
+			default:
+				System.out.println("Invalid direction!");
+		}
+		return new HexLocation(deltaX + x, deltaY + y);
+	}
+	
+	private int positiveModulo(int lhs, int rhs) {
+		
+		return ((lhs % rhs) + rhs) % rhs;
 	}
 	
 	@Override

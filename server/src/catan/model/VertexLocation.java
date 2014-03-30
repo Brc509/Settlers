@@ -40,6 +40,14 @@ public class VertexLocation {
 	public String getDirection() {
 		return direction;
 	}
+	
+	public int getDirectionIndex() {
+		
+		for (int i = 0; i < VERTEX_STRINGS.length; i++)
+			if (VERTEX_STRINGS[i].equals(direction))
+				return i;
+		return -1;
+	}
 
 	public void setDirection(String direction) {
 		this.direction = direction;

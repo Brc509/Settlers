@@ -290,12 +290,6 @@ public class JsonPlugin implements Model {
 	}
 
 	@Override
-	public Number[] getNumbers(int number) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public ResourceList getPlayerResources(int playerIndex) {
 		JsonElement resources = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().get("resources");
 		return gson.fromJson(resources, ResourceList.class);

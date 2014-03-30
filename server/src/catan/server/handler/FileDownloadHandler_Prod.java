@@ -64,7 +64,7 @@ public class FileDownloadHandler_Prod implements FileDownloadHandler {
 						return;
 					}
 					// Otherwise, send the target file
-					Server.println("  File found at \"" + target.getPath() + "\".");
+//					Server.println("  File found at \"" + target.getPath() + "\".");
 					fileFound(exchange, target);
 					return;
 				} else if (target.isDirectory()) {
@@ -80,7 +80,7 @@ public class FileDownloadHandler_Prod implements FileDownloadHandler {
 					// Otherwise, look for a default file in the directory and send it
 					for (File child : target.listFiles()) {
 						if (child.isFile() && child.getName().equals("index.html")) {
-							Server.println("  Default file found at \"" + child.getPath() + "\".");
+//							Server.println("  Default file found at \"" + child.getPath() + "\".");
 							fileFound(exchange, child);
 							return;
 						}

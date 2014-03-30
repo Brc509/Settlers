@@ -142,4 +142,20 @@ public class ResourceList {
 			return false;
 		return true;
 	}
+
+	public boolean incrementResource(String resourceName, int amount) {
+		if (resourceName.equals("brick"))
+			brick += amount;
+		else if (resourceName.equals("ore"))
+			ore += amount;
+		else if (resourceName.equals("sheep"))
+			sheep += amount;
+		else if (resourceName.equals("wheat"))
+			wheat += amount;
+		else if (resourceName.equals("wood"))
+			wood += amount;
+		else
+			return false;
+		return true;
+	}
 }

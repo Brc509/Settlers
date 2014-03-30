@@ -1,5 +1,7 @@
 package catan.model;
 
+import java.util.Arrays;
+
 public class Hex {
 
 	private Edge[] edges;
@@ -61,5 +63,12 @@ public class Hex {
 	public boolean isLand() {
 		
 		return isLand;
+	}
+	
+	@Override
+	public String toString() {
+		return "Hex [edges=" + Arrays.toString(edges) + ", vertexes="
+				+ Arrays.toString(vertexes) + ", location=" + location
+				+ ", landtype=" + landtype + ", isLand=" + isLand + "]";
 	}
 }

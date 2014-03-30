@@ -14,6 +14,8 @@ public interface Model {
 
 	public DevCardList getDeck();
 
+	public void setDeck(DevCardList deck);
+
 	public String getGamesListJSON(int id);
 
 	public Hex getHex(HexLocation location);

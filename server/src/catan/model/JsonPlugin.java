@@ -316,4 +316,9 @@ public class JsonPlugin implements Model {
 	public void setBank(ResourceList bank) {
 		model.add("bank", gson.toJsonTree(bank));
 	}
+
+	@Override
+	public void setDeck(DevCardList deck) {
+		model.add("deck", gson.toJsonTree(deck));
+	}
 }

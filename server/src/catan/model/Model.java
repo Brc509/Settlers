@@ -62,7 +62,7 @@ public interface Model {
 
 	public void setTurnTracker(TurnTracker track);
 
-	VertexLocation[] getAllHexesForVertex(VertexLocation location);
+	public VertexLocation[] getAllHexesForVertex(VertexLocation location);
 
-	EdgeLocation getEquivalentEdge(EdgeLocation thisEdge);
+	public EdgeLocation getEquivalentEdge(EdgeLocation thisEdge);
 }

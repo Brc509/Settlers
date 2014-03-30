@@ -16,9 +16,12 @@ public class MaritimeTradeCommand implements Command {
 	
 	@Override
 	public Object execute(Object gameId) {
-		// TODO Auto-generated method stub
+		
 		System.out.println(type + playerIndex + ratio + inputResource + outputResource);
 		Model model = Games.get().getGames().get(gameId);
+		
+		
+		
 		return null;
 	}
 }

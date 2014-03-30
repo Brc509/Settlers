@@ -16,11 +16,11 @@ public class GameHandler implements HttpHandler {
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
 
-		Server.println("\n" + this.getClass().getSimpleName() + ":");
+//		Server.println("\n" + this.getClass().getSimpleName() + ":");
 
 		// Based on the request path, execute the appropriate operation
 		String endpoint = exchange.getRequestURI().getPath();
-		System.out.println(endpoint);
+//		System.out.println(endpoint);
 		switch (endpoint) {
 		case "/game/model":
 			if (HandlerUtils.checkRequestMethod("GET", exchange)) {
@@ -61,7 +61,7 @@ public class GameHandler implements HttpHandler {
 
 	private void gameModel(HttpExchange exchange) throws IOException {
 
-		Server.println("  /game/model");
+//		Server.println("  /game/model");
 		int gameID = Integer.parseInt(HandlerUtils.getCookies(exchange).get("catan.game"));
 		Model game = Games.get().getGames().get(gameID);
 
@@ -81,7 +81,7 @@ public class GameHandler implements HttpHandler {
 
 		// Send the appropriate response
 		if (revision != null) {
-			Server.println("  Client has revision " + revision + ".");
+//			Server.println("  Client has revision " + revision + ".");
 			HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, game.getModelJSONForRevision(revision));
 		} else {
 			Server.println("  Client did not specify revision.");

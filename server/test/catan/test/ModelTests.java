@@ -2,6 +2,8 @@ package catan.test;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,6 +18,7 @@ import catan.model.Number;
 import catan.model.Player;
 import catan.model.ResourceList;
 import catan.model.TurnTracker;
+import catan.model.VertexLocation;
 
 import com.google.gson.JsonObject;
 
@@ -169,12 +172,6 @@ public class ModelTests {
 		}
 
 		@Override
-		public Number[] getNumbers(int number) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
 		public Player[] getPlayers() {
 			// TODO Auto-generated method stub
 			return null;
@@ -267,7 +264,8 @@ public class ModelTests {
 		}
 
 		@Override
-		public void rollNumber(int number) {
+		public ArrayList<Hex> rollNumber(int number) {
+			return null;
 			// TODO Auto-generated method stub
 			
 		}
@@ -291,9 +289,41 @@ public class ModelTests {
 		}
 
 		@Override
-		public void updatePlayer(int playerIndex, Player player) {
+		public void setDeck(DevCardList deck) {
 			// TODO Auto-generated method stub
 			
+		}
+
+		@Override
+		public DevCardList getPlayerNewDevCards(int playerIndex) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public DevCardList getPlayerOldDevCards(int playerIndex) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void setPlayerNewDevCards(int playerIndex,
+				DevCardList newDevCards) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void setPlayerOldDevCards(int playerIndex,
+				DevCardList oldDevCards) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public VertexLocation[] getAllHexesForVertex(VertexLocation location) {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 	}

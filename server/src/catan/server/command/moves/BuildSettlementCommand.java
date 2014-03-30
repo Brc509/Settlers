@@ -160,12 +160,12 @@ public class BuildSettlementCommand implements Command{
 	public int getCornerValue(String direction)
 	{
 		int corner1 = -1;
-		if(direction.equals("NE")){corner1 = 0;}
-		if(direction.equals("E")){corner1 = 1;}
-		if(direction.equals("SE")){corner1 = 2;}
-		if(direction.equals("SW")){corner1 = 3;}
-		if(direction.equals("W")){corner1 = 4;}
-		if(direction.equals("NW")){corner1 = 5;}
+			if(direction.equals("W")){corner1 = 0;}
+			if(direction.equals("NW")){corner1 = 1;}
+			if(direction.equals("NE")){corner1 = 2;}
+			if(direction.equals("E")){corner1 = 3;}
+			if(direction.equals("SE")){corner1 = 4;}
+			if(direction.equals("SW")){corner1 = 5;}
 		return corner1;
 	}
 

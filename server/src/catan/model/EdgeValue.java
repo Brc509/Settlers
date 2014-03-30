@@ -2,9 +2,15 @@ package catan.model;
 
 public class EdgeValue {
 
-	int ownerID;
+	private int ownerID;
 	public EdgeValue(int ownerID) {
 		
+		this.ownerID = ownerID;
+	}
+	public int getOwnerID() {
+		return ownerID;
+	}
+	public void setOwnerID(int ownerID) {
 		this.ownerID = ownerID;
 	}
 }

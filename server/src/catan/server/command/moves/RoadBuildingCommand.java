@@ -18,5 +18,4 @@ public class RoadBuildingCommand implements Command {
 		Model model = Games.get().getGames().get(gameId);
 		return null;
 	}
-
 }

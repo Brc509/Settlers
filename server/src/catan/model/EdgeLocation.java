@@ -4,7 +4,7 @@ public class EdgeLocation {
 	private int x;
 	private int y;
 	private String direction;
-	private transient final String[] EDGE_STRINGS = new String[] {"NW","N","NE","SE","S","SW"};
+	private transient String[] EDGE_STRINGS = {"NW","N","NE","SE","S","SW"};
 	
 	public EdgeLocation(int x, int y, int direction) {
 		
@@ -21,6 +21,7 @@ public class EdgeLocation {
 	
 	public int getDirectionIndex() {
 		
+		EDGE_STRINGS = new String[] {"NW","N","NE","SE","S","SW"};
 		for (int i = 0; i < EDGE_STRINGS.length; i++) {
 			
 			if (EDGE_STRINGS[i].equals(direction))

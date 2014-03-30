@@ -3,6 +3,8 @@ package catan.server.command.moves;
 import com.google.gson.JsonObject;
 
 import catan.model.EdgeLocation;
+import catan.model.Hex;
+import catan.model.HexLocation;
 import catan.model.Model;
 import catan.model.Player;
 import catan.model.ResourceList;
@@ -33,40 +35,53 @@ public class BuildRoadCommand implements Command {
 		//change property 
 				
 		ResourceList playerRList = game.getPlayerResources(playerIndex);
-		playerRList.setBrick(playerRList.getBrick() - 1);
-		playerRList.setWood(playerRList.getWood() - 1);
-		game.setPlayerResources(playerIndex, playerRList);
+		if (!free) {
+			
+			playerRList.setBrick(playerRList.getBrick() - 1);
+			playerRList.setWood(playerRList.getWood() - 1);
+			game.setPlayerResources(playerIndex, playerRList);
 		
-		ResourceList bankList = game.getBank();
-		bankList.setBrick(bankList.getBrick() + 1);
-		bankList.setWood(bankList.getWood() + 1);
-		game.setBank(bankList);
+			ResourceList bankList = game.getBank();
+			bankList.setBrick(bankList.getBrick() + 1);
+			bankList.setWood(bankList.getWood() + 1);
+			game.setBank(bankList);
+		}
 			
 		int roads = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().get("roads").getAsInt();
 		model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().addProperty("roads", roads - 1);
 
-		//whoever has the most roads, give them longest road
-		//give them two victory points
+		// Add the roads to the map
 	
-		EdgeLocation edgeLocation = game.getEquivalentEdge(roadLocation);
+		EdgeLocation roadLocation2 = game.getEquivalentEdge(roadLocation);
 		
+		Hex hex1 = game.getHex(new HexLocation(roadLocation.getX(), roadLocation.getY()));
+		Hex hex2 = game.getHex(new HexLocation(roadLocation2.getX(), roadLocation2.getY()));
+		
+		hex1.getEdges()[roadLocation.getDirectionIndex()].getValue().setOwnerID(playerIndex);
+		hex2.getEdges()[roadLocation2.getDirectionIndex()].getValue().setOwnerID(playerIndex);
+		
+		game.setHex(hex1);
+		game.setHex(hex2);
+		
+		//whoever has the most roads, give them longest road
+		//give them two victory points		
 		Player[] players = game.getPlayers();
 	
-		int mostRoads12 = Math.max(players[0].getRoads(), players[1].getRoads());
-		int mostRoads34 = Math.max(players[2].getRoads(), players[3].getRoads());
-		int mostRoads = Math.max(mostRoads12, mostRoads34);
+		int minRoads12 = Math.min(players[0].getRoads(), players[1].getRoads());
+		int minRoads34 = Math.min(players[2].getRoads(), players[3].getRoads());
+		int minRoads = Math.min(minRoads12, minRoads34);
 		
 		for(int i = 0; i < players.length; i++){
-			if(players[i].getRoads() == mostRoads && mostRoads > 5){
-				model.addProperty("longestRoad", mostRoads);
+			if(players[i].getRoads() == minRoads && 17 - minRoads > 5){
+				model.addProperty("longestRoad", i);
 			}
 		}
 		
+		// LOG IT
+		game.addLogEntry(playerIndex, " built a road.");
+		
 		return null;
 	}
-
-
-
 }
 
 //Model model = Games.get().getGames().get((Integer)obj);

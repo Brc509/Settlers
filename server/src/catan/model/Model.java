@@ -50,7 +50,7 @@ public interface Model {
 
 	public ArrayList <Hex> rollNumber(int number);
 
-	public void setHex(HexLocation location, Hex hex);
+	public void setHex(Hex hex);
 
 	public boolean setPlayer(int orderNumber, int userID, String name, String color);
 

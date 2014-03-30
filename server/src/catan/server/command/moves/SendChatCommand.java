@@ -20,6 +20,15 @@ public class SendChatCommand implements Command {
 
 	@Override
 	public Boolean execute(Object obj) {
+
+		Server.println("Executing command: \"" + type + "\".");
+
+		int gameID = (Integer) obj;
+		Model game = Games.get().getGames().get(gameID);
+		game.addChatEntry(playerIndex, content);
+
+		return null;
+
 //		Server.println("  Attempting to execute command \"" + type + "\".");
 //		Model game = Games.get().getGames().get(obj);
 ////		return game.sendChat(playerIndex, content);
@@ -33,6 +42,5 @@ public class SendChatCommand implements Command {
 //		}
 //		return verdict;
 //	}
-		return false;
 	}
 }

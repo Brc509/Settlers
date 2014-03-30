@@ -13,6 +13,12 @@ public class HexLocation {
 		this.y = y;
 	}
 	
+	public HexLocation(int x, int y) {
+		
+		this.x = "" + x;
+		this.y = "" + y;
+	}
+	
 	public String getX() {
 		return x;
 	}

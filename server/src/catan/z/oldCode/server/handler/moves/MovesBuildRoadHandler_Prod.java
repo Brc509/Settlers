@@ -17,7 +17,7 @@ public class MovesBuildRoadHandler_Prod implements MovesBuildRoadHandler {
 	    java.util.Scanner s = new java.util.Scanner(arg0.getRequestBody()).useDelimiter("\\A");
 	    Gson g = new Gson();
 	    JsonObject json = g.fromJson(s.hasNext() ? s.next() : "", JsonObject.class);		
-		BuildRoadCommand test = new BuildRoadCommand(arg0, json);
-		test.execute(null);
+		//BuildRoadCommand test = new BuildRoadCommand(arg0, json);
+		//test.execute(null);
 	}
 }

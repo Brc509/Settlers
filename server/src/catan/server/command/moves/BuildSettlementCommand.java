@@ -5,6 +5,8 @@ import java.util.Map;
 
 import catan.model.ClientModel;
 import catan.model.Model;
+import catan.model.Player;
+import catan.model.ResourceList;
 import catan.server.Cookie;
 import catan.server.Games;
 import catan.server.command.Command;

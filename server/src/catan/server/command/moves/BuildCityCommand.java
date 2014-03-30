@@ -3,6 +3,8 @@ package catan.server.command.moves;
 import com.google.gson.JsonObject;
 
 import catan.model.Model;
+import catan.model.Player;
+import catan.model.ResourceList;
 import catan.server.Games;
 import catan.server.command.Command;
 import catan.server.command.moves.BuildSettlementCommand.VertexLocation;

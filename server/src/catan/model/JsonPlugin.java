@@ -27,6 +27,7 @@ public class JsonPlugin implements Model {
 		resourceNames.add("wheat");
 		resourceNames.add("wood");
 	}
+	private static final int[] offsets = new int[] {3, 2, 1, 0, 0, 0, 0};
 
 	private JsonObject model;
 	private String gameName;
@@ -234,10 +235,50 @@ public class JsonPlugin implements Model {
 	@Override
 	public Hex getHex(HexLocation location) {
 
-		//TODO
-		return null;
+		int index2 = Integer.parseInt(location.getY()) + 3;
+		int index1 = Integer.parseInt(location.getX()) + 3 - offsets[index2];
+		return getHexes()[index1][index2];
 	}
 
+	@Override
+	public VertexLocation[] getAllHexesForVertex(VertexLocation location) {
+		VertexLocation[] locations = new VertexLocation[3];
+		locations[0] = location; // this location
+		
+		
+		return locations;
+	}
+	
+	private HexLocation getNeighborLocation(int x, int y, int hexDirection) {
+		
+		/*	int deltaX = 0;
+			int deltaY = 0;
+		    switch (hexDirection) {
+				case HexDirection.SE:
+					deltaX = 1; deltaY = 0;
+					break;
+				case HexDirection.S:
+					deltaX = 0; deltaY = 1;
+					break;
+				case HexDirection.SW:
+					deltaX = -1; deltaY = 1;
+					break;
+				case HexDirection.NW:
+					deltaX = -1; deltaY = 0;
+					break;
+				case HexDirection.N:
+					deltaX = 0; deltaY = -1;
+					break;
+				case HexDirection.NE:
+					deltaX = 1; deltaY = -1;
+					break;
+				default:
+					System.out.println("Invalid direction!");
+			}
+			return new HexLocation(deltaX + x, deltaY + y);*/
+		return null;
+	}
+	
 	@Override
 	public TurnTracker getTurnTracker() {
 		JsonObject jsonTurnTracker = model.getAsJsonObject("turnTracker");

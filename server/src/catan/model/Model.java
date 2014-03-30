@@ -26,6 +26,8 @@ public interface Model {
 
 	public Player getPlayerByIndex(int playerIndex);
 
+	public ResourceList getPlayerResources(int playerIndex);
+
 	public Player[] getPlayers();
 
 	public HexLocation getRobberPosition();
@@ -36,13 +38,15 @@ public interface Model {
 
 	public void initializeMap(boolean randomTokens, boolean randomHexes, boolean randomPorts);
 
+	void rollNumber(int number);
+
 	public void setHex(HexLocation location, Hex hex);
 
 	public boolean setPlayer(int orderNumber, int userID, String name, String color);
 
+	public void setPlayerResources(int playerIndex, ResourceList resources);
+
 	public void setTurnTracker(TurnTracker track);
 
 	public void updatePlayer(int playerIndex, Player player);
-
-	void rollNumber(int number);
 }

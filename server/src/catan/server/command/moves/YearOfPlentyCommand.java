@@ -1,14 +1,5 @@
 package catan.server.command.moves;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-
-import catan.model.DevCardList;
-import catan.model.Model;
-import catan.model.Player;
-import catan.model.ResourceList;
-import catan.server.Games;
-import catan.server.Server;
 import catan.server.command.Command;
 
 /**
@@ -27,6 +18,11 @@ public class YearOfPlentyCommand implements Command {
 
 	@Override
 	public Boolean execute(Object obj) {
+
+		resource1 = resource1.toLowerCase();
+		resource2 = resource2.toLowerCase();
+
+		return null;
 //		Server.println("  Attempting to execute command \"" + type + "\".");
 //		Model game = Games.get().getGames().get(obj);
 //		return game.yearOfPlenty(playerIndex, resource1, resource2);
@@ -92,6 +88,5 @@ public class YearOfPlentyCommand implements Command {
 //
 //				// Return the verdict
 //				return verdict;
-		return null;
 	}
 }

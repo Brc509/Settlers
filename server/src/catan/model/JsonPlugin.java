@@ -294,4 +294,16 @@ public class JsonPlugin implements Model {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public ResourceList getPlayerResources(int playerIndex) {
+		JsonObject resourcesObject = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().getAsJsonObject("resources");
+		return gson.fromJson(resourcesObject, ResourceList.class);
+	}
+
+	@Override
+	public void setPlayerResources(int playerIndex, ResourceList resources) {
+		JsonElement resourceObject = gson.toJsonTree(resources);
+		model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().add("resources", resourceObject);
+	}
 }

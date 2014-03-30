@@ -27,6 +27,7 @@ public class JsonPlugin implements Model {
 		resourceNames.add("wheat");
 		resourceNames.add("wood");
 	}
+	private static final int[] offsets = new int[] {3, 2, 1, 0, 0, 0, 0};
 
 	private JsonObject model;
 	private String gameName;
@@ -238,10 +239,62 @@ public class JsonPlugin implements Model {
 	@Override
 	public Hex getHex(HexLocation location) {
 
-		//TODO
-		return null;
+		int index1 = Integer.parseInt(location.getY()) + 3;                        
+		int index2 = Integer.parseInt(location.getX()) + 3 - offsets[index1];     // [3, 2, 1, 0, 0, 0, 0]
+		return getHexes()[index1][index2];
 	}
 
+	@Override
+	public VertexLocation[] getAllHexesForVertex(VertexLocation location) {
+		VertexLocation[] locations = new VertexLocation[3];
+		locations[0] = location; // this location
+		
+		// Get one adjacent hex that shares this vertex
+		HexLocation loc1 = getNeighborLocation(location.getX(), location.getY(), positiveModulo(location.getDirectionIndex() - 1, 6));
+		locations[1] = new VertexLocation(loc1.getXInt(), loc1.getYInt(), positiveModulo(location.getDirectionIndex() + 2, 6));
+		
+		// Get the other adjacent hex that shares this vertex
+		HexLocation loc2 = getNeighborLocation(location.getX(), location.getY(), location.getDirectionIndex());
+		locations[2] = new VertexLocation(loc2.getXInt(), loc2.getYInt(), positiveModulo(location.getDirectionIndex() + 4, 6));
+		
+		return locations;
+	}
+	
+	private HexLocation getNeighborLocation(int x, int y, int hexDirection) {
+		
+		int deltaX = 0;
+		int deltaY = 0;
+		//["NW","N","NE","SE","S","SW"]
+	    switch (hexDirection) {
+			case 0: // NW
+				deltaX = -1; deltaY = 0;
+				break;
+			case 1: // N
+				deltaX = 0; deltaY = -1;
+				break;
+			case 2: // NE
+				deltaX = 1; deltaY = -1;
+				break;
+			case 3: // SE
+				deltaX = 1; deltaY = 0;
+				break;
+			case 4: // S
+				deltaX = 0; deltaY = 1;
+				break;
+			case 5: // SW
+				deltaX = -1; deltaY = 1;
+				break;
+			default:
+				System.out.println("Invalid direction!");
+		}
+		return new HexLocation(deltaX + x, deltaY + y);
+	}
+	
+	private int positiveModulo(int lhs, int rhs) {
+		
+		return ((lhs % rhs) + rhs) % rhs;
+	}
+	
 	@Override
 	public TurnTracker getTurnTracker() {
 		JsonObject jsonTurnTracker = model.getAsJsonObject("turnTracker");
@@ -294,12 +347,6 @@ public class JsonPlugin implements Model {
 	}
 
 	@Override
-	public Number[] getNumbers(int number) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public ResourceList getPlayerResources(int playerIndex) {
 		JsonElement resources = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().get("resources");
 		return gson.fromJson(resources, ResourceList.class);
@@ -319,5 +366,34 @@ public class JsonPlugin implements Model {
 	@Override
 	public void setBank(ResourceList bank) {
 		model.add("bank", gson.toJsonTree(bank));
+	}
+
+	@Override
+	public void setDeck(DevCardList deck) {
+		model.add("deck", gson.toJsonTree(deck));
+	}
+
+	@Override
+	public DevCardList getPlayerNewDevCards(int playerIndex) {
+		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
+		return gson.fromJson(player.get("newDevCards"), DevCardList.class);
+	}
+
+	@Override
+	public DevCardList getPlayerOldDevCards(int playerIndex) {
+		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
+		return gson.fromJson(player.get("oldDevCards"), DevCardList.class);
+	}
+
+	@Override
+	public void setPlayerNewDevCards(int playerIndex, DevCardList newDevCards) {
+		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
+		player.add("newDevCards", gson.toJsonTree(newDevCards));
+	}
+
+	@Override
+	public void setPlayerOldDevCards(int playerIndex, DevCardList oldDevCards) {
+		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
+		player.add("oldDevCards", gson.toJsonTree(oldDevCards));
 	}
 }

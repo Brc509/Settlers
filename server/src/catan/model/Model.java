@@ -14,6 +14,8 @@ public interface Model {
 
 	public DevCardList getDeck();
 
+	public void setDeck(DevCardList deck);
+
 	public String getGamesListJSON(int id);
 
 	public Hex getHex(HexLocation location);
@@ -26,11 +28,13 @@ public interface Model {
 
 	public String getName();
 
-	public Number[] getNumbers(int number);
-
 	public Player getPlayerByIndex(int playerIndex);
 
 	public ResourceList getPlayerResources(int playerIndex);
+
+	public DevCardList getPlayerNewDevCards(int playerIndex);
+
+	public DevCardList getPlayerOldDevCards(int playerIndex);
 
 	public Player[] getPlayers();
 
@@ -50,7 +54,13 @@ public interface Model {
 
 	public void setPlayerResources(int playerIndex, ResourceList resources);
 
+	public void setPlayerNewDevCards(int playerIndex, DevCardList newDevCards);
+
+	public void setPlayerOldDevCards(int playerIndex, DevCardList oldDevCards);
+
 	public void setTurnTracker(TurnTracker track);
 
 	public void updatePlayer(int playerIndex, Player player);
+
+	VertexLocation[] getAllHexesForVertex(VertexLocation location);
 }

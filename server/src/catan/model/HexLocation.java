@@ -13,16 +13,39 @@ public class HexLocation {
 		this.y = y;
 	}
 	
+	public HexLocation(int x, int y) {
+		
+		this.x = "" + x;
+		this.y = "" + y;
+	}
+	
 	public String getX() {
+		
 		return x;
 	}
+	
+	public int getXInt() {
+		
+		return Integer.parseInt(x);
+	}
+	
 	public void setX(String x) {
+		
 		this.x = x;
 	}
+	
 	public String getY() {
+		
 		return y;
 	}
+	
+	public int getYInt() {
+		
+		return Integer.parseInt(y);
+	}
+	
 	public void setY(String y) {
+		
 		this.y = y;
 	}
 
@@ -30,5 +53,4 @@ public class HexLocation {
 	public String toString() {
 		return "HexLocation [x=" + x + ", y=" + y + "]";
 	}
-
 }

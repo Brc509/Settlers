@@ -25,6 +25,8 @@ public class BuildRoadCommand implements Command {
 		Model game = Games.get().getGames().get(gameID);
 		JsonObject model = game.getModel();
 		
+		
+		
 		//decrement player resources
 		//add bank resources
 		//subtract number of roads player can build
@@ -46,6 +48,8 @@ public class BuildRoadCommand implements Command {
 		//whoever has the most roads, give them longest road
 		//give them two victory points
 	
+		EdgeLocation edgeLocation = game.getEquivalentEdge(roadLocation);
+		
 		Player[] players = game.getPlayers();
 	
 		int mostRoads12 = Math.max(players[0].getRoads(), players[1].getRoads());
@@ -60,6 +64,8 @@ public class BuildRoadCommand implements Command {
 		
 		return null;
 	}
+
+
 
 }
 

@@ -297,13 +297,23 @@ public class JsonPlugin implements Model {
 
 	@Override
 	public ResourceList getPlayerResources(int playerIndex) {
-		JsonObject resourcesObject = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().getAsJsonObject("resources");
-		return gson.fromJson(resourcesObject, ResourceList.class);
+		JsonElement resources = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().get("resources");
+		return gson.fromJson(resources, ResourceList.class);
 	}
 
 	@Override
 	public void setPlayerResources(int playerIndex, ResourceList resources) {
-		JsonElement resourceObject = gson.toJsonTree(resources);
-		model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().add("resources", resourceObject);
+		JsonElement resourcesElement = gson.toJsonTree(resources);
+		model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().add("resources", resourcesElement);
+	}
+
+	@Override
+	public ResourceList getBank() {
+		return gson.fromJson(model.get("bank"), ResourceList.class);
+	}
+
+	@Override
+	public void setBank(ResourceList bank) {
+		model.add("bank", gson.toJsonTree(bank));
 	}
 }

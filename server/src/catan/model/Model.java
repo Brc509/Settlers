@@ -8,6 +8,10 @@ public interface Model {
 
 	public void addLogEntry(int playerIndex, String message);
 
+	public ResourceList getBank();
+
+	public void setBank(ResourceList bank);
+
 	public DevCardList getDeck();
 
 	public String getGamesListJSON(int id);

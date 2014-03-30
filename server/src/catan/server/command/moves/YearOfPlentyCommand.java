@@ -1,5 +1,8 @@
 package catan.server.command.moves;
 
+import catan.model.Model;
+import catan.model.ResourceList;
+import catan.server.Games;
 import catan.server.command.Command;
 
 /**
@@ -19,8 +22,33 @@ public class YearOfPlentyCommand implements Command {
 	@Override
 	public Boolean execute(Object obj) {
 
+		int gameID = (Integer) obj;
 		resource1 = resource1.toLowerCase();
 		resource2 = resource2.toLowerCase();
+		String[] rNames = { resource1, resource2 };
+
+		Model game = Games.get().getGames().get(gameID);
+		ResourceList pResources = game.getPlayerResources(playerIndex);
+		ResourceList bank = game.getBank();
+
+		for (String rName : rNames) {
+			if (rName.equals("brick")) {
+				pResources.setBrick(pResources.getBrick() + 1);
+				bank.setBrick(bank.getBrick() - 1);
+			} else if (rName.equals("ore")) {
+				pResources.setBrick(pResources.getOre() + 1);
+				bank.setOre(bank.getOre() - 1);
+			} else if (rName.equals("sheep")) {
+				pResources.setBrick(pResources.getSheep() + 1);
+				bank.setSheep(bank.getSheep() - 1);
+			} else if (rName.equals("wheat")) {
+				pResources.setBrick(pResources.getWheat() + 1);
+				bank.setWheat(bank.getWheat() - 1);
+			} else if (rName.equals("wood")) {
+				pResources.setBrick(pResources.getWood() + 1);
+				bank.setWood(bank.getWood() - 1);
+			}
+		}
 
 		return null;
 //		Server.println("  Attempting to execute command \"" + type + "\".");

@@ -136,8 +136,7 @@ public class JsonPlugin implements Model {
 		*/
 	}
 
-	@Override
-	public void initializeMap(boolean randomTokens, boolean randomHexes, boolean randomPorts) {
+	private void initializeMap(boolean randomTokens, boolean randomHexes, boolean randomPorts) {
 
 		if (randomTokens) randomizeTokens();
 		if (randomHexes) randomizeHexes();

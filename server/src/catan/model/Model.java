@@ -1,205 +1,381 @@
 package catan.model;
 
+import java.io.FileReader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
-public interface Model {
+public class Model{
+
+	public static final String NEWGAMEFILE = "server/newGame.json";
+	public static final String DEFAULTGAMEFILE = "server/defaultGame.json";
+	private static final Gson gson = new Gson();
+
+	private static final Set<String> resourceNames;
+
+	static {
+		resourceNames = new HashSet<>();
+		resourceNames.add("brick");
+		resourceNames.add("ore");
+		resourceNames.add("sheep");
+		resourceNames.add("wheat");
+		resourceNames.add("wood");
+	}
+	private static final int[] offsets = new int[] {3, 2, 1, 0, 0, 0, 0};
+
+	private JsonObject model;
+	private String gameName;
+	private int revision = 0;
+
+	public Model() {
+
+		this(NEWGAMEFILE);
+	}
+	
+	public Model(String gameFile) {
+		try {
+			FileReader file = new FileReader(gameFile);
+			model = gson.fromJson(file, JsonObject.class);
+			file.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Model(boolean defaultGame) {
+		try {
+			FileReader file = new FileReader(DEFAULTGAMEFILE);
+			model = gson.fromJson(file, JsonObject.class);
+			file.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	
+	public void initGame(String name, boolean randomTokens, boolean randomHexes, boolean randomPorts) {
+		gameName = name;
+		initializeMap(randomTokens, randomHexes, randomPorts);
+	}
+
+	
+	public JsonObject getModel() {
+		return model;
+	}
+
+	
+	public String getModelJSON() {
+		model.addProperty("revision", revision);
+		return model.toString();
+	}
+
+	
+	public String getModelJSONForRevision(int revision) {
+		if (revision == this.revision) {
+			return "\"true\"";
+		}
+		return getModelJSON();
+	}
+
+	
+	public String getName() {
+		return gameName;
+	}
+
+	
+	public String getGamesListJSON(int id) {
+		String s = "{\"title\":\"" + gameName + "\",\"id\":" + id + ",\"players\":[";
+		JsonArray players = model.getAsJsonArray("players");
+		int n = 1;
+		for (JsonElement player : players) {
+			JsonObject playerObj = player.getAsJsonObject();
+			String name = playerObj.get("name").getAsString();
+			String color = playerObj.get("color").getAsString();
+			int playerID = playerObj.get("playerID").getAsInt();
+			if (playerID != -1) {
+				s += "{\"name\":\"" + name + "\",\"color\":\"" + color + "\",\"id\":" + playerID + "}";
+			} else {
+				s += "{}";
+			}
+			if (n < players.size()) {
+				s += ",";
+			}
+			n++;
+		}
+		s += "]}";
+		return s;
+	}
+
+	
+	public boolean setPlayer(int orderNumber, int userID, String name, String color) {
+		boolean verdict = false;
+		if (0 <= orderNumber && orderNumber <= 3) {
+
+			JsonObject jsonPlayer = model.getAsJsonArray("players").get(orderNumber).getAsJsonObject();
+			jsonPlayer.addProperty("playerID", userID);
+			jsonPlayer.addProperty("name", name);
+			jsonPlayer.addProperty("color", color);
+			verdict = true;
+		}
+		return verdict;
+		//Is it guaranteed that the players will be in the order of their orderNumber?
+		/*
+		JsonArray players = model.getAsJsonArray("players");
+		for (JsonElement player : players) {
+			if (((JsonObject) player).get("playerID").getAsInt() == userID)
+				System.out.println("setPLAYER " + userID);
+		}
+		return false;
+		*/
+	}
+
+	private void initializeMap(boolean randomTokens, boolean randomHexes, boolean randomPorts) {
+
+		if (randomTokens) randomizeTokens();
+		if (randomHexes) randomizeHexes();
+		if (randomPorts) randomizePorts();
+	}
 
 	/**
-	 * Generate a new chat entry, using the given parameters, and add it to the game's model
-	 * @param playerIndex Index (0-3) of the player sending the chat
-	 * @param content String to be appended to the player's name
+	 * Take the tokens (number values) from the default game and shuffle them
 	 */
-	public void addChatEntry(int playerIndex, String content);
-	
+	public void randomizeTokens() {
+
+		//TODO Implement
+	}
+
 	/**
-	 * Generate a new log entry, using the given parameters, and add it to the game's model
-	 * @param playerIndex Index (0-3) of the player that created the action to be logged
-	 * @param message String to be appended to the player's name
+	 * Take the hexes (land values) from the default game and shuffle them
 	 */
-	public void addLogEntry(int playerIndex, String message);
-	
+	public void randomizeHexes() {
+
+		//TODO Implement
+	}
+
 	/**
-	 * Gathers the bank from memory and return it as a ResourceList (5 int values)
-	 * @return A ResourceList containing bank values 
+	 * Take the ports (9 port values) from the default game and shuffle them
 	 */
-	public ResourceList getBank();
+	public void randomizePorts() {
+
+		//TODO Implement
+	}
+
 	
-	/**
-	 * Sets the game's bank value to match the parameter bank
-	 * @param bank A ResourceList containing new bank values
-	 */
-	public void setBank(ResourceList bank);
+	public Player getPlayerByIndex(int playerIndex) {
+
+		JsonObject jsonPlayer = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
+		return gson.fromJson(jsonPlayer, Player.class);
+	}
+
+	// ------------------------------
+	// AWESOME HELPER METHODS
+	// ------------------------------
 	
-	/**
-	 * Gets the deck as a DevCardList (5 int values) from the model
-	 * @return The deck from the model
-	 */
-	public DevCardList getDeck();
+	public ArrayList <Hex> rollNumber(int number) {
+		JsonArray numbers = model.getAsJsonObject("map").getAsJsonObject("numbers").getAsJsonArray(Integer.toString(number));
+		JsonArray hexes = model.getAsJsonObject("map").getAsJsonObject("hexGrid").getAsJsonArray("hexes");
+		
+		ArrayList <Hex> hexList = new ArrayList <>();
+		
+		for (JsonElement location : numbers) {
+			JsonObject l = gson.fromJson(location, JsonObject.class);
+			HexLocation hexLocation = new HexLocation(l.get("x").getAsString(), l.get("y").getAsString());
+			Hex hex = getHex(hexLocation);
+			
+			hexList.add(hex);
+		}
+		
+		return hexList;
+	}
+
+	public Hex[][] getHexes() {
+
+		JsonArray jsonHexes = model.getAsJsonObject("map").getAsJsonObject("hexGrid").getAsJsonArray("hexes");
+		Type hexesType = new TypeToken<Hex[][]>() {}.getType();
+		return gson.fromJson(jsonHexes, hexesType);
+	}
+
+	public JsonObject buildSettlement(int playerIndex) {
+		return model;
+	}
+
 	
-	/**
-	 * Sets the deck to match the parameter DevCardList
-	 * @param deck The new deck to set the model to match
-	 */
-	public void setDeck(DevCardList deck);
+	public Player[] getPlayers() {
+
+		JsonArray jsonArray = model.getAsJsonArray("players");
+		Type playerArrayType = new TypeToken<Player[]>() {}.getType();
+		return gson.fromJson(jsonArray, playerArrayType);
+	}
+
 	
-	/**
-	 * Get a list of games to as a JSON-formatted string return to the client
-	 * @param id The player ID of 
-	 * @return String containing the list of games (formatted as JSON)
-	 */
-	public String getGamesListJSON(int id);
+	public HexLocation getRobberPosition() {
+
+		JsonObject jsonRobber = model.getAsJsonObject("map").getAsJsonObject("robber");
+		return gson.fromJson(jsonRobber, HexLocation.class);
+	}
+
 	
-	/**
-	 * Get a Hex object for the hex that matches the parameter location
-	 * @param location A HexLocation object containing x and y coordinates of the Hex to get
-	 * @return Hex object containing more information about the Hex
-	 */
-	public Hex getHex(HexLocation location);
+	public Hex getHex(HexLocation location) {
+
+		int index1 = Integer.parseInt(location.getY()) + 3;
+		int index2 = Integer.parseInt(location.getX()) + 3 - offsets[index1];
+		return getHexes()[index1][index2];
+	}
 	
-	/**
-	 * Get the entire model as a Gson JsonObject
-	 * @return JsonObject containing the entire model
-	 */
-	public JsonObject getModel();
 	
-	/**
-	 * Gets a String containing the JSON serialization of the model, with the revision number included
-	 * @return String containing the JSON model
-	 */
-	public String getModelJSON();
+	public EdgeLocation getEquivalentEdge(EdgeLocation thisEdge) {
+		
+		HexLocation otherHexLocation = getNeighborLocation(thisEdge.getX(), thisEdge.getY(), thisEdge.getDirectionIndex());
+		int otherDirection = getOppositeDirection(thisEdge.getDirectionIndex());
+		return new EdgeLocation(otherHexLocation.getXInt(), otherHexLocation.getYInt(), otherDirection);
+	}
+
+	private int getOppositeDirection(int direction){
 	
-	/**
-	 * Gets a String containing the JSON serialization of the model, or 'true' 
-	 * if the parameter revision matches the model's current revision number
-	 * @param revision Number to compare to the model's revision number
-	 * @return JSON of model if revisions do not match, 'true' if match 
-	 */
-	public String getModelJSONForRevision(int revision);
+		return positiveModulo((direction + 3),6);
+	}
+
 	
-	/**
-	 * Gets this model's game name
-	 * @return String containing the name
-	 */
-	public String getName();
+	public VertexLocation[] getAllHexesForVertex(VertexLocation location) {
+		VertexLocation[] locations = new VertexLocation[3];
+		locations[0] = location; // this location
+		
+		// Get one adjacent hex that shares this vertex
+		HexLocation loc1 = getNeighborLocation(location.getX(), location.getY(), positiveModulo(location.getDirectionIndex() - 1, 6));
+		locations[1] = new VertexLocation(loc1.getXInt(), loc1.getYInt(), positiveModulo(location.getDirectionIndex() + 2, 6));
+		
+		// Get the other adjacent hex that shares this vertex
+		HexLocation loc2 = getNeighborLocation(location.getX(), location.getY(), location.getDirectionIndex());
+		locations[2] = new VertexLocation(loc2.getXInt(), loc2.getYInt(), positiveModulo(location.getDirectionIndex() + 4, 6));
+		
+		return locations;
+	}
 	
-	/**
-	 * Get a player object that matches the parameter index for this game
-	 * @param playerIndex The index (0-3) of the player to retrieve
-	 * @return A Player object which contains all necessary information about the player
-	 */
-	public Player getPlayerByIndex(int playerIndex);
+	private HexLocation getNeighborLocation(int x, int y, int hexDirection) {
+		
+		int deltaX = 0;
+		int deltaY = 0;
+		//["NW","N","NE","SE","S","SW"]
+	    switch (hexDirection) {
+			case 0: // NW
+				deltaX = -1; deltaY = 0;
+				break;
+			case 1: // N
+				deltaX = 0; deltaY = -1;
+				break;
+			case 2: // NE
+				deltaX = 1; deltaY = -1;
+				break;
+			case 3: // SE
+				deltaX = 1; deltaY = 0;
+				break;
+			case 4: // S
+				deltaX = 0; deltaY = 1;
+				break;
+			case 5: // SW
+				deltaX = -1; deltaY = 1;
+				break;
+			default:
+				System.out.println("Invalid direction!");
+		}
+		return new HexLocation(deltaX + x, deltaY + y);
+	}
 	
-	/**
-	 * Get a ResourceList for the given playerIndex 
-	 * @param playerIndex The index (0-3) of the player to retrieve resources from
-	 * @return ResourceList containing the 5 int values representing the player's resources
-	 */
-	public ResourceList getPlayerResources(int playerIndex);
+	private int positiveModulo(int lhs, int rhs) {
+		
+		return ((lhs % rhs) + rhs) % rhs;
+	}
 	
-	/**
-	 * Get the DevCardList of new cards for the player (cards that cannot be played yet)
-	 * @param playerIndex The index (0-3) of the player to retrieve the DevCardList from
-	 * @return DevCardList containing the 5 int values representing the player's new dev cards
-	 */
-	public DevCardList getPlayerNewDevCards(int playerIndex);	
+	public TurnTracker getTurnTracker() {
+		JsonObject jsonTurnTracker = model.getAsJsonObject("turnTracker");
+		return gson.fromJson(jsonTurnTracker, TurnTracker.class);
+	}
 	
-	/**
-	 * Get the DevCardList of old cards for the player (cards drawn in previous turns)
-	 * @param playerIndex The index (0-3) of the player to retrieve the DevCardList from
-	 * @return DevCardList containing the 5 int values representing the player's old dev cards
-	 */
-	public DevCardList getPlayerOldDevCards(int playerIndex);
+	public void addLogEntry(int playerIndex, String message) {
+		String name = getPlayerByIndex(playerIndex).getName();
+		message = name + message;
+		model.getAsJsonObject("log").getAsJsonArray("lines").add(createEntry(name, message));
+		revision++;
+	}
 	
-	/**
-	 * Get an array (of size 4) containing all four Player objects corresponding to this game
-	 * @return Player[] for the four players
-	 */
-	public Player[] getPlayers();
+	public void addChatEntry(int playerIndex, String content) {
+
+		String name = getPlayerByIndex(playerIndex).getName();
+		model.getAsJsonObject("chat").getAsJsonArray("lines").add(createEntry(name, content));
+		revision++;
+	}
+
+	private JsonElement createEntry(String source, String message) {
+		return gson.fromJson("{\"source\":\"" + source + "\",\"message\":\"" + message + "\"}", JsonElement.class);
+	}
 	
-	/**
-	 * Get a HexLocation (x, y) containing the robber's current position in this game
-	 * @return HexLocation containing the robber's location
-	 */
-	public HexLocation getRobberPosition();
+	public void setTurnTracker(TurnTracker track) {
+		JsonObject jsonTurnTracker = model.getAsJsonObject("turnTracker");
+		jsonTurnTracker.addProperty("status", track.getStatus());
+		jsonTurnTracker.addProperty("currentTurn", track.getCurrentTurn());
+	}
 	
-	/**
-	 * Get the current turn tracker as a TurnTracker object
-	 * @return TurnTracker (which contains the currentTurn index and a status)
-	 */
-	public TurnTracker getTurnTracker();
+	public DevCardList getDeck() {
+		JsonObject jsonDeck = model.getAsJsonObject("deck");
+		return gson.fromJson(jsonDeck, DevCardList.class);
+	}
 	
-	/**
-	 * Set the game's name and shuffle desired areas from the default map
-	 * @param string The name to assign to this game
-	 * @param randomTokens Boolean to determine whether to shuffle the tokens (numbers on top on hexes)
-	 * @param randomHexes Boolean to determine whether to shuffle the hexes (resource value for each hex)
-	 * @param randomPorts Boolean to determine whether to shuffle the ports (9 resource/ratio pairs for 9 fixed hexes)
-	 */
-	public void initGame(String string, boolean randomTokens, boolean randomHexes, boolean randomPorts);
+	public void setHex(Hex hex) {
+		HexLocation location = hex.getLocation();
+		JsonArray hexes = model.getAsJsonObject("map").getAsJsonObject("hexGrid").getAsJsonArray("hexes");
+		int index1 = Integer.parseInt(location.getY()) + 3;
+		int index2 = Integer.parseInt(location.getX()) + 3 - offsets[index1];
+		JsonObject target = hexes.get(index1).getAsJsonArray().get(index2).getAsJsonObject();
+		target.add("edges", gson.toJsonTree(hex.getEdges()));
+		target.add("vertexes", gson.toJsonTree(hex.getVertexes()));
+	}
 	
-	/**
-	 * Gets a list of hexes that contain the number parameter
-	 * @param number The number rolled that we need hexes for
-	 * @return ArrayList<Hex> containing all the necessary hexes
-	 */
-	public ArrayList <Hex> rollNumber(int number);
+	public ResourceList getPlayerResources(int playerIndex) {
+		JsonElement resources = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().get("resources");
+		return gson.fromJson(resources, ResourceList.class);
+	}
 	
-	/**
-	 * Set the edges and vertexes for this parameter hex (at its location)
-	 * @param hex Hex object containing location and Edge/Vertex values
-	 */
-	public void setHex(Hex hex);
+	public void setPlayerResources(int playerIndex, ResourceList resources) {
+		JsonElement resourcesElement = gson.toJsonTree(resources);
+		model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().add("resources", resourcesElement);
+	}	
 	
-	/**
-	 * Set the game's player's id, name, and color to these parameters at the given orderNumber
-	 * @param orderNumber Index (must be 0-3) of the position to set the player
-	 * @param userID Player's ID
-	 * @param name Player's name
-	 * @param color Player's selected color
-	 * @return
-	 */
-	public boolean setPlayer(int orderNumber, int userID, String name, String color);
+	public ResourceList getBank() {
+		return gson.fromJson(model.get("bank"), ResourceList.class);
+	}
 	
-	/**
-	 * Set the resource values for the player at this index
-	 * @param playerIndex Index (0-3) of the player to set
-	 * @param resources ResourceList containing the 5 resource values for this player
-	 */
-	public void setPlayerResources(int playerIndex, ResourceList resources);
+	public void setBank(ResourceList bank) {
+		model.add("bank", gson.toJsonTree(bank));
+	}
+
+	public void setDeck(DevCardList deck) {
+		model.add("deck", gson.toJsonTree(deck));
+	}
 	
-	/**
-	 * Set the New Devcard values for the player at this index
-	 * @param playerIndex Index (0-3) of the player to set
-	 * @param newDevCards DevCardList containing the 5 new dev card values for this player
-	 */
-	public void setPlayerNewDevCards(int playerIndex, DevCardList newDevCards);
+	public DevCardList getPlayerNewDevCards(int playerIndex) {
+		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
+		return gson.fromJson(player.get("newDevCards"), DevCardList.class);
+	}
 	
-	/**
-	 * Set the Old Devcard values for the player at this index
-	 * @param playerIndex Index (0-3) of the player to set
-	 * @param oldDevCards DevCardList containing the 5 old dev card values for this player
-	 */
-	public void setPlayerOldDevCards(int playerIndex, DevCardList oldDevCards);
+	public DevCardList getPlayerOldDevCards(int playerIndex) {
+		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
+		return gson.fromJson(player.get("oldDevCards"), DevCardList.class);
+	}
 	
-	/**
-	 * Set the game's turntracker values to match the parameter TurnTracker
-	 * @param track TurnTracker object containing the updated values
-	 */
-	public void setTurnTracker(TurnTracker track);
-	
-	/**
-	 * Get all hexes that match a given vertex (there should be 3 total)
-	 * @param location VertexLocation object to get location from
-	 * @return An array of 3 vertex locations (including the parameter location)
-	 */
-	public VertexLocation[] getAllHexesForVertex(VertexLocation location);
-	
-	/**
-	 * Get the Equivalent reference to the edge at this same location (to update both hexes with the edge value)
-	 * @param thisEdge EdgeLocation to get the other edge from
-	 * @return EdgeLocation containing the reference to the other edge
-	 */
-	public EdgeLocation getEquivalentEdge(EdgeLocation thisEdge);
+	public void setPlayerNewDevCards(int playerIndex, DevCardList newDevCards) {
+		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
+		player.add("newDevCards", gson.toJsonTree(newDevCards));
+	}
+
+	public void setPlayerOldDevCards(int playerIndex, DevCardList oldDevCards) {
+		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
+		player.add("oldDevCards", gson.toJsonTree(oldDevCards));
+	}
 }

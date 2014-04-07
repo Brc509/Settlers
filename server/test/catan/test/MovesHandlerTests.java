@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import catan.model.JsonPlugin;
+import catan.model.Model;
 import catan.model.Model;
 import catan.model.Player;
 import catan.model.ResourceList;
@@ -49,7 +49,7 @@ public class MovesHandlerTests {
 	public void beforeTest() {
 		movesHandler = new MovesHandler();
 		userHandler = new UserLoginHandler_Prod();
-		Games.get().getGames().put(1, new JsonPlugin(JsonPlugin.DEFAULTGAMEFILE));
+		Games.get().getGames().put(1, new Model(Model.DEFAULTGAMEFILE));
 
 	}
 	

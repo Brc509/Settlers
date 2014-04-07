@@ -6,7 +6,7 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Map;
 
-import catan.model.JsonPlugin;
+import catan.model.Model;
 import catan.model.Model;
 import catan.server.GameListGames;
 import catan.server.GameListPlayer;
@@ -79,7 +79,7 @@ public class GamesHandler implements HttpHandler {
 		Boolean randomTiles = Boolean.parseBoolean(gameCreateInfoMap.get("randomTiles"));
 		Boolean randomPorts = Boolean.parseBoolean(gameCreateInfoMap.get("randomPorts"));
 		
-		Model model = new JsonPlugin();
+		Model model = new Model();
 		model.initGame(name, randomNumbers ,randomTiles, randomPorts);
 			
 		Games catanGames = Games.get();

@@ -3,7 +3,7 @@ package catan.server;
 import java.util.HashMap;
 import java.util.Map;
 
-import catan.model.JsonPlugin;
+import catan.model.Model;
 import catan.model.Model;
 
 public class Games {
@@ -15,7 +15,7 @@ public class Games {
 	private Games() {
 
 		games = new HashMap<Integer, Model>();
-		Model newGame = new JsonPlugin(true);
+		Model newGame = new Model(true);
 		newGame.initGame("Default Game", false, false, false);
 		games.put(1, newGame);
 	}

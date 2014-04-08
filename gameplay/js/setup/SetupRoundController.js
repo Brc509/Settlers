@@ -43,7 +43,6 @@ catan.setup.Controller = (function(){
 
 		var cm = this.mapController.ClientModel;
 		var status = cm.turnTracker.status;
-		
 		if(status == "FirstRound" || status == "SecondRound"){
 
 			var currPlayerIndex = cm.playerIndex;

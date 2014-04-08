@@ -130,6 +130,16 @@ catan.models.Command = (function() {
 		this.clientProxy.post();
 	};
 
+	Command.prototype.reset = function() {
+		// Create the data for the command
+		var data = {};
+		data.type = 'reset';
+		data.playerIndex = this.clientModel.playerIndex;
+		// Create and execute the command
+		this.clientProxy.url 	= '/game/reset';
+		this.clientProxy.data 	= data;
+		this.clientProxy.post();
+	};
 	/**
 		Accepts/rejects a trade offer.
 		
@@ -239,7 +249,7 @@ catan.models.Command = (function() {
 		data.type = 'buildCity';
 		data.playerIndex = this.clientModel.playerIndex;
 		data.vertexLocation = vertexLocation;
-		data.vertexLocation.direction = vdLookup[vertexLocation.direction];
+		data.vertexLocation.direction = vertexLocation.direction;
 		data.free = free;
 		// Create and execute the command
 		this.clientProxy.url 	= '/moves/buildCity';
@@ -263,7 +273,7 @@ catan.models.Command = (function() {
 		data.type = 'buildSettlement';
 		data.playerIndex = this.clientModel.playerIndex;
 		data.vertexLocation = vertexLocation;
-		data.vertexLocation.direction = vdLookup[vertexLocation.direction];
+		data.vertexLocation.direction = vertexLocation.direction;
 		data.free = free;
 		// Create and execute the command
 		this.clientProxy.url 	= '/moves/buildSettlement';
@@ -329,7 +339,7 @@ catan.models.Command = (function() {
 		@param {HexLocation} robberSpot the hex to move the robber to
 	*/
 	Command.prototype.soldier = function(victimIndex, robberSpot) {
-		// Create the data for the command
+		// Create the data for the
 		var data = {};
 		data.type = 'Soldier';
 		data.playerIndex = this.clientModel.playerIndex;

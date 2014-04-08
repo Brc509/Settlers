@@ -27,7 +27,13 @@ catan.models.ClientModel  = (function clientModelNameSpace(){
 		function ClientModel(playerID){
 			myself = this;
 
-			this.playerID 		= JSON.parse(decodeURIComponent(Cookies.get('catan.user'))).playerID; // Get the player ID from the cookie
+			var cookies 		= document.cookie.split(';');
+			if(cookies){
+				var userCookie = unescape(cookies[0]);
+				userCookie = userCookie.split('=');
+				var jsonPlayerCookie = JSON.parse(userCookie[1]);
+				this.playerID = jsonPlayerCookie.playerID;
+			}//JSON.parse(decodeURIComponent(document.cookie.get("catan.user"))).playerID;//JSON.parse(decodeURIComponent(Cookies.get('catan.user'))).playerID; // Get the player ID from the cookie
 			this.clientProxy 	= new catan.models.ClientProxy(this);
 			this.command		= new catan.models.Command(this.clientProxy, this);
 			this.map 			= new catan.models.Map(4);

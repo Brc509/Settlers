@@ -38,8 +38,9 @@ catan.models.ClientProxy = (function() {
 	}
 
 	ClientProxy.prototype.post = function (callback) {
-		jQuery.post(this.url, JSON.stringify(this.data),
-			function (data) { myself.callback(false, data); })
+		jQuery.post(this.url, JSON.stringify(this.data),function (data) { 
+			myself.callback(false, data); 
+		})
 			.fail (function (data) { myself.callback(true, data); });
 	}
 

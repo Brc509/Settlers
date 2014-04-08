@@ -1,6 +1,6 @@
 package catan.server.command.game;
 
-import catan.model.Model;
+import catan.model.GameModel;
 import catan.server.command.Command;
 
 public class GameModelCommand implements Command{

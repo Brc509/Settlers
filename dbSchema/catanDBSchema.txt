@@ -1,0 +1,50 @@
+
+
+create table Games(
+
+   Id INTEGER AUTO_INCREMENT,
+   GameModel BLOB,
+   OrigGameModel BLOB,
+   LastSavedCommand INTEGER,
+ 
+  PRIMARY KEY(Id)
+);
+
+
+
+create table Users(
+
+   Id INTEGER AUTO_INCREMENT,
+ 
+  Name TEXT,
+ 
+  Password VARCHAR(64),
+ 
+  PRIMARY KEY(Id),
+ 
+  UNIQUE(Password)
+
+);
+
+
+
+create table Commands(
+ 
+  Id INTEGER AUTO_INCREMENT,
+
+   Command BLOB,
+
+   GameId INTEGER,
+   PRIMARY KEY(Id)
+   FOREIGN KEY(GameId) REFERENCES Games(Id)
+); 
+
+
+create table Activity(
+ 
+  UserId INTEGER,
+
+   GameId INTEGER,
+   FOREIGN KEY(UserId) REFERENCES Users(Id),
+   FOREIGN KEY(GameId) REFERENCES Games(Id)
+);

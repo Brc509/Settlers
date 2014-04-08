@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import catan.model.DevCardList;
 import catan.model.Hex;
 import catan.model.HexLocation;
-import catan.model.Model;
+import catan.model.GameModel;
 import catan.model.Player;
 import catan.model.Vertex;
 import catan.model.VertexValue;
@@ -31,7 +31,7 @@ public class SoldierCommand implements Command {
 	@Override
 	public Boolean execute(Object obj) {
 		Server.println("  Attempting to execute command \"" + type + "\".");
-		Model game = Games.get().getGames().get(obj);
+		GameModel game = Games.get().getGames().get(obj);
 	
 		boolean verdict = false;
 		if (playerIndex >= 0 && playerIndex < 4 && victimIndex >= 0 && victimIndex < 4) {
@@ -66,7 +66,7 @@ public class SoldierCommand implements Command {
 		return verdict;
 	}
 	
-	private boolean moveRobberAndRob(Model game, int playerIndex, int victimIndex, HexLocation location) {
+	private boolean moveRobberAndRob(GameModel game, int playerIndex, int victimIndex, HexLocation location) {
 		boolean verdict = false;
 	
 		HexLocation robber = game.getRobberPosition();

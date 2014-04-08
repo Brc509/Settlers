@@ -1,7 +1,7 @@
 package catan.server.command.moves;
 
 import catan.model.DevCardList;
-import catan.model.Model;
+import catan.model.GameModel;
 import catan.model.TurnTracker;
 import catan.server.Games;
 import catan.server.Server;
@@ -19,7 +19,7 @@ public class FinishTurnCommand implements Command {
 
 		Server.println("Executing command: \"" + type + "\".");
 
-		Model model = Games.get().getGames().get(obj);
+		GameModel model = Games.get().getGames().get(obj);
 		TurnTracker track = model.getTurnTracker();
 
 		// Move the current player's new dev cards to old dev cards

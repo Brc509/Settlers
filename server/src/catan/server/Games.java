@@ -3,19 +3,18 @@ package catan.server;
 import java.util.HashMap;
 import java.util.Map;
 
-import catan.model.JsonPlugin;
-import catan.model.Model;
+import catan.model.GameModel;
 
 public class Games {
 
 	private static Games gamesSingleton;
 
-	public Map<Integer, Model> games;
+	public Map<Integer, GameModel> games;
 
 	private Games() {
 
-		games = new HashMap<Integer, Model>();
-		Model newGame = new JsonPlugin(true);
+		games = new HashMap<Integer, GameModel>();
+		GameModel newGame = new GameModel(true);
 		newGame.initGame("Default Game", false, false, false);
 		games.put(1, newGame);
 	}
@@ -28,11 +27,11 @@ public class Games {
 		return gamesSingleton;
 	}
 
-	public Map<Integer, Model> getGames() {
+	public Map<Integer, GameModel> getGames() {
 		return games;
 	}
 
-	public void addGame(Model cm) {
+	public void addGame(GameModel cm) {
 		games.put(games.size() + 1, cm);
 	}
 

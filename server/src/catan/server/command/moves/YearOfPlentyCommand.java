@@ -1,7 +1,7 @@
 package catan.server.command.moves;
 
 import catan.model.DevCardList;
-import catan.model.Model;
+import catan.model.GameModel;
 import catan.model.ResourceList;
 import catan.server.Games;
 import catan.server.Server;
@@ -32,7 +32,7 @@ public class YearOfPlentyCommand implements Command {
 
 		// Get original player resources and bank
 		int gameID = (Integer) obj;
-		Model game = Games.get().getGames().get(gameID);
+		GameModel game = Games.get().getGames().get(gameID);
 		ResourceList pResources = game.getPlayerResources(playerIndex);
 		ResourceList bank = game.getBank();
 

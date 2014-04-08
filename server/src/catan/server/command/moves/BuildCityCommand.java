@@ -3,7 +3,7 @@ package catan.server.command.moves;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import catan.model.Model;
+import catan.model.GameModel;
 import catan.model.Player;
 import catan.model.ResourceList;
 import catan.server.Games;
@@ -29,7 +29,7 @@ public class BuildCityCommand implements Command {
 	
 	@Override
 	public Object execute(Object obj){
-		Model model = Games.get().getGames().get((Integer)obj);
+		GameModel model = Games.get().getGames().get((Integer)obj);
 		Player currPlayer = model.getPlayerByIndex(playerIndex);
 		
 		if(!free)

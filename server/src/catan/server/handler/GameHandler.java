@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Map;
 
-import catan.model.Model;
+import catan.model.GameModel;
 import catan.server.Games;
 import catan.server.Server;
 
@@ -63,7 +63,7 @@ public class GameHandler implements HttpHandler {
 
 //		Server.println("  /game/model");
 		int gameID = Integer.parseInt(HandlerUtils.getCookies(exchange).get("catan.game"));
-		Model game = Games.get().getGames().get(gameID);
+		GameModel game = Games.get().getGames().get(gameID);
 
 		// Find the specified revision (if any)
 		Integer revision = null;

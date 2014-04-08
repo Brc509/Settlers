@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import catan.model.HexLocation;
-import catan.model.Model;
+import catan.model.GameModel;
 import catan.model.Vertex;
 import catan.model.VertexValue;
 import catan.server.Games;
@@ -17,7 +17,7 @@ public class RobPlayerCommand implements Command {
 	private int playerIndex;
 	private int victimIndex;
 	private HexLocation location;
-	private Model model;
+	private GameModel model;
 	
 	@Override
 	public Object execute(Object gameId) {

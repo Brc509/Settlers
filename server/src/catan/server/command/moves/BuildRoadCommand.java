@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import catan.model.EdgeLocation;
 import catan.model.Hex;
 import catan.model.HexLocation;
-import catan.model.Model;
+import catan.model.GameModel;
 import catan.model.Player;
 import catan.model.ResourceList;
 import catan.server.Games;
@@ -24,7 +24,7 @@ public class BuildRoadCommand implements Command {
 	public Object execute(Object obj) {
 		int gameID = (Integer) obj;
 		// TODO Auto-generated method stub
-		Model game = Games.get().getGames().get(gameID);
+		GameModel game = Games.get().getGames().get(gameID);
 		JsonObject model = game.getModel();
 		
 		

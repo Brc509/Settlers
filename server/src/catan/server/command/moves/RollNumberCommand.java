@@ -3,7 +3,7 @@ package catan.server.command.moves;
 import java.util.ArrayList;
 
 import catan.model.Hex;
-import catan.model.Model;
+import catan.model.GameModel;
 import catan.model.Player;
 import catan.model.TurnTracker;
 import catan.model.Vertex;
@@ -15,7 +15,7 @@ public class RollNumberCommand implements Command {
 	private int playerIndex;
 	private int number;
 	
-	private Model model;
+	private GameModel model;
 	
 	@Override
 	public Object execute(Object gameId) {

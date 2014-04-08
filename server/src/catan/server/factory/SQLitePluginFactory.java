@@ -1,12 +1,12 @@
 package catan.server.factory;
 
-import catan.server.persistence.JsonPlugin;
 import catan.server.persistence.PersistenceProvider;
+import catan.server.persistence.SQLitePlugin;
 
-public class JsonPluginFactory implements PersistenceProviderFactory {
+public class SQLitePluginFactory implements PersistenceProviderFactory {
 
 	@Override
 	public PersistenceProvider createInstance() {
-		return new JsonPlugin();
+		return new SQLitePlugin();
 	}
 }

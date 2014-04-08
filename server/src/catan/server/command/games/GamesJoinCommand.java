@@ -2,7 +2,7 @@ package catan.server.command.games;
 
 import java.util.List;
 
-import catan.model.Model;
+import catan.model.GameModel;
 import catan.model.Player;
 import catan.server.Games;
 import catan.server.RegisteredUser;
@@ -36,7 +36,7 @@ public class GamesJoinCommand implements Command {
 		boolean success = false;
 		// TODO This can't be hardcoded
 		
-		Model game = Games.get().getGames().get(gameID);
+		GameModel game = Games.get().getGames().get(gameID);
 		Player[] players = game.getPlayers();
 		
 		

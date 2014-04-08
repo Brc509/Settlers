@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import catan.model.DevCardList;
-import catan.model.Model;
+import catan.model.GameModel;
 import catan.model.ResourceList;
 import catan.server.Games;
 import catan.server.Server;
@@ -25,7 +25,7 @@ public class BuyDevCardCommand implements Command {
 
 		// Pick a random dev card from the deck
 		int gameID = (Integer) obj;
-		Model game = Games.get().getGames().get(gameID);
+		GameModel game = Games.get().getGames().get(gameID);
 		DevCardList deck = game.getDeck();
 		List<Integer> stack = new ArrayList<>();
 		for (int n = 0; n < deck.getMonopoly(); n++) {

@@ -3,7 +3,7 @@ package catan.server.handler;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
-import catan.model.Model;
+import catan.model.GameModel;
 import catan.server.Games;
 import catan.server.command.Command;
 import catan.server.command.moves.AcceptTradeCommand;
@@ -106,7 +106,7 @@ public class MovesHandler implements HttpHandler {
 		//if (error) send error response
 		//else { send back the model appropriate to the game }
 		// TODO
-		Model game = Games.get().getGames().get(gameId);
+		GameModel game = Games.get().getGames().get(gameId);
 		HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, game.getModelJSON());
 	}
 

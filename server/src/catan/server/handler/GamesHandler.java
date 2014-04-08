@@ -6,8 +6,8 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Map;
 
-import catan.model.Model;
-import catan.model.Model;
+import catan.model.GameModel;
+import catan.model.GameModel;
 import catan.server.GameListGames;
 import catan.server.GameListPlayer;
 import catan.server.Games;
@@ -50,12 +50,12 @@ public class GamesHandler implements HttpHandler {
 		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		Games games = Games.get();
 		
-		Map<Integer, Model> gameList = games.getGames();
+		Map<Integer, GameModel> gameList = games.getGames();
 		
 		String jsonString = "[";
 		int gameNum = 1;
-		for (Map.Entry<Integer, Model> e : gameList.entrySet()) {
-			Model game = e.getValue();
+		for (Map.Entry<Integer, GameModel> e : gameList.entrySet()) {
+			GameModel game = e.getValue();
 			jsonString += game.getGamesListJSON(e.getKey());
 			if (gameNum < gameList.size()) {
 				jsonString += ",";
@@ -79,7 +79,7 @@ public class GamesHandler implements HttpHandler {
 		Boolean randomTiles = Boolean.parseBoolean(gameCreateInfoMap.get("randomTiles"));
 		Boolean randomPorts = Boolean.parseBoolean(gameCreateInfoMap.get("randomPorts"));
 		
-		Model model = new Model();
+		GameModel model = new GameModel();
 		model.initGame(name, randomNumbers ,randomTiles, randomPorts);
 			
 		Games catanGames = Games.get();

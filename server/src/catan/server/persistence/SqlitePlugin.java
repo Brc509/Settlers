@@ -1,45 +1,42 @@
 package catan.server.persistence;
 
-import catan.model.Model;
-import catan.model.Player;
+import java.util.List;
+
+import catan.model.GameModel;
+import catan.server.RegisteredUser;
 import catan.server.command.Command;
 
-public class SqlitePlugin implements PersistenceProvider {
-	private int frequency;
+public class SQLitePlugin implements PersistenceProvider {
 
 	@Override
 	public void setCheckpointFrequency(int frequency) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	public void saveUser(Player registeredUser) {
+	public void saveUser(RegisteredUser user) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	public void loadUsers() {
+	public List<RegisteredUser> loadUsers() {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override
-	public void saveBaseline(int gameID, Model model) {
+	public void saveBaseline(int gameID, GameModel model) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void saveCommand(int gameID, Command command) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	public void loadGames() {
+	public List<GameModel> loadGames() {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 }

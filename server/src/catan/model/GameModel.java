@@ -12,13 +12,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
-public class Model{
+public class GameModel {
 
 	public static final String NEWGAMEFILE = "server/newGame.json";
 	public static final String DEFAULTGAMEFILE = "server/defaultGame.json";
-	private static final Gson gson = new Gson();
 
+	private static final Gson gson = new Gson();
 	private static final Set<String> resourceNames;
+	private static final int[] offsets = new int[] {3, 2, 1, 0, 0, 0, 0};
 
 	static {
 		resourceNames = new HashSet<>();
@@ -28,18 +29,17 @@ public class Model{
 		resourceNames.add("wheat");
 		resourceNames.add("wood");
 	}
-	private static final int[] offsets = new int[] {3, 2, 1, 0, 0, 0, 0};
 
 	private JsonObject model;
 	private String gameName;
 	private int revision = 0;
 
-	public Model() {
+	public GameModel() {
 
 		this(NEWGAMEFILE);
 	}
-	
-	public Model(String gameFile) {
+
+	public GameModel(String gameFile) {
 		try {
 			FileReader file = new FileReader(gameFile);
 			model = gson.fromJson(file, JsonObject.class);
@@ -49,7 +49,7 @@ public class Model{
 		}
 	}
 
-	public Model(boolean defaultGame) {
+	public GameModel(boolean defaultGame) {
 		try {
 			FileReader file = new FileReader(DEFAULTGAMEFILE);
 			model = gson.fromJson(file, JsonObject.class);
@@ -59,24 +59,20 @@ public class Model{
 		}
 	}
 
-	
 	public void initGame(String name, boolean randomTokens, boolean randomHexes, boolean randomPorts) {
 		gameName = name;
 		initializeMap(randomTokens, randomHexes, randomPorts);
 	}
 
-	
 	public JsonObject getModel() {
 		return model;
 	}
 
-	
 	public String getModelJSON() {
 		model.addProperty("revision", revision);
 		return model.toString();
 	}
 
-	
 	public String getModelJSONForRevision(int revision) {
 		if (revision == this.revision) {
 			return "\"true\"";
@@ -84,12 +80,10 @@ public class Model{
 		return getModelJSON();
 	}
 
-	
 	public String getName() {
 		return gameName;
 	}
 
-	
 	public String getGamesListJSON(int id) {
 		String s = "{\"title\":\"" + gameName + "\",\"id\":" + id + ",\"players\":[";
 		JsonArray players = model.getAsJsonArray("players");
@@ -113,7 +107,6 @@ public class Model{
 		return s;
 	}
 
-	
 	public boolean setPlayer(int orderNumber, int userID, String name, String color) {
 		boolean verdict = false;
 		if (0 <= orderNumber && orderNumber <= 3) {
@@ -167,7 +160,6 @@ public class Model{
 		//TODO Implement
 	}
 
-	
 	public Player getPlayerByIndex(int playerIndex) {
 
 		JsonObject jsonPlayer = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
@@ -177,21 +169,21 @@ public class Model{
 	// ------------------------------
 	// AWESOME HELPER METHODS
 	// ------------------------------
-	
-	public ArrayList <Hex> rollNumber(int number) {
+
+	public ArrayList<Hex> rollNumber(int number) {
 		JsonArray numbers = model.getAsJsonObject("map").getAsJsonObject("numbers").getAsJsonArray(Integer.toString(number));
-		JsonArray hexes = model.getAsJsonObject("map").getAsJsonObject("hexGrid").getAsJsonArray("hexes");
-		
-		ArrayList <Hex> hexList = new ArrayList <>();
-		
+		//JsonArray hexes = model.getAsJsonObject("map").getAsJsonObject("hexGrid").getAsJsonArray("hexes");
+
+		ArrayList<Hex> hexList = new ArrayList<>();
+
 		for (JsonElement location : numbers) {
 			JsonObject l = gson.fromJson(location, JsonObject.class);
 			HexLocation hexLocation = new HexLocation(l.get("x").getAsString(), l.get("y").getAsString());
 			Hex hex = getHex(hexLocation);
-			
+
 			hexList.add(hex);
 		}
-		
+
 		return hexList;
 	}
 
@@ -206,7 +198,6 @@ public class Model{
 		return model;
 	}
 
-	
 	public Player[] getPlayers() {
 
 		JsonArray jsonArray = model.getAsJsonArray("players");
@@ -214,97 +205,99 @@ public class Model{
 		return gson.fromJson(jsonArray, playerArrayType);
 	}
 
-	
 	public HexLocation getRobberPosition() {
 
 		JsonObject jsonRobber = model.getAsJsonObject("map").getAsJsonObject("robber");
 		return gson.fromJson(jsonRobber, HexLocation.class);
 	}
 
-	
 	public Hex getHex(HexLocation location) {
 
 		int index1 = Integer.parseInt(location.getY()) + 3;
 		int index2 = Integer.parseInt(location.getX()) + 3 - offsets[index1];
 		return getHexes()[index1][index2];
 	}
-	
-	
+
 	public EdgeLocation getEquivalentEdge(EdgeLocation thisEdge) {
-		
+
 		HexLocation otherHexLocation = getNeighborLocation(thisEdge.getX(), thisEdge.getY(), thisEdge.getDirectionIndex());
 		int otherDirection = getOppositeDirection(thisEdge.getDirectionIndex());
 		return new EdgeLocation(otherHexLocation.getXInt(), otherHexLocation.getYInt(), otherDirection);
 	}
 
-	private int getOppositeDirection(int direction){
-	
-		return positiveModulo((direction + 3),6);
+	private int getOppositeDirection(int direction) {
+
+		return positiveModulo((direction + 3), 6);
 	}
 
-	
 	public VertexLocation[] getAllHexesForVertex(VertexLocation location) {
 		VertexLocation[] locations = new VertexLocation[3];
 		locations[0] = location; // this location
-		
+
 		// Get one adjacent hex that shares this vertex
 		HexLocation loc1 = getNeighborLocation(location.getX(), location.getY(), positiveModulo(location.getDirectionIndex() - 1, 6));
 		locations[1] = new VertexLocation(loc1.getXInt(), loc1.getYInt(), positiveModulo(location.getDirectionIndex() + 2, 6));
-		
+
 		// Get the other adjacent hex that shares this vertex
 		HexLocation loc2 = getNeighborLocation(location.getX(), location.getY(), location.getDirectionIndex());
 		locations[2] = new VertexLocation(loc2.getXInt(), loc2.getYInt(), positiveModulo(location.getDirectionIndex() + 4, 6));
-		
+
 		return locations;
 	}
-	
+
 	private HexLocation getNeighborLocation(int x, int y, int hexDirection) {
-		
+
 		int deltaX = 0;
 		int deltaY = 0;
 		//["NW","N","NE","SE","S","SW"]
-	    switch (hexDirection) {
-			case 0: // NW
-				deltaX = -1; deltaY = 0;
-				break;
-			case 1: // N
-				deltaX = 0; deltaY = -1;
-				break;
-			case 2: // NE
-				deltaX = 1; deltaY = -1;
-				break;
-			case 3: // SE
-				deltaX = 1; deltaY = 0;
-				break;
-			case 4: // S
-				deltaX = 0; deltaY = 1;
-				break;
-			case 5: // SW
-				deltaX = -1; deltaY = 1;
-				break;
-			default:
-				System.out.println("Invalid direction!");
+		switch (hexDirection) {
+		case 0: // NW
+			deltaX = -1;
+			deltaY = 0;
+			break;
+		case 1: // N
+			deltaX = 0;
+			deltaY = -1;
+			break;
+		case 2: // NE
+			deltaX = 1;
+			deltaY = -1;
+			break;
+		case 3: // SE
+			deltaX = 1;
+			deltaY = 0;
+			break;
+		case 4: // S
+			deltaX = 0;
+			deltaY = 1;
+			break;
+		case 5: // SW
+			deltaX = -1;
+			deltaY = 1;
+			break;
+		default:
+			System.out.println("Invalid direction!");
 		}
 		return new HexLocation(deltaX + x, deltaY + y);
 	}
-	
+
 	private int positiveModulo(int lhs, int rhs) {
-		
+
 		return ((lhs % rhs) + rhs) % rhs;
 	}
-	
+
 	public TurnTracker getTurnTracker() {
 		JsonObject jsonTurnTracker = model.getAsJsonObject("turnTracker");
 		return gson.fromJson(jsonTurnTracker, TurnTracker.class);
 	}
-	
+
 	public void addLogEntry(int playerIndex, String message) {
 		String name = getPlayerByIndex(playerIndex).getName();
 		message = name + message;
 		model.getAsJsonObject("log").getAsJsonArray("lines").add(createEntry(name, message));
 		revision++;
 	}
-	
+
 	public void addChatEntry(int playerIndex, String content) {
 
 		String name = getPlayerByIndex(playerIndex).getName();
@@ -315,18 +308,18 @@ public class Model{
 	private JsonElement createEntry(String source, String message) {
 		return gson.fromJson("{\"source\":\"" + source + "\",\"message\":\"" + message + "\"}", JsonElement.class);
 	}
-	
+
 	public void setTurnTracker(TurnTracker track) {
 		JsonObject jsonTurnTracker = model.getAsJsonObject("turnTracker");
 		jsonTurnTracker.addProperty("status", track.getStatus());
 		jsonTurnTracker.addProperty("currentTurn", track.getCurrentTurn());
 	}
-	
+
 	public DevCardList getDeck() {
 		JsonObject jsonDeck = model.getAsJsonObject("deck");
 		return gson.fromJson(jsonDeck, DevCardList.class);
 	}
-	
+
 	public void setHex(Hex hex) {
 		HexLocation location = hex.getLocation();
 		JsonArray hexes = model.getAsJsonObject("map").getAsJsonObject("hexGrid").getAsJsonArray("hexes");
@@ -336,21 +329,21 @@ public class Model{
 		target.add("edges", gson.toJsonTree(hex.getEdges()));
 		target.add("vertexes", gson.toJsonTree(hex.getVertexes()));
 	}
-	
+
 	public ResourceList getPlayerResources(int playerIndex) {
 		JsonElement resources = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().get("resources");
 		return gson.fromJson(resources, ResourceList.class);
 	}
-	
+
 	public void setPlayerResources(int playerIndex, ResourceList resources) {
 		JsonElement resourcesElement = gson.toJsonTree(resources);
 		model.getAsJsonArray("players").get(playerIndex).getAsJsonObject().add("resources", resourcesElement);
-	}	
-	
+	}
+
 	public ResourceList getBank() {
 		return gson.fromJson(model.get("bank"), ResourceList.class);
 	}
-	
+
 	public void setBank(ResourceList bank) {
 		model.add("bank", gson.toJsonTree(bank));
 	}
@@ -358,17 +351,17 @@ public class Model{
 	public void setDeck(DevCardList deck) {
 		model.add("deck", gson.toJsonTree(deck));
 	}
-	
+
 	public DevCardList getPlayerNewDevCards(int playerIndex) {
 		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
 		return gson.fromJson(player.get("newDevCards"), DevCardList.class);
 	}
-	
+
 	public DevCardList getPlayerOldDevCards(int playerIndex) {
 		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
 		return gson.fromJson(player.get("oldDevCards"), DevCardList.class);
 	}
-	
+
 	public void setPlayerNewDevCards(int playerIndex, DevCardList newDevCards) {
 		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
 		player.add("newDevCards", gson.toJsonTree(newDevCards));

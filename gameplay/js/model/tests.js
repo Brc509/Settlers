@@ -43,6 +43,179 @@ test("model.initFromServer()", 4, function(){
 
 });
 
+test( "clientProxy.rollNumber()", function() {
+	stop();
+	var clientModel = new catan.models.ClientModel(0);
+	loginPlayer("Sam", "sam", "red", "0", function () {
+
+		ok(true, "Logged in");
+		
+		clientModel.initFromServer(function () {
+
+			ok(true, "inited Sam");
+						
+			var preWheat = clientModel.clientPlayer.resources['wheat'];
+
+			var proxy = new catan.models.ClientProxy(clientModel);
+			var command = new catan.models.Command(proxy, clientModel);
+
+			// stop();
+			command.rollNumber(6);
+			setTimeout(function(){
+				var postWheat = clientModel.clientPlayer.resources['wheat'];
+
+				ok(clientModel.turnTracker.status = "Playing", "Sam rolled a 6.  Good work there sammy");
+				ok(postWheat - preWheat, "Sam gained appropriate resources from roll.")
+				start();
+			
+			}, 2000);	
+			
+		});
+	});
+});
+
+test( "model.canDiscardCards()", 3, function() {
+	var clientModel = new catan.models.ClientModel(0);
+
+	stop();
+	var clientModel = new catan.models.ClientModel(0);
+	loginPlayer("Sam", "sam", "red", "0", function () {
+
+		ok(true, "Sam has logged in.");
+		
+		clientModel.initFromServer(function () {
+
+			ok(true, "Initialized server with current player (Sam).");
+			start();
+
+			clientModel.clientPlayer.resources['ore'] ++;
+			var result = clientModel.canDiscardCards(clientModel.clientPlayer.newDevCards);
+			ok(result == false, "ERROR: Sam does not have enough resources");
+			console.log(result);
+		});
+	});
+});
+
+
+test( "model.canBuildRoad()", 4, function() {
+	var clientModel = new catan.models.ClientModel(0);
+
+	stop();
+	var clientModel = new catan.models.ClientModel(0);
+	loginPlayer("Sam", "sam", "red", "0", function () {
+
+		ok(true, "Sam has logged in.");
+		
+		clientModel.initFromServer(function () {
+
+			ok(true, "Initialized server with current player (Sam).");
+			start();
+
+			var result = clientModel.clientPlayer.canAffordRoad();
+			ok(result == false, "Sam doesn't have enough resources to build road");
+
+			clientModel.clientPlayer.resources['ore'] += 5;
+			clientModel.clientPlayer.resources['brick'] += 5;
+			clientModel.clientPlayer.resources['wood'] += 5;
+			clientModel.clientPlayer.resources['sheep'] += 5;
+			clientModel.clientPlayer.resources['wheat'] += 5;
+
+			var result = clientModel.clientPlayer.canAffordRoad();
+			ok(result == true, "Sam's resources have been increased, he does have enough resources to build road");
+		});
+	});
+});
+
+test( "model.canBuildSettlement()", 4, function() {
+	var clientModel = new catan.models.ClientModel(0);
+
+	stop();
+	var clientModel = new catan.models.ClientModel(0);
+	loginPlayer("Sam", "sam", "red", "0", function () {
+
+		ok(true, "Sam has logged in.");
+		
+		clientModel.initFromServer(function () {
+
+			ok(true, "Initialized server with current player (Sam).");
+			start();
+
+			var result = clientModel.clientPlayer.canAffordSettlement();
+			ok(result == false, "Sam doesn't have enough resources to build settlement");
+
+			clientModel.clientPlayer.resources['ore'] += 5;
+			clientModel.clientPlayer.resources['brick'] += 5;
+			clientModel.clientPlayer.resources['wood'] += 5;
+			clientModel.clientPlayer.resources['sheep'] += 5;
+			clientModel.clientPlayer.resources['wheat'] += 5;
+
+			var result = clientModel.clientPlayer.canAffordSettlement();
+			ok(result == true, "Sam's resources have been increased, he does have enough resources to build settlement");
+		});
+	});
+});
+
+test( "model.canBuildCity()", 4, function() {
+	var clientModel = new catan.models.ClientModel(0);
+
+	stop();
+	var clientModel = new catan.models.ClientModel(0);
+	loginPlayer("Sam", "sam", "red", "0", function () {
+
+		ok(true, "Sam has logged in.");
+		
+		clientModel.initFromServer(function () {
+
+			ok(true, "Initialized server with current player (Sam).");
+			start();
+
+			var result = clientModel.clientPlayer.canAffordCity();
+			ok(result == false, "Sam doesn't have enough resources to build city");
+
+			clientModel.clientPlayer.resources['ore'] += 5;
+			clientModel.clientPlayer.resources['brick'] += 5;
+			clientModel.clientPlayer.resources['wood'] += 5;
+			clientModel.clientPlayer.resources['sheep'] += 5;
+			clientModel.clientPlayer.resources['wheat'] += 5;
+
+			var result = clientModel.clientPlayer.canAffordCity();
+			ok(result == true, "Sam's resources have been increased, he does have enough resources to build city");
+		});
+	});
+});
+
+test( "model.canFinishTurn()", 4, function() {
+	var clientModel = new catan.models.ClientModel(0);
+
+	stop();
+	var clientModel = new catan.models.ClientModel(0);
+	loginPlayer("Sam", "sam", "red", "0", function () {
+
+		ok(true, "Sam has logged in.");
+		
+		clientModel.initFromServer(function () {
+
+			ok(true, "Initialized server with current player (Sam).");
+			start();
+
+			var status = clientModel.turnTracker.status;
+			var turn   = clientModel.turnTracker.currentTurn;
+
+			var result = clientModel.clientPlayer.canAffordCity();
+			ok(status == "Playing" && turn == 0 , "Turntracker is correct, Sam can end turn.");
+
+			clientModel.clientPlayer.resources['ore'] += 5;
+			clientModel.clientPlayer.resources['brick'] += 5;
+			clientModel.clientPlayer.resources['wood'] += 5;
+			clientModel.clientPlayer.resources['sheep'] += 5;
+			clientModel.clientPlayer.resources['wheat'] += 5;
+
+			status = "Rolling";
+			turn = 1;
+			ok(status == "Rolling" && turn == 1, "Turntracker is not correct, Sam cannot end turn.");
+		});
+	});
+});
 test( "model.yearOfPlenty()", 3, function() {
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
@@ -167,42 +340,11 @@ test( "clientProxy.buyDevCard()", function() {
 				ok(preArray.toString() != postArray.toString(), "Sam's dev cards have changed, success.");
 				start();
 			
-			}, 3000);
+			}, 5500);
 				
 		});
 	});
 
-});
-
-test( "clientProxy.rollNumber()", function() {
-	stop();
-	var clientModel = new catan.models.ClientModel(0);
-	loginPlayer("Sam", "sam", "red", "0", function () {
-
-		ok(true, "Logged in");
-		
-		clientModel.initFromServer(function () {
-
-			ok(true, "inited Sam");
-						
-			var preWheat = clientModel.clientPlayer.resources['wheat'];
-
-			var proxy = new catan.models.ClientProxy(clientModel);
-			var command = new catan.models.Command(proxy, clientModel);
-
-			// stop();
-			command.rollNumber(6);
-			setTimeout(function(){
-				var postWheat = clientModel.clientPlayer.resources['wheat'];
-
-				ok(clientModel.turnTracker.status = "Playing", "Sam rolled a 6.  Good work there sammy");
-				ok(postWheat - preWheat, "Sam gained appropriate resources from roll.")
-				start();
-			
-			}, 2000);	
-			
-		});
-	});
 });
 
 
@@ -522,46 +664,6 @@ test( "model.finishTurn()", 3, function() {
 		});
 	});
 });
-// test( "model.canDiscardCards()", function() {
-// 	var clientModel = new catan.models.ClientModel(0);
 
-// 	stop();
-// 	var clientModel = new catan.models.ClientModel(0);
-// 	loginPlayer("Sam", "sam", "red", "0", function () {
-
-// 		ok(true, "Sam has logged in.");
-// 		start();
-// 		stop();
-// 		clientModel.initFromServer(function () {
-
-// 			ok(true, "Initialized server with current player (Sam).");
-// 			start();
-
-// 			clientModel.clientPlayer.resources['ore'] ++;
-// 			var result = clientModel.canDiscardCards();
-// 			ok(result == false, "ERROR: Sam does not have enough resources");
-// 			console.log(result);
-// 		});
-// 	});
-
-
-// 	loginPlayer("Brooke", "brooke", "blue", "0", function () {
-		
-// 		ok(true, "Brooke has logged in.");
-// 		start();
-// 		stop();
-
-// 		clientModel.initFromServer(function () {
-// 			ok(true, "Initialized server with current player (Brooke).");
-// 			start();
-			
-// 			var result = clientModel.canDiscardCards();
-// 			ok(result == false, "ERROR: Brooke cannot discard cards.");
-// 			console.log(result);
-// 		});
-// 	});
-
-// 	ok( 1 == "1", "Passed!" );
-// });
 
 

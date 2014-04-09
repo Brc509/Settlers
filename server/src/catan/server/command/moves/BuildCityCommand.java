@@ -103,7 +103,11 @@ public class BuildCityCommand implements Command {
 		setHex(getHex(vertexLocation.x-1, vertexLocation.y+1,"NE",hexes), getCornerValue("NE"), playerIndex);
 		}
 		
-		model.addLogEntry(playerIndex, "has built a city.");
+		model.addLogEntry(playerIndex, " has built a city.");
+		int numCities = currPlayer.getCities()-1;
+		
+		model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().addProperty("cities", numCities);
+		
 		return null;
 		}
 		

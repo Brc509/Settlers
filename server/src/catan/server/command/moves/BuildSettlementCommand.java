@@ -94,7 +94,10 @@ public class BuildSettlementCommand implements Command {
 			setHex(getHex(vertexLocation.x - 1, vertexLocation.y + 1, "NE", hexes), getCornerValue("NE"), playerIndex);
 		}
 
-		model.addLogEntry(playerIndex, "has built a settlement.");
+		model.addLogEntry(playerIndex, " has built a settlement.");
+		int numSettlements = currPlayer.getSettlements()-1;
+		
+		model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().addProperty("settlements", numSettlements);
 
 		return null;
 	}

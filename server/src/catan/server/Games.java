@@ -31,6 +31,10 @@ public class Games {
 		return games;
 	}
 
+	public void setGames(Map<Integer, GameModel> games) {
+		this.games = games;
+	}
+
 	public Integer getGameID(GameModel game) {
 		for (Map.Entry<Integer, GameModel> e : games.entrySet()) {
 			if (e.getValue() == game) {
@@ -40,8 +44,10 @@ public class Games {
 		return null;
 	}
 
-	public void addGame(GameModel cm) {
-		games.put(games.size() + 1, cm);
+	public void addGame(GameModel game) {
+		int gameID = games.size() + 1;
+		games.put(gameID, game);
+		Server.getPP().saveBaseline(gameID, game);
 	}
 
 }

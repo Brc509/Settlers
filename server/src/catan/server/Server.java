@@ -2,7 +2,10 @@ package catan.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.List;
+import java.util.Map;
 
+import catan.model.GameModel;
 import catan.server.factory.PersistenceProviderFactory;
 // HANDLERS
 import catan.server.handler.FileDownloadHandlerFactory;
@@ -75,6 +78,21 @@ public class Server {
 			pp = ((PersistenceProviderFactory) Class.forName(ppFactoryClassName).newInstance()).createInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			e.printStackTrace();
+		}
+
+		// Set the checkpoint frequency
+		pp.setCheckpointFrequency(checkpointFrequency);
+
+		// Load users into memory
+		List<RegisteredUser> users = pp.loadUsers();
+		if (!users.isEmpty()) {
+			RegisteredUsers.get().setUsers(users);
+		}
+
+		// Load games into memory
+		Map<Integer, GameModel> games = pp.loadGames();
+		if (!games.isEmpty()) {
+			Games.get().setGames(games);
 		}
 
 		// Create the server

@@ -162,8 +162,8 @@ public class JsonPlugin implements PersistenceProvider {
 	}
 
 	@Override
-	public List<GameModel> loadGames() {
-		List<GameModel> games = new ArrayList<>();
+	public Map<Integer, GameModel> loadGames() {
+		Map<Integer, GameModel> games = new HashMap<>();
 		loading = true; // Prevent self-interference while loading
 		try {
 			// Read in the games and commands arrays
@@ -198,7 +198,7 @@ public class JsonPlugin implements PersistenceProvider {
 					command.execute(game);
 				}
 				// Add the fully restored model to the list
-				games.add(game);
+				games.put(gameID, game);
 			}
 		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
 			e.printStackTrace();

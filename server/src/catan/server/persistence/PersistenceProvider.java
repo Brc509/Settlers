@@ -1,6 +1,7 @@
 package catan.server.persistence;
 
 import java.util.List;
+import java.util.Map;
 
 import catan.model.GameModel;
 import catan.server.RegisteredUser;
@@ -48,7 +49,7 @@ public interface PersistenceProvider {
 	/**
 	 * Loads all games into memory
 	 * 
-	 * @return A list containing all games
+	 * @return A map containing all games
 	 */
-	public List<GameModel> loadGames();
+	public Map<Integer, GameModel> loadGames();
 }

@@ -1,6 +1,7 @@
 package catan.server.persistence;
 
 import java.util.List;
+import java.util.Map;
 
 import catan.model.GameModel;
 import catan.server.RegisteredUser;
@@ -35,7 +36,7 @@ public class SQLitePlugin implements PersistenceProvider {
 	}
 
 	@Override
-	public List<GameModel> loadGames() {
+	public Map<Integer, GameModel> loadGames() {
 		// TODO Auto-generated method stub
 		return null;
 	}

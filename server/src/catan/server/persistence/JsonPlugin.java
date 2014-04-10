@@ -14,6 +14,7 @@ import catan.model.GameModel;
 import catan.server.Games;
 import catan.server.RegisteredUser;
 import catan.server.command.Command;
+import catan.server.handler.HandlerUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -171,6 +172,9 @@ public class JsonPlugin implements PersistenceProvider {
 			JsonObject gameObject;
 			JsonObject modelObject;
 			JsonArray commandsArray;
+			JsonObject commandObject;
+			Command command;
+			String endpoint;
 			// For each game:
 			for (int gameIndex = 0; gameIndex < gamesArray.size(); gameIndex++) {
 				gameObject = gamesArray.get(gameIndex).getAsJsonObject();
@@ -188,8 +192,9 @@ public class JsonPlugin implements PersistenceProvider {
 				commandsArray = getObjectForGame(commandListArray, gameID).getAsJsonArray("commands");
 				// Deserialize and execute remaining commands on the model
 				for (int commandIndex = lastCommand; commandIndex < commandsArray.size(); commandIndex++) {
-					// TODO: We may have to check the "type" and use a big switch statement...
-					Command command = gson.fromJson(commandsArray.get(commandIndex), Command.class);
+					commandObject = commandsArray.get(commandIndex).getAsJsonObject();
+					endpoint = "/moves/" + commandObject.get("type").getAsString();
+					command = gson.fromJson(commandObject, HandlerUtils.getCommandClassForEndpoint(endpoint));
 					command.execute(game);
 				}
 				// Add the fully restored model to the list

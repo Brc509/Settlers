@@ -1,16 +1,11 @@
 package catan.server.command.moves;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-
-import catan.model.DevCardList;
+import catan.model.GameModel;
 import catan.model.Hex;
 import catan.model.HexLocation;
-import catan.model.GameModel;
 import catan.model.Player;
 import catan.model.Vertex;
 import catan.model.VertexValue;
-import catan.server.Games;
 import catan.server.Server;
 import catan.server.command.Command;
 
@@ -29,10 +24,9 @@ public class SoldierCommand implements Command {
 	public SoldierCommand() {}
 
 	@Override
-	public Boolean execute(Object obj) {
+	public Boolean execute(GameModel game) {
 		Server.println("  Attempting to execute command \"" + type + "\".");
-		GameModel game = Games.get().getGames().get(obj);
-	
+
 		boolean verdict = false;
 		if (playerIndex >= 0 && playerIndex < 4 && victimIndex >= 0 && victimIndex < 4) {
 
@@ -65,19 +59,19 @@ public class SoldierCommand implements Command {
 		// TODO update the game with the new values
 		return verdict;
 	}
-	
+
 	private boolean moveRobberAndRob(GameModel game, int playerIndex, int victimIndex, HexLocation location) {
 		boolean verdict = false;
-	
+
 		HexLocation robber = game.getRobberPosition();
-	
+
 		// Make sure robber is moved from last location
 		String oldX = robber.getX();
 		String oldY = robber.getY();
-		
+
 		// If the new robber location doesn't exactly match the old robber location (it shouldn't)
 		if (!(oldX.equals(location.getX()) && oldY == location.getY())) {
-	
+
 			// Make sure victim is valid for new location
 			String newX = location.getX();
 			String newY = location.getY();
@@ -97,11 +91,11 @@ public class SoldierCommand implements Command {
 				Player[] players = game.getPlayers();
 				Player player = players[playerIndex];
 				Player victim = players[victimIndex];
-				
+
 				String robResource = victim.getResources().getRandomResource();
 				player.getResources().incrementResource(robResource);
 				victim.getResources().decrementResource(robResource);
-				
+
 				game.setPlayerResources(playerIndex, player.getResources());
 				game.setPlayerResources(victimIndex, player.getResources());
 			}

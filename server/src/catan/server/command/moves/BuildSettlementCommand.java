@@ -3,7 +3,6 @@ package catan.server.command.moves;
 import catan.model.GameModel;
 import catan.model.Player;
 import catan.model.ResourceList;
-import catan.server.Games;
 import catan.server.command.Command;
 
 import com.google.gson.JsonArray;
@@ -13,12 +12,12 @@ public class BuildSettlementCommand implements Command {
 
 	private String type;
 	private int playerIndex;
-	public VertexLocation vertexLocation;
+	private VertexLocation vertexLocation;
 	private boolean free;
 
 	public BuildSettlementCommand() {}
 
-	class VertexLocation {
+	private class VertexLocation {
 
 		int x;
 		int y;
@@ -26,33 +25,32 @@ public class BuildSettlementCommand implements Command {
 	}
 
 	@Override
-	public Object execute(Object obj) {
-		GameModel model = Games.get().getGames().get(obj);
-		Player currPlayer = model.getPlayerByIndex(playerIndex);
+	public Object execute(GameModel game) {
+		Player currPlayer = game.getPlayerByIndex(playerIndex);
 
 		if (!free) {
 			ResourceList playerList = currPlayer.getResources();
 
-			int playerBrick = model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().get("resources").getAsJsonObject().get("brick").getAsInt();
-			model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().get("resources").getAsJsonObject().addProperty("brick", playerBrick - 1);
-			int playerWood = model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().get("resources").getAsJsonObject().get("wood").getAsInt();
-			model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().get("resources").getAsJsonObject().addProperty("wood", playerWood - 1);
-			int playerSheep = model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().get("resources").getAsJsonObject().get("sheep").getAsInt();
-			model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().get("resources").getAsJsonObject().addProperty("sheep", playerSheep - 1);
-			int playerWheat = model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().get("resources").getAsJsonObject().get("wheat").getAsInt();
-			model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().get("resources").getAsJsonObject().addProperty("wheat", playerWheat - 1);
+			int playerBrick = game.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().get("resources").getAsJsonObject().get("brick").getAsInt();
+			game.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().get("resources").getAsJsonObject().addProperty("brick", playerBrick - 1);
+			int playerWood = game.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().get("resources").getAsJsonObject().get("wood").getAsInt();
+			game.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().get("resources").getAsJsonObject().addProperty("wood", playerWood - 1);
+			int playerSheep = game.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().get("resources").getAsJsonObject().get("sheep").getAsInt();
+			game.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().get("resources").getAsJsonObject().addProperty("sheep", playerSheep - 1);
+			int playerWheat = game.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().get("resources").getAsJsonObject().get("wheat").getAsInt();
+			game.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().get("resources").getAsJsonObject().addProperty("wheat", playerWheat - 1);
 
-			int brick = model.getModel().get("bank").getAsJsonObject().get("brick").getAsInt();
-			model.getModel().get("bank").getAsJsonObject().addProperty("brick", brick + 1);
-			int wood = model.getModel().get("bank").getAsJsonObject().get("wood").getAsInt();
-			model.getModel().get("bank").getAsJsonObject().addProperty("wood", wood + 1);
-			int sheep = model.getModel().get("bank").getAsJsonObject().get("sheep").getAsInt();
-			model.getModel().get("bank").getAsJsonObject().addProperty("sheep", sheep + 1);
-			int wheat = model.getModel().get("bank").getAsJsonObject().get("wheat").getAsInt();
-			model.getModel().get("bank").getAsJsonObject().addProperty("wheat", wheat + 1);
+			int brick = game.getModel().get("bank").getAsJsonObject().get("brick").getAsInt();
+			game.getModel().get("bank").getAsJsonObject().addProperty("brick", brick + 1);
+			int wood = game.getModel().get("bank").getAsJsonObject().get("wood").getAsInt();
+			game.getModel().get("bank").getAsJsonObject().addProperty("wood", wood + 1);
+			int sheep = game.getModel().get("bank").getAsJsonObject().get("sheep").getAsInt();
+			game.getModel().get("bank").getAsJsonObject().addProperty("sheep", sheep + 1);
+			int wheat = game.getModel().get("bank").getAsJsonObject().get("wheat").getAsInt();
+			game.getModel().get("bank").getAsJsonObject().addProperty("wheat", wheat + 1);
 		}
 
-		JsonArray hexes = model.getModel().get("map").getAsJsonObject().get("hexGrid").getAsJsonObject().get("hexes").getAsJsonArray();
+		JsonArray hexes = game.getModel().get("map").getAsJsonObject().get("hexGrid").getAsJsonObject().get("hexes").getAsJsonArray();
 
 		String direction = vertexLocation.direction;
 		int corner = getCornerValue(direction);
@@ -94,22 +92,22 @@ public class BuildSettlementCommand implements Command {
 			setHex(getHex(vertexLocation.x - 1, vertexLocation.y + 1, "NE", hexes), getCornerValue("NE"), playerIndex);
 		}
 
-		model.addLogEntry(playerIndex, " has built a settlement.");
-		int numSettlements = currPlayer.getSettlements()-1;
-		
-		model.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().addProperty("settlements", numSettlements);
+		game.addLogEntry(playerIndex, " has built a settlement.");
+		int numSettlements = currPlayer.getSettlements() - 1;
+
+		game.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().addProperty("settlements", numSettlements);
 
 		return null;
 	}
 
-	public void setHex(JsonObject hex, int corner, int player) {
+	private void setHex(JsonObject hex, int corner, int player) {
 		if (hex != null) {
 			hex.getAsJsonObject().get("vertexes").getAsJsonArray().get(corner).getAsJsonObject().get("value").getAsJsonObject().addProperty("worth", 1);
 			hex.getAsJsonObject().get("vertexes").getAsJsonArray().get(corner).getAsJsonObject().get("value").getAsJsonObject().addProperty("ownerID", player);
 		}
 	}
 
-	public JsonObject getHex(int x, int y, String direction, JsonArray hexes) {
+	private JsonObject getHex(int x, int y, String direction, JsonArray hexes) {
 		for (int i = 0; i < hexes.size(); i++) {
 			JsonArray setOfHexes = hexes.get(i).getAsJsonArray();
 			for (int j = 0; j < setOfHexes.size(); j++) {
@@ -121,7 +119,7 @@ public class BuildSettlementCommand implements Command {
 		return null;
 	}
 
-	public int getCornerValue(String direction) {
+	private int getCornerValue(String direction) {
 		int corner1 = -1;
 		if (direction.equals("W")) {
 			corner1 = 0;

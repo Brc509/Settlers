@@ -7,7 +7,6 @@ import java.util.Random;
 import catan.model.DevCardList;
 import catan.model.GameModel;
 import catan.model.ResourceList;
-import catan.server.Games;
 import catan.server.Server;
 import catan.server.command.Command;
 
@@ -19,13 +18,11 @@ public class BuyDevCardCommand implements Command {
 	public BuyDevCardCommand() {}
 
 	@Override
-	public Object execute(Object obj) {
+	public Object execute(GameModel game) {
 
 		Server.println("Executing command: \"" + type + "\".");
 
 		// Pick a random dev card from the deck
-		int gameID = (Integer) obj;
-		GameModel game = Games.get().getGames().get(gameID);
 		DevCardList deck = game.getDeck();
 		List<Integer> stack = new ArrayList<>();
 		for (int n = 0; n < deck.getMonopoly(); n++) {

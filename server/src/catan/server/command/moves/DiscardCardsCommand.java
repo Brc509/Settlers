@@ -1,24 +1,19 @@
 package catan.server.command.moves;
 
+import catan.model.GameModel;
+import catan.model.ResourceList;
 import catan.server.command.Command;
 
-import com.google.gson.JsonObject;
-import com.sun.net.httpserver.HttpExchange;
+public class DiscardCardsCommand implements Command {
 
-public class DiscardCardsCommand implements Command{
-	
-	HttpExchange arg0;
-	JsonObject json;
+	private String type;
+	private int playerIndex;
+	private ResourceList discardedCards;
 
-	public DiscardCardsCommand(HttpExchange arg0,JsonObject json) {
-		// TODO Auto-generated constructor stub
-		this.arg0 = arg0;
-		this.json = json;
-		//execute();
-	}
+	public DiscardCardsCommand() {}
 
 	@Override
-	public Object execute(Object obj) {
+	public Object execute(GameModel game) {
 		// TODO Auto-generated method stub
 		return null;
 	}

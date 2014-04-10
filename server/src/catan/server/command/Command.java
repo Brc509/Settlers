@@ -1,5 +1,8 @@
 package catan.server.command;
 
+import catan.model.GameModel;
+
 public interface Command {
-	public Object execute(Object obj);
+
+	public Object execute(GameModel game);
 }

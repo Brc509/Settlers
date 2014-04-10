@@ -3,7 +3,6 @@ package catan.server.command.moves;
 import catan.model.DevCardList;
 import catan.model.GameModel;
 import catan.model.TurnTracker;
-import catan.server.Games;
 import catan.server.Server;
 import catan.server.command.Command;
 
@@ -15,16 +14,15 @@ public class FinishTurnCommand implements Command {
 	public FinishTurnCommand() {}
 
 	@Override
-	public Object execute(Object obj) {
+	public Object execute(GameModel game) {
 
 		Server.println("Executing command: \"" + type + "\".");
 
-		GameModel model = Games.get().getGames().get(obj);
-		TurnTracker track = model.getTurnTracker();
+		TurnTracker track = game.getTurnTracker();
 
 		// Move the current player's new dev cards to old dev cards
-		DevCardList oldDC = model.getPlayerOldDevCards(playerIndex);
-		DevCardList newDC = model.getPlayerNewDevCards(playerIndex);
+		DevCardList oldDC = game.getPlayerOldDevCards(playerIndex);
+		DevCardList newDC = game.getPlayerNewDevCards(playerIndex);
 
 		oldDC.setMonopoly(oldDC.getMonopoly() + newDC.getMonopoly());
 		oldDC.setMonument(oldDC.getMonument() + newDC.getMonument());
@@ -38,16 +36,16 @@ public class FinishTurnCommand implements Command {
 		newDC.setSoldier(0);
 		newDC.setYearOfPlenty(0);
 
-		model.setPlayerOldDevCards(playerIndex, oldDC);
-		model.setPlayerNewDevCards(playerIndex, newDC);
+		game.setPlayerOldDevCards(playerIndex, oldDC);
+		game.setPlayerNewDevCards(playerIndex, newDC);
 
 		// Go to the next player's turn
 		track.setCurrentTurn((track.getCurrentTurn() + 1) % 4);
 		track.setStatus("Rolling");
-		model.setTurnTracker(track);
+		game.setTurnTracker(track);
 
 		// Add the log entry
-		model.addLogEntry(playerIndex, "'s turn has ended.");
+		game.addLogEntry(playerIndex, "'s turn has ended.");
 
 		return null;
 	}

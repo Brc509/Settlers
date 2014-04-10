@@ -3,7 +3,6 @@ package catan.server.command.moves;
 import catan.model.DevCardList;
 import catan.model.GameModel;
 import catan.model.ResourceList;
-import catan.server.Games;
 import catan.server.Server;
 import catan.server.command.Command;
 
@@ -14,12 +13,10 @@ public class MonopolyCommand implements Command {
 	private int playerIndex;
 
 	@Override
-	public Object execute(Object obj) {
+	public Object execute(GameModel game) {
 
 		Server.println("Executing command: \"" + type + "\".");
 
-		int gameID = (Integer) obj;
-		GameModel game = Games.get().getGames().get(gameID);
 		resource = resource.toLowerCase();
 
 		// Gather the victims' resources of the given type

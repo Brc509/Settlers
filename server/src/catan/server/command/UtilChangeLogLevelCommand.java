@@ -1,5 +1,6 @@
 package catan.server.command;
 
+import catan.model.GameModel;
 import catan.server.Server;
 
 /**
@@ -16,7 +17,7 @@ public class UtilChangeLogLevelCommand implements Command {
 	}
 
 	@Override
-	public String execute(Object obj) {
+	public String execute(GameModel game) {
 		Server.println("  Log level changed to \"" + logLevel + "\".");
 		return "Success";
 	}

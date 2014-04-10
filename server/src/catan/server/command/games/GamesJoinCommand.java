@@ -9,7 +9,6 @@ import catan.server.RegisteredUser;
 import catan.server.RegisteredUsers;
 import catan.server.Server;
 import catan.server.command.Command;
-import catan.server.handler.HandlerUtils;
 
 /**
  * When executed, joins a player to an active game.
@@ -21,7 +20,7 @@ public class GamesJoinCommand implements Command {
 	private final int userID;
 	private final int gameID;
 	private final String color;
-	private final String userName; 
+	private final String userName;
 
 	public GamesJoinCommand(int userID, int gameID, String color, String userName) {
 		this.userID = userID;
@@ -31,27 +30,26 @@ public class GamesJoinCommand implements Command {
 	}
 
 	@Override
-	public Boolean execute(Object obj) {
+	public Boolean execute(GameModel game) {
 
 		boolean success = false;
 		// TODO This can't be hardcoded
-		
-		GameModel game = Games.get().getGames().get(gameID);
+
+		game = Games.get().getGames().get(gameID);
 		Player[] players = game.getPlayers();
-		
-		
+
 		int orderNumber = 0;
-		for(int i = 0; i < players.length; i++){
+		for (int i = 0; i < players.length; i++) {
 			String name = players[i].getName();
 			Player p = players[i];
-			if(this.userName.equals(p.getName()) && p.getPlayerID() >= 0){
+			if (userName.equals(p.getName()) && p.getPlayerID() >= 0) {
 				orderNumber = i;
 				break;
-			}else if(!name.equals("") && p.getPlayerID() >= 0){
+			} else if (!name.equals("") && p.getPlayerID() >= 0) {
 				orderNumber++;
 			}
 		}
-		
+
 		if (game != null) {
 			List<RegisteredUser> users = RegisteredUsers.get().getUsers();
 			String name = null;

@@ -7,8 +7,6 @@ import catan.server.Server;
 import catan.server.handler.HandlerUtils;
 
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.Headers;
-
 
 public class GameCommandsHandler_Prod implements GameCommandsHandler {
 

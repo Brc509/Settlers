@@ -1,5 +1,6 @@
 package catan.server.command.games;
 
+import catan.model.GameModel;
 import catan.server.command.Command;
 
 /**
@@ -14,7 +15,7 @@ public class GamesCreateCommand implements Command {
 	}
 
 	@Override
-	public Object execute(Object obj) {
+	public Object execute(GameModel game) {
 		// TODO Auto-generated method stub
 		return null;
 	}

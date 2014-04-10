@@ -46,7 +46,7 @@ public class MovesHandlerTests {
 	public void gamesGoodJoin() {
 
 		GamesJoinCommand gjc = new GamesJoinCommand(0, 1, "orange", "Sam");
-		boolean didJoin = gjc.execute(gjc);
+		boolean didJoin = gjc.execute(null);
 		assertTrue(didJoin);
 
 	}
@@ -55,7 +55,7 @@ public class MovesHandlerTests {
 	public void gamesBadJoin() {
 
 		GamesJoinCommand gjc = new GamesJoinCommand(0, 1, "orange", "Samantha");
-		boolean didJoin = gjc.execute(gjc);
+		boolean didJoin = gjc.execute(null);
 		assertFalse(didJoin);
 	}
 
@@ -63,8 +63,8 @@ public class MovesHandlerTests {
 	public void finishTurn() {
 
 		FinishTurnCommand ftc = gson.fromJson("{\"type\":\"finishTurn\", \"playerIndex\": 0}", FinishTurnCommand.class);
-		ftc.execute(1);
 		GameModel game = Games.get().getGames().get(1);
+		ftc.execute(game);
 		TurnTracker tt = game.getTurnTracker();
 		assertEquals(tt.getCurrentTurn(), 1);
 		assertEquals(tt.getStatus(), "Rolling");
@@ -78,7 +78,7 @@ public class MovesHandlerTests {
 		Player[] playersPre = gamePre.getPlayers();
 
 		RollNumberCommand rnc = gson.fromJson("{\"type\": \"rollNumber\",\"playerIndex\": 0,\"number\": 10}", RollNumberCommand.class);
-		rnc.execute(1);
+		rnc.execute(gamePre);
 
 		GameModel gamePost = Games.get().getGames().get(1);
 		Player[] playersPost = gamePost.getPlayers();
@@ -99,7 +99,7 @@ public class MovesHandlerTests {
 		int preSize = prechatArray.size();
 
 		SendChatCommand scc = gson.fromJson("{\"type\": \"sendChat\",\"playerIndex\": 0,\"content\": \"hello world\"}", SendChatCommand.class);
-		scc.execute(1);
+		scc.execute(premodel);
 
 		GameModel model = Games.get().getGames().get(1);
 		JsonObject modelJson = model.getModel();
@@ -118,7 +118,7 @@ public class MovesHandlerTests {
 		Player[] playersPre = gamePre.getPlayers();
 
 		YearOfPlentyCommand yopc = gson.fromJson("{	\"type\": \"Year_of_Plenty\", \"playerIndex\": 0, \"resource1\": \"sheep\", \"resource2\": \"brick\"}", YearOfPlentyCommand.class);
-		yopc.execute(1);
+		yopc.execute(gamePre);
 
 		GameModel gamePost = Games.get().getGames().get(1);
 		Player[] playersPost = gamePost.getPlayers();
@@ -141,7 +141,7 @@ public class MovesHandlerTests {
 		Player[] playersPre = gamePre.getPlayers();
 
 		MonopolyCommand mc = gson.fromJson("{\"type\": \"Monopoly\",\"resource\": \"brick\",\"playerIndex\": 0}", MonopolyCommand.class);
-		mc.execute(1);
+		mc.execute(gamePre);
 
 		GameModel gamePost = Games.get().getGames().get(1);
 		Player[] playersPost = gamePost.getPlayers();
@@ -163,7 +163,7 @@ public class MovesHandlerTests {
 		Player[] playersPre = gamePre.getPlayers();
 
 		MaritimeTradeCommand mtc = gson.fromJson("{\"type\": \"maritimeTrade\",\"playerIndex\": 0,	\"ratio\": 4,\"inputResource\": \"sheep\",\"outputResource\": \"brick\"}", MaritimeTradeCommand.class);
-		mtc.execute(1);
+		mtc.execute(gamePre);
 
 		GameModel gamePost = Games.get().getGames().get(1);
 		Player[] playersPost = gamePost.getPlayers();

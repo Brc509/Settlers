@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import catan.model.GameModel;
-import catan.model.GameModel;
 import catan.server.GameListGames;
 import catan.server.GameListPlayer;
 import catan.server.Games;
@@ -19,7 +18,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 public class GamesHandler implements HttpHandler {
-	
+
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
 		//TODO CHECK FOR BAD REQUESTS
@@ -28,30 +27,35 @@ public class GamesHandler implements HttpHandler {
 		try {
 			switch (endpoint) {
 			case "/games/list":
-				if (HandlerUtils.checkRequestMethod("GET", exchange)){ listGames(exchange); }
+				if (HandlerUtils.checkRequestMethod("GET", exchange)) {
+					listGames(exchange);
+				}
 				break;
 			case "/games/create":
-				if (HandlerUtils.checkRequestMethod("POST", exchange)){ createGame(exchange); }
+				if (HandlerUtils.checkRequestMethod("POST", exchange)) {
+					createGame(exchange);
+				}
 				break;
 			case "/games/join":
-				if (HandlerUtils.checkRequestMethod("POST", exchange)){ joinGame(exchange); }
+				if (HandlerUtils.checkRequestMethod("POST", exchange)) {
+					joinGame(exchange);
+				}
 				break;
-			default: 
+			default:
 				System.out.println("gameHandler. Endpoint: " + endpoint + ". Sent Bad Request");
 				HandlerUtils.sendEmptyBody(exchange, HttpURLConnection.HTTP_BAD_REQUEST);
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	private void listGames (HttpExchange exchange) throws IOException {
+
+	private void listGames(HttpExchange exchange) throws IOException {
 		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		Games games = Games.get();
-		
+
 		Map<Integer, GameModel> gameList = games.getGames();
-		
+
 		String jsonString = "[";
 		int gameNum = 1;
 		for (Map.Entry<Integer, GameModel> e : gameList.entrySet()) {
@@ -63,43 +67,43 @@ public class GamesHandler implements HttpHandler {
 			gameNum++;
 		}
 		jsonString += "]";
-		
+
 		Server.println("  /games/list");
 		HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, jsonString);
 	}
-	
-	private void createGame (HttpExchange exchange) throws IOException {			
-		
+
+	private void createGame(HttpExchange exchange) throws IOException {
+
 		InputStream headers = exchange.getRequestBody();
 		String gameCreateInfo = HandlerUtils.inputStreamToString(headers);
-		Map<String,String> gameCreateInfoMap = HandlerUtils.decodeQueryString(gameCreateInfo);
-		
+		Map<String, String> gameCreateInfoMap = HandlerUtils.decodeQueryString(gameCreateInfo);
+
 		String name = gameCreateInfoMap.get("name");
 		Boolean randomNumbers = Boolean.parseBoolean(gameCreateInfoMap.get("randomNumbers"));
 		Boolean randomTiles = Boolean.parseBoolean(gameCreateInfoMap.get("randomTiles"));
 		Boolean randomPorts = Boolean.parseBoolean(gameCreateInfoMap.get("randomPorts"));
-		
+
 		GameModel model = new GameModel();
-		model.initGame(name, randomNumbers ,randomTiles, randomPorts);
-			
+		model.initGame(name, randomNumbers, randomTiles, randomPorts);
+
 		Games catanGames = Games.get();
 		catanGames.addGame(model);
-		
+
 		Gson gson = new Gson();
-		
+
 		ArrayList<GameListPlayer> glp = new ArrayList<GameListPlayer>();
-		for(int i = 0; i < 4; i++){
+		for (int i = 0; i < 4; i++) {
 			glp.add(new GameListPlayer());
 		}
-		
+
 		GameListGames g = new GameListGames(name, catanGames.getGames().size(), glp);
-		
+
 		String jsonString = gson.toJson(g);
 		Server.println("  /games/create");
 		HandlerUtils.sendStringAsJSON(exchange, HttpURLConnection.HTTP_OK, jsonString);
 	}
-	
-	private void joinGame (HttpExchange exchange) throws IOException {
+
+	private void joinGame(HttpExchange exchange) throws IOException {
 		Server.println("\n" + this.getClass().getSimpleName() + ":");
 		System.out.println("Request type: " + exchange.getRequestMethod().toUpperCase());
 		if (!HandlerUtils.authorizeUser(exchange)) {

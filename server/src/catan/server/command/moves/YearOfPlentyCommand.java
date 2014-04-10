@@ -3,7 +3,6 @@ package catan.server.command.moves;
 import catan.model.DevCardList;
 import catan.model.GameModel;
 import catan.model.ResourceList;
-import catan.server.Games;
 import catan.server.Server;
 import catan.server.command.Command;
 
@@ -22,17 +21,15 @@ public class YearOfPlentyCommand implements Command {
 	public YearOfPlentyCommand() {}
 
 	@Override
-	public Boolean execute(Object obj) {
+	public Boolean execute(GameModel game) {
 
 		Server.println("Executing command: \"" + type + "\".");
 
 		resource1 = resource1.toLowerCase();
 		resource2 = resource2.toLowerCase();
-		String[] rNames = { resource1, resource2 };
+		String[] rNames = {resource1, resource2};
 
 		// Get original player resources and bank
-		int gameID = (Integer) obj;
-		GameModel game = Games.get().getGames().get(gameID);
 		ResourceList pResources = game.getPlayerResources(playerIndex);
 		ResourceList bank = game.getBank();
 
@@ -58,7 +55,7 @@ public class YearOfPlentyCommand implements Command {
 
 		game.setPlayerResources(playerIndex, pResources);
 		game.setBank(bank);
-		
+
 		// Subtract Year of Plenty card from player's old dev cards
 		DevCardList pOldDevCards = game.getPlayerOldDevCards(playerIndex);
 		pOldDevCards.setYearOfPlenty(pOldDevCards.getYearOfPlenty() - 1);

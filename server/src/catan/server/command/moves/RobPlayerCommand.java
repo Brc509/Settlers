@@ -1,14 +1,7 @@
 package catan.server.command.moves;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
-import catan.model.HexLocation;
 import catan.model.GameModel;
-import catan.model.Vertex;
-import catan.model.VertexValue;
-import catan.server.Games;
+import catan.model.HexLocation;
 import catan.server.command.Command;
 
 public class RobPlayerCommand implements Command {
@@ -17,34 +10,32 @@ public class RobPlayerCommand implements Command {
 	private int playerIndex;
 	private int victimIndex;
 	private HexLocation location;
-	private GameModel model;
-	
+
 	@Override
-	public Object execute(Object gameId) {
+	public Object execute(GameModel game) {
 //		System.out.println(type + playerIndex + victimIndex + location.toString());
-//		model = Games.get().getGames().get(gameId);
-//		model.robPlayer(type, playerIndex, victimIndex, location);
+//		game.robPlayer(type, playerIndex, victimIndex, location);
 //		
 //		
 //		boolean verdict = false;
 //		if (playerIndex >= 0 && playerIndex < 4 && victimIndex >= 0 && victimIndex < 4) {
 //			// This method is also used by soldier().
-//			boolean movedRobberAndRobbed = moveRobberAndRob(playerIndex, victimIndex, location);
+//			boolean movedRobberAndRobbed = moveRobberAndRob(game, playerIndex, victimIndex, location);
 //			if (movedRobberAndRobbed) {
 //				// Add the log entry
-//				Player[] players = model.getPlayers();
+//				Player[] players = game.getPlayers();
 //				String victimName = players[victimIndex].getName();
-//				model.addLogEntry(playerIndex, " rolled a 7 and robbed " + victimName + ".");
+//				game.addLogEntry(playerIndex, " rolled a 7 and robbed " + victimName + ".");
 //				verdict = true;
 //			}
 //		}
 //		return verdict;
 //	}
 //	
-//	private boolean moveRobberAndRob(int playerIndex, int victimIndex, HexLocation location) {
+//	private boolean moveRobberAndRob(GameModel game, int playerIndex, int victimIndex, HexLocation location) {
 //		boolean verdict = false;
 //
-//		HexLocation robber = model.getRobberPosition();
+//		HexLocation robber = game.getRobberPosition();
 //
 //		// Make sure robber is moved from last location
 //		int oldX = robber.getX();
@@ -54,7 +45,7 @@ public class RobPlayerCommand implements Command {
 //			// Make sure victim is valid for new location
 //			int newX = Integer.parseInt(location.getX());
 //			int newY = Integer.parseInt(location.getY());
-//			Hex newHex = model.getHex(newX, newY);
+//			Hex newHex = game.getHex(newX, newY);
 //			Vertex[] vertexes = newHex.getVetexes();
 //			boolean foundVictim = false;
 //			for (Vertex v : vertexes) {

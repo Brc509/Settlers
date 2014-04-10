@@ -17,7 +17,24 @@ import java.util.TreeMap;
 import catan.server.Cookie;
 import catan.server.RegisteredUser;
 import catan.server.RegisteredUsers;
-import catan.server.Server;
+import catan.server.command.Command;
+import catan.server.command.moves.AcceptTradeCommand;
+import catan.server.command.moves.BuildCityCommand;
+import catan.server.command.moves.BuildRoadCommand;
+import catan.server.command.moves.BuildSettlementCommand;
+import catan.server.command.moves.BuyDevCardCommand;
+import catan.server.command.moves.DiscardCardsCommand;
+import catan.server.command.moves.FinishTurnCommand;
+import catan.server.command.moves.MaritimeTradeCommand;
+import catan.server.command.moves.MonopolyCommand;
+import catan.server.command.moves.MonumentCommand;
+import catan.server.command.moves.OfferTradeCommand;
+import catan.server.command.moves.RoadBuildingCommand;
+import catan.server.command.moves.RobPlayerCommand;
+import catan.server.command.moves.RollNumberCommand;
+import catan.server.command.moves.SendChatCommand;
+import catan.server.command.moves.SoldierCommand;
+import catan.server.command.moves.YearOfPlentyCommand;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -65,11 +82,11 @@ public class HandlerUtils {
 			String cookieStr = exchange.getRequestHeaders().getFirst("Cookie");
 			if (cookieStr != null) {
 				cookies = decodeQueryString(cookieStr, "\\s*;\\s*", "\\s*=\\s*");
-				if (Server.isDebugEnabled()) {
-					for (Map.Entry<String, String> e : cookies.entrySet()) {
+//				if (Server.isDebugEnabled()) {
+//					for (Map.Entry<String, String> e : cookies.entrySet()) {
 //						System.out.println("  \"" + e.getKey() + "\" = \"" + e.getValue() + "\".");
-					}
-				}
+//					}
+//				}
 			}
 		}
 //		Server.println("Done.");
@@ -268,6 +285,66 @@ public class HandlerUtils {
 	 */
 	public static Map<String, String> decodeQueryString(String str) {
 		return decodeQueryString(str, "&", "=");
+	}
+
+	public static Class<? extends Command> getCommandClassForEndpoint(String endpoint) {
+		Class<? extends Command> commandClass;
+		switch (endpoint) {
+		case "/moves/sendChat":
+			commandClass = SendChatCommand.class;
+			break;
+		case "/moves/rollNumber":
+			commandClass = RollNumberCommand.class;
+			break;
+		case "/moves/robPlayer":
+			commandClass = RobPlayerCommand.class;
+			break;
+		case "/moves/finishTurn":
+			commandClass = FinishTurnCommand.class;
+			break;
+		case "/moves/buyDevCard":
+			commandClass = BuyDevCardCommand.class;
+			break;
+		case "/moves/Year_of_Plenty":
+			commandClass = YearOfPlentyCommand.class;
+			break;
+		case "/moves/Road_Building":
+			commandClass = RoadBuildingCommand.class;
+			break;
+		case "/moves/Soldier":
+			commandClass = SoldierCommand.class;
+			break;
+		case "/moves/Monopoly":
+			commandClass = MonopolyCommand.class;
+			break;
+		case "/moves/Monument":
+			commandClass = MonumentCommand.class;
+			break;
+		case "/moves/buildRoad":
+			commandClass = BuildRoadCommand.class;
+			break;
+		case "/moves/buildSettlement":
+			commandClass = BuildSettlementCommand.class;
+			break;
+		case "/moves/buildCity":
+			commandClass = BuildCityCommand.class;
+			break;
+		case "/moves/offerTrade":
+			commandClass = OfferTradeCommand.class;
+			break;
+		case "/moves/acceptTrade":
+			commandClass = AcceptTradeCommand.class;
+			break;
+		case "/moves/maritimeTrade":
+			commandClass = MaritimeTradeCommand.class;
+			break;
+		case "/moves/discardCards":
+			commandClass = DiscardCardsCommand.class;
+			break;
+		default:
+			commandClass = null;
+		}
+		return commandClass;
 	}
 
 	private static Map<String, String> decodeQueryString(String str, String paramSeparator, String keyValueSeparator) {

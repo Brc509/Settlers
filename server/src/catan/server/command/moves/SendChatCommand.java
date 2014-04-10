@@ -1,6 +1,7 @@
 package catan.server.command.moves;
 
 import catan.model.GameModel;
+import catan.server.Games;
 import catan.server.Server;
 import catan.server.command.Command;
 
@@ -23,6 +24,9 @@ public class SendChatCommand implements Command {
 		Server.println("Executing command: \"" + type + "\".");
 
 		game.addChatEntry(playerIndex, content);
+
+		// Save the command
+		Server.getPP().saveCommand(Games.get().getGameID(game), this);
 
 		return null;
 

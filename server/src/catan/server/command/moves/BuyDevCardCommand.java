@@ -7,6 +7,7 @@ import java.util.Random;
 import catan.model.DevCardList;
 import catan.model.GameModel;
 import catan.model.ResourceList;
+import catan.server.Games;
 import catan.server.Server;
 import catan.server.command.Command;
 
@@ -78,6 +79,9 @@ public class BuyDevCardCommand implements Command {
 
 		// Add a log entry
 		game.addLogEntry(playerIndex, " bought a development card.");
+
+		// Save the command
+		Server.getPP().saveCommand(Games.get().getGameID(game), this);
 
 		return null;
 	}

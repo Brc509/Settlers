@@ -7,6 +7,8 @@ import catan.model.Hex;
 import catan.model.Player;
 import catan.model.TurnTracker;
 import catan.model.Vertex;
+import catan.server.Games;
+import catan.server.Server;
 import catan.server.command.Command;
 
 public class RollNumberCommand implements Command {
@@ -37,6 +39,10 @@ public class RollNumberCommand implements Command {
 		game.setTurnTracker(tracker);
 
 		game.addLogEntry(playerIndex, " rolled a " + number);
+
+		// Save the command
+		Server.getPP().saveCommand(Games.get().getGameID(game), this);
+
 		return false;
 	}
 

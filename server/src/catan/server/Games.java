@@ -31,6 +31,15 @@ public class Games {
 		return games;
 	}
 
+	public Integer getGameID(GameModel game) {
+		for (Map.Entry<Integer, GameModel> e : games.entrySet()) {
+			if (e.getValue() == game) {
+				return e.getKey();
+			}
+		}
+		return null;
+	}
+
 	public void addGame(GameModel cm) {
 		games.put(games.size() + 1, cm);
 	}

@@ -3,6 +3,8 @@ package catan.server.command.moves;
 import catan.model.GameModel;
 import catan.model.Player;
 import catan.model.ResourceList;
+import catan.server.Games;
+import catan.server.Server;
 import catan.server.command.Command;
 
 public class MaritimeTradeCommand implements Command {
@@ -18,6 +20,8 @@ public class MaritimeTradeCommand implements Command {
 	@Override
 	public Boolean execute(GameModel game) {
 
+		boolean success = false;
+
 		Player player = game.getPlayerByIndex(playerIndex);
 		if (player.getResources().decrementResource(inputResource, ratio)) {
 
@@ -32,9 +36,12 @@ public class MaritimeTradeCommand implements Command {
 
 			game.addLogEntry(playerIndex, " performed Maritime Trade.");
 
-			return null;
+			success = true;
 		}
 
-		return false;
+		// Save the command
+		Server.getPP().saveCommand(Games.get().getGameID(game), this);
+
+		return success;
 	}
 }

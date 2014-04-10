@@ -3,6 +3,8 @@ package catan.server.command.moves;
 import catan.model.GameModel;
 import catan.model.Player;
 import catan.model.ResourceList;
+import catan.server.Games;
+import catan.server.Server;
 import catan.server.command.Command;
 
 import com.google.gson.JsonArray;
@@ -96,6 +98,9 @@ public class BuildSettlementCommand implements Command {
 		int numSettlements = currPlayer.getSettlements() - 1;
 
 		game.getModel().get("players").getAsJsonArray().get(playerIndex).getAsJsonObject().addProperty("settlements", numSettlements);
+
+		// Save the command
+		Server.getPP().saveCommand(Games.get().getGameID(game), this);
 
 		return null;
 	}

@@ -3,6 +3,7 @@ package catan.server.command.moves;
 import catan.model.DevCardList;
 import catan.model.GameModel;
 import catan.model.TurnTracker;
+import catan.server.Games;
 import catan.server.Server;
 import catan.server.command.Command;
 
@@ -46,6 +47,9 @@ public class FinishTurnCommand implements Command {
 
 		// Add the log entry
 		game.addLogEntry(playerIndex, "'s turn has ended.");
+
+		// Save the command
+		Server.getPP().saveCommand(Games.get().getGameID(game), this);
 
 		return null;
 	}

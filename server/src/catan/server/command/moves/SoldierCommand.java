@@ -6,6 +6,7 @@ import catan.model.HexLocation;
 import catan.model.Player;
 import catan.model.Vertex;
 import catan.model.VertexValue;
+import catan.server.Games;
 import catan.server.Server;
 import catan.server.command.Command;
 
@@ -57,6 +58,10 @@ public class SoldierCommand implements Command {
 			}
 		}
 		// TODO update the game with the new values
+
+		// Save the command
+		Server.getPP().saveCommand(Games.get().getGameID(game), this);
+
 		return verdict;
 	}
 

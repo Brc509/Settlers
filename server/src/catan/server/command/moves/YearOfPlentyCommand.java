@@ -3,6 +3,7 @@ package catan.server.command.moves;
 import catan.model.DevCardList;
 import catan.model.GameModel;
 import catan.model.ResourceList;
+import catan.server.Games;
 import catan.server.Server;
 import catan.server.command.Command;
 
@@ -68,6 +69,9 @@ public class YearOfPlentyCommand implements Command {
 
 		// Add a log entry
 		game.addLogEntry(playerIndex, " played a Year of Plenty card.");
+
+		// Save the command
+		Server.getPP().saveCommand(Games.get().getGameID(game), this);
 
 		return null;
 

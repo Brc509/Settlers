@@ -6,6 +6,8 @@ import catan.model.Hex;
 import catan.model.HexLocation;
 import catan.model.Player;
 import catan.model.ResourceList;
+import catan.server.Games;
+import catan.server.Server;
 import catan.server.command.Command;
 
 import com.google.gson.JsonObject;
@@ -80,6 +82,9 @@ public class BuildRoadCommand implements Command {
 
 		// LOG IT
 		game.addLogEntry(playerIndex, " built a road.");
+
+		// Save the command
+		Server.getPP().saveCommand(Games.get().getGameID(game), this);
 
 		return null;
 	}

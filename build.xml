@@ -26,6 +26,16 @@
 	<!-- Our server's library folder -->
 	<property name="our-server-lib.dir" value="${our-server.dir}/lib"/>
 	
+	<!-- Cobertura folder and classpath -->
+	<property name="cobertura.dir" value="${our-server-lib.dir}/cobertura"/>
+	<path id="cobertura-classpath">
+		<fileset dir="${cobertura.dir}">
+			<include name="cobertura.jar"/>
+			<include name="lib/**/*.jar"/>
+		</fileset>
+	</path>
+	<taskdef classpathref="cobertura-classpath" resource="tasks.properties"/>
+	
 	<!-- Our server's classpath -->
 	<path id="our-server-classpath">
 		<pathelement location="${our-server-bin.dir}"/>

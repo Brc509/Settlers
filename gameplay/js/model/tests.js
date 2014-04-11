@@ -18,7 +18,7 @@ function loginPlayer(player, password, color, id, callback){
 			});
 }
 
-test("model.initFromServer()", 4, function(){
+test("model.initFromServer()", 7, function(){
 	stop();
 	loginPlayer("Sam", "sam", "red", "0", function () {
 
@@ -35,7 +35,10 @@ test("model.initFromServer()", 4, function(){
 			ok(clientModel.players[0] && clientModel.players[1] && 
 				clientModel.players[2] && clientModel.players[3], "Initialized model with 4 players.");
 			ok(clientModel.turnTracker.status == "Rolling" && clientModel.turnTracker.currentTurn == 0, "Initialized turn tracker correctly.");
-			ok(clientModel.map !== undefined, "Map initialized");
+			ok(clientModel.deck, "Deck initialized");
+			ok(clientModel.bank, "Map initialized");
+			ok(clientModel.chat, "Chat initialized");
+			ok(clientModel.log, "Log initialized");
 
 			start();
 		});
@@ -216,7 +219,7 @@ test( "model.canFinishTurn()", 4, function() {
 		});
 	});
 });
-test( "model.yearOfPlenty()", 3, function() {
+test( "clientProxy.yearOfPlenty()", 3, function() {
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Sam", "sam", "red", "0", function () {
@@ -340,7 +343,7 @@ test( "clientProxy.buyDevCard()", function() {
 				ok(preArray.toString() != postArray.toString(), "Sam's dev cards have changed, success.");
 				start();
 			
-			}, 5500);
+			}, 7800);
 				
 		});
 	});
@@ -348,7 +351,7 @@ test( "clientProxy.buyDevCard()", function() {
 });
 
 
-test( "model.soldier(robberSpot, victimID)", 3, function() {
+test( "clientProxy.soldier(robberSpot, victimID)", 3, function() {
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Sam", "sam", "red", "0", function () {
@@ -391,7 +394,7 @@ test( "model.soldier(robberSpot, victimID)", 3, function() {
 
 });
 
-test( "model.monopoly()", 3, function() {
+test( "clientProxy.monopoly()", 3, function() {
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Sam", "sam", "red", "0", function () {
@@ -421,7 +424,7 @@ test( "model.monopoly()", 3, function() {
 	});
 });
 
-test( "model.monument()", 3, function() {
+test( "clientProxy.monument()", 3, function() {
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Sam", "sam", "red", "0", function () {
@@ -453,7 +456,7 @@ test( "model.monument()", 3, function() {
 
 
 
-test( "model.buildSettlement()", 4, function() {
+test( "clientProxy.buildSettlement()", 4, function() {
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Sam", "sam", "red", "0", function () {
@@ -497,7 +500,7 @@ test( "model.buildSettlement()", 4, function() {
 	});
 });
 
-test( "model.buildCity()", 3, function() {
+test( "clientProxy.buildCity()", 3, function() {
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Sam", "sam", "red", "0", function () {
@@ -546,7 +549,7 @@ test( "model.buildCity()", 3, function() {
 	});
 });
 
-test( "model.buildRoad()", 3, function() {
+test( "clientProxy.buildRoad()", 3, function() {
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Sam", "sam", "red", "0", function () {
@@ -582,7 +585,7 @@ test( "model.buildRoad()", 3, function() {
 	});
 });
 
-test( "model.offerTrade()", 3, function() {
+test( "clientProxy.offerTrade()", 3, function() {
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Sam", "sam", "red", "0", function () {
@@ -613,7 +616,7 @@ test( "model.offerTrade()", 3, function() {
 	});
 });
 
-test( "model.acceptTrade()", 3, function() {
+test( "clientProxy.acceptTrade()", 3, function() {
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Brooke", "brooke", "blue", "0", function () {
@@ -641,7 +644,7 @@ test( "model.acceptTrade()", 3, function() {
 	});
 });
 
-test( "model.finishTurn()", 3, function() {
+test( "clientProxy.finishTurn()", 3, function() {
 	stop();
 	var clientModel = new catan.models.ClientModel(0);
 	loginPlayer("Sam", "sam", "orange", "0", function () {

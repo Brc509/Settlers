@@ -3,7 +3,6 @@ package catan.server.handler;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
-import java.util.List;
 import java.util.Map;
 
 import catan.server.Cookie;
@@ -28,9 +27,6 @@ public class UserHandler implements HttpHandler {
 		String requestMethod = exchange.getRequestMethod().toUpperCase();
 		if (requestMethod.equals("POST")) {
 
-			// Get the list of registered users
-			List<RegisteredUser> users = RegisteredUsers.get().getUsers();
-
 			// Get the incoming username and password
 			String requestBodyStr = HandlerUtils.inputStreamToString(exchange.getRequestBody());
 			Map<String, String> requestParams = HandlerUtils.decodeQueryString(requestBodyStr);
@@ -44,13 +40,13 @@ public class UserHandler implements HttpHandler {
 
 				// Login the user
 				Server.println("  " + endpoint);
-				user = login(exchange, users, username, password);
+				user = login(exchange, username, password);
 
 			} else if (endpoint.equals("/user/register")) {
 
 				// Register the user
 				Server.println("  " + endpoint);
-				user = register(exchange, users, username, password);
+				user = register(exchange, username, password);
 
 			} else {
 
@@ -78,10 +74,10 @@ public class UserHandler implements HttpHandler {
 		}
 	}
 
-	private RegisteredUser login(HttpExchange exchange, List<RegisteredUser> users, String username, String password) {
+	private RegisteredUser login(HttpExchange exchange, String username, String password) {
 
 		// If the user is registered, return the user
-		for (RegisteredUser user : users) {
+		for (RegisteredUser user : RegisteredUsers.get().getUsers()) {
 			if (user.getName().equals(username) && user.getPassword().equals(password)) {
 				return user;
 			}
@@ -90,19 +86,19 @@ public class UserHandler implements HttpHandler {
 		return null;
 	}
 
-	private RegisteredUser register(HttpExchange exchange, List<RegisteredUser> users, String username, String password) {
+	private RegisteredUser register(HttpExchange exchange, String username, String password) {
 
 		// Make sure the username is not already taken
-		for (RegisteredUser user : users) {
+		for (RegisteredUser user : RegisteredUsers.get().getUsers()) {
 			if (user.getName().equals(username)) {
 				return null;
 			}
 		}
 
 		// Register a new user
-		int userID = users.size();
+		int userID = RegisteredUsers.get().getUsers().size();
 		RegisteredUser newUser = new RegisteredUser(username, password, userID);
-		users.add(newUser);
+		RegisteredUsers.get().addUser(newUser);
 
 		return newUser;
 	}

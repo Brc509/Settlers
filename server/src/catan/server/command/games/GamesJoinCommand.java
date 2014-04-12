@@ -33,19 +33,19 @@ public class GamesJoinCommand implements Command {
 	public Boolean execute(GameModel game) {
 
 		boolean success = false;
-		// TODO This can't be hardcoded
 
 		game = Games.get().getGames().get(gameID);
 		Player[] players = game.getPlayers();
 
 		int orderNumber = 0;
+		boolean newPlayer = true;
 		for (int i = 0; i < players.length; i++) {
-			String name = players[i].getName();
 			Player p = players[i];
 			if (userName.equals(p.getName()) && p.getPlayerID() >= 0) {
 				orderNumber = i;
+				newPlayer = false;
 				break;
-			} else if (!name.equals("") && p.getPlayerID() >= 0) {
+			} else if (!p.getName().equals("") && p.getPlayerID() >= 0) {
 				orderNumber++;
 			}
 		}
@@ -61,11 +61,16 @@ public class GamesJoinCommand implements Command {
 			}
 			if (name != null) {
 				success = game.setPlayer(orderNumber, userID, name, color);
-				if (Server.isDebugEnabled() && success) {
+				if (success) {
+					if (newPlayer) {
+						// Overwrite the baseline each time a new person joins the game
+						Server.getPP().saveBaseline(gameID, game);
+					}
 					System.out.println("  \"" + name + "\" (" + userID + ") joined game " + gameID + " as \"" + color + "\".");
 				}
 			}
 		}
+
 		return success;
 	}
 }

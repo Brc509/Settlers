@@ -35,23 +35,12 @@ public class GameModel {
 	private int revision = 0;
 
 	public GameModel() {
-
 		this(NEWGAMEFILE);
 	}
 
 	public GameModel(String gameFile) {
 		try {
 			FileReader file = new FileReader(gameFile);
-			model = gson.fromJson(file, JsonObject.class);
-			file.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public GameModel(boolean defaultGame) {
-		try {
-			FileReader file = new FileReader(DEFAULTGAMEFILE);
 			model = gson.fromJson(file, JsonObject.class);
 			file.close();
 		} catch (Exception e) {

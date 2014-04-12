@@ -30,8 +30,8 @@ public class Server {
 	// Static constants
 	private static final int DEFAULT_PORT = 8081;
 	private static final int DEFAULT_QUEUE_SIZE = 10;
-	private static final String DEFAULT_PP_FACTORY = "JsonPluginFactory";
-	private static final int DEFAULT_CHECKPOINT_FREQ = 10;
+	private static final String DEFAULT_PP_FACTORY = "catan.server.factory.JsonPluginFactory";
+	private static final int DEFAULT_CHECKPOINT_FREQ = 3;
 
 	// Static mutables
 	private static boolean debugEnabled = false;
@@ -75,24 +75,35 @@ public class Server {
 
 		// Create the persistence provider
 		try {
-			pp = ((PersistenceProviderFactory) Class.forName(ppFactoryClassName).newInstance()).createInstance();
+			pp = ((PersistenceProviderFactory) Class.forName(this.ppFactoryClassName).newInstance()).createInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 
 		// Set the checkpoint frequency
-		pp.setCheckpointFrequency(checkpointFrequency);
+		pp.setCheckpointFrequency(this.checkpointFrequency);
 
 		// Load users into memory
 		List<RegisteredUser> users = pp.loadUsers();
-		if (!users.isEmpty()) {
-			RegisteredUsers.get().setUsers(users);
+		RegisteredUsers ru = RegisteredUsers.get();
+		if (users.isEmpty()) {
+			ru.addUser(new RegisteredUser("Sam", "sam", 0));
+			ru.addUser(new RegisteredUser("Brooke", "brooke", 1));
+			ru.addUser(new RegisteredUser("Pete", "pete", 2));
+			ru.addUser(new RegisteredUser("Mark", "mark", 3));
+		} else {
+			ru.setUsers(users);
 		}
 
 		// Load games into memory
 		Map<Integer, GameModel> games = pp.loadGames();
-		if (!games.isEmpty()) {
-			Games.get().setGames(games);
+		Games g = Games.get();
+		if (games.isEmpty()) {
+			GameModel gm = new GameModel(GameModel.DEFAULTGAMEFILE);
+			gm.initGame("Default Game", false, false, false);
+			g.addGame(gm);
+		} else {
+			g.setGames(games);
 		}
 
 		// Create the server

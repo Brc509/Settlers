@@ -7,6 +7,9 @@
 	<property name="port.arg" value="8081"/>
 	<property name="web.arg" value="gameplay"/>
 	<property name="requests.arg" value="ug"/>
+	
+	<property name="ppfactory.arg" value="catan.server.factory.JsonPluginFactory"/>
+	<property name="checkpointfreq.arg" value="3"/>
 
 	<!-- Base output folder -->
 	<property name="dest.dir" value="docs"/>
@@ -81,7 +84,8 @@
 			<classpath>
 				<path refid="our-server-classpath"/>
 			</classpath>
-			<arg value="${port.arg}"/>
+			<arg value="${ppfactory.arg}"/>
+			<arg value="${checkpointfreq.arg}"/>
 		</java>
 	</target>
 	

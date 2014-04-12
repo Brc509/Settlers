@@ -12,17 +12,12 @@ public class Games {
 	public Map<Integer, GameModel> games;
 
 	private Games() {
-
 		games = new HashMap<Integer, GameModel>();
-		GameModel newGame = new GameModel(true);
-		newGame.initGame("Default Game", false, false, false);
-		games.put(1, newGame);
 	}
 
 	public static Games get() {
 		if (gamesSingleton == null) {
 			gamesSingleton = new Games();
-
 		}
 		return gamesSingleton;
 	}
@@ -35,13 +30,13 @@ public class Games {
 		this.games = games;
 	}
 
-	public Integer getGameID(GameModel game) {
+	public int getGameID(GameModel game) {
 		for (Map.Entry<Integer, GameModel> e : games.entrySet()) {
 			if (e.getValue() == game) {
 				return e.getKey();
 			}
 		}
-		return null;
+		return -1;
 	}
 
 	public void addGame(GameModel game) {

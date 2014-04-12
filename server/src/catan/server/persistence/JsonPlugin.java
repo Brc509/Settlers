@@ -1,7 +1,6 @@
 package catan.server.persistence;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,6 +25,7 @@ public class JsonPlugin implements PersistenceProvider {
 
 	// Static constants
 	private static final Gson gson = new Gson();
+	private static final JsonObject EMPTY_JSON_OBJECT = new JsonObject();
 	private static final File USERS_FILE = new File("users.json");
 	private static final File GAMES_FILE = new File("games.json");
 	private static final File COMMANDS_FILE = new File("commands.json");
@@ -35,19 +35,34 @@ public class JsonPlugin implements PersistenceProvider {
 
 	// Create new JSON files if they don't exist
 	static {
+		if (!USERS_FILE.exists() || USERS_FILE.length() == 0) {
+			writeJSONToFile(USERS_FILE, new JsonArray());
+		}
+		if (!GAMES_FILE.exists() || GAMES_FILE.length() == 0) {
+			writeJSONToFile(GAMES_FILE, new JsonArray());
+		}
+		if (!COMMANDS_FILE.exists() || COMMANDS_FILE.length() == 0) {
+			writeJSONToFile(COMMANDS_FILE, new JsonArray());
+		}
+	}
+
+	private static <T> T readJSONFromFile(File file, Class<T> classOfT) {
+		T t = null;
 		try {
-			if (!USERS_FILE.exists()) {
-				USERS_FILE.createNewFile();
-				new FileWriter(USERS_FILE).write("[]");
-			}
-			if (!GAMES_FILE.exists()) {
-				GAMES_FILE.createNewFile();
-				new FileWriter(GAMES_FILE).write("[]");
-			}
-			if (!COMMANDS_FILE.exists()) {
-				COMMANDS_FILE.createNewFile();
-				new FileWriter(COMMANDS_FILE).write("[]");
-			}
+			FileReader fr = new FileReader(file);
+			t = gson.fromJson(fr, classOfT);
+			fr.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return t;
+	}
+
+	private static void writeJSONToFile(File file, Object src) {
+		try {
+			FileWriter fw = new FileWriter(file);
+			gson.toJson(src, fw);
+			fw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -67,13 +82,15 @@ public class JsonPlugin implements PersistenceProvider {
 	@Override
 	public void setCheckpointFrequency(int frequency) {
 		checkpointFrequency = frequency;
+		System.out.println("Checkpoint frequency set to " + checkpointFrequency + ".");
 	}
 
 	@Override
 	public void saveUser(RegisteredUser user) {
+		System.out.println("Saving user (\"" + user.getName() + "\", \"" + user.getPassword() + "\", " + user.getPlayerID() + ")...");
 		try {
 			// Read in the users array
-			JsonArray usersArray = gson.fromJson(new FileReader(USERS_FILE), JsonArray.class);
+			JsonArray usersArray = readJSONFromFile(USERS_FILE, JsonArray.class);
 			// Add the user (duplicates are possible)
 			JsonObject userObject = new JsonObject();
 			userObject.addProperty("username", user.getName());
@@ -81,18 +98,20 @@ public class JsonPlugin implements PersistenceProvider {
 			userObject.addProperty("userID", user.getPlayerID());
 			usersArray.add(userObject);
 			// Write out the users array
-			gson.toJson(usersArray, new FileWriter(USERS_FILE));
-		} catch (JsonSyntaxException | JsonIOException | IOException e) {
+			writeJSONToFile(USERS_FILE, usersArray);
+		} catch (JsonSyntaxException | JsonIOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Done.");
 	}
 
 	@Override
 	public List<RegisteredUser> loadUsers() {
+		System.out.println("Loading users...");
 		List<RegisteredUser> users = new ArrayList<>();
 		try {
 			// Read in the users array
-			JsonArray usersArray = gson.fromJson(new FileReader(USERS_FILE), JsonArray.class);
+			JsonArray usersArray = readJSONFromFile(USERS_FILE, JsonArray.class);
 			// Create RegisteredUser objects
 			JsonObject userObject;
 			for (int n = 0; n < usersArray.size(); n++) {
@@ -100,34 +119,52 @@ public class JsonPlugin implements PersistenceProvider {
 				RegisteredUser user = new RegisteredUser(userObject.get("username").getAsString(), userObject.get("password").getAsString(), userObject.get("userID").getAsInt());
 				users.add(user);
 			}
-		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
+		} catch (JsonSyntaxException | JsonIOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Done.");
 		return users;
 	}
 
 	@Override
 	public void saveBaseline(int gameID, GameModel model) {
+		System.out.println("Saving baseline for game " + gameID + "...");
 		try {
 			// Read in the games array
-			JsonArray gamesArray = gson.fromJson(new FileReader(GAMES_FILE), JsonArray.class);
+			JsonArray gamesArray = readJSONFromFile(GAMES_FILE, JsonArray.class);
 			// Get the right game
 			JsonObject gameObject = getObjectForGame(gamesArray, gameID);
 			// Set the baseline
 			gameObject.add("baseline", gson.toJsonTree(model));
+			// Initialize other fields if necessary
+			if (!gameObject.has("checkpoint")) {
+				gameObject.add("checkpoint", new JsonObject());
+			}
+			if (!gameObject.has("lastCommand")) {
+				gameObject.addProperty("lastCommand", 0);
+			}
+			// Initialize command fields if necessary
+			JsonArray commandListArray = readJSONFromFile(COMMANDS_FILE, JsonArray.class);
+			JsonObject commandList = getObjectForGame(commandListArray, gameID);
+			if (!commandList.has("commands")) {
+				commandList.add("commands", new JsonArray());
+				writeJSONToFile(COMMANDS_FILE, commandListArray);
+			}
 			// Write out the games array
-			gson.toJson(gamesArray, new FileWriter(GAMES_FILE));
-		} catch (JsonSyntaxException | JsonIOException | IOException e) {
+			writeJSONToFile(GAMES_FILE, gamesArray);
+		} catch (JsonSyntaxException | JsonIOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Done.");
 	}
 
 	@Override
 	public void saveCommand(int gameID, Command command) {
 		if (!loading) {
+			System.out.println("Saving command \"" + command.getClass().getSimpleName() + "\" for game " + gameID + "...");
 			try {
 				// Read in the commands array
-				JsonArray commandListArray = gson.fromJson(new FileReader(COMMANDS_FILE), JsonArray.class);
+				JsonArray commandListArray = readJSONFromFile(COMMANDS_FILE, JsonArray.class);
 				// Get the right command list
 				JsonObject commandListObject = getObjectForGame(commandListArray, gameID);
 				// Create the internal commands array if it doesn't exist
@@ -137,7 +174,7 @@ public class JsonPlugin implements PersistenceProvider {
 				// Add the command
 				commandListObject.getAsJsonArray("commands").add(gson.toJsonTree(command));
 				// Write out the commands array
-				gson.toJson(commandListArray, new FileWriter(COMMANDS_FILE));
+				writeJSONToFile(COMMANDS_FILE, commandListArray);
 				// Create map entries for this game ID if they doesn't already exist
 				if (!commandCounts.containsKey(gameID)) {
 					commandCounts.put(gameID, 0);
@@ -155,20 +192,22 @@ public class JsonPlugin implements PersistenceProvider {
 					// Reset the checkpoint count for this game ID
 					checkpointCounts.put(gameID, 0);
 				}
-			} catch (JsonSyntaxException | JsonIOException | IOException e) {
+			} catch (JsonSyntaxException | JsonIOException e) {
 				e.printStackTrace();
 			}
+			System.out.println("Done.");
 		}
 	}
 
 	@Override
 	public Map<Integer, GameModel> loadGames() {
+		System.out.println("Loading games...");
 		Map<Integer, GameModel> games = new HashMap<>();
 		loading = true; // Prevent self-interference while loading
 		try {
 			// Read in the games and commands arrays
-			JsonArray gamesArray = gson.fromJson(new FileReader(GAMES_FILE), JsonArray.class);
-			JsonArray commandListArray = gson.fromJson(new FileReader(COMMANDS_FILE), JsonArray.class);
+			JsonArray gamesArray = readJSONFromFile(GAMES_FILE, JsonArray.class);
+			JsonArray commandListArray = readJSONFromFile(COMMANDS_FILE, JsonArray.class);
 			JsonObject gameObject;
 			JsonObject modelObject;
 			JsonArray commandsArray;
@@ -178,19 +217,17 @@ public class JsonPlugin implements PersistenceProvider {
 			// For each game:
 			for (int gameIndex = 0; gameIndex < gamesArray.size(); gameIndex++) {
 				gameObject = gamesArray.get(gameIndex).getAsJsonObject();
-				// Get the game ID and last command executed
 				int gameID = gameObject.get("gameID").getAsInt();
-				int lastCommand = gameObject.get("lastCommand").getAsInt();
 				// Get the checkpoint model, or the baseline model if there is no checkpoint
-				if (gameObject.has("checkpoint")) {
-					modelObject = gameObject.getAsJsonObject("checkpoint");
-				} else {
+				modelObject = gameObject.getAsJsonObject("checkpoint");
+				if (modelObject.equals(EMPTY_JSON_OBJECT)) {
 					modelObject = gameObject.getAsJsonObject("baseline");
 				}
 				GameModel game = gson.fromJson(modelObject, GameModel.class);
 				// Get the internal commands array
 				commandsArray = getObjectForGame(commandListArray, gameID).getAsJsonArray("commands");
 				// Deserialize and execute remaining commands on the model
+				int lastCommand = gameObject.get("lastCommand").getAsInt();
 				for (int commandIndex = lastCommand; commandIndex < commandsArray.size(); commandIndex++) {
 					commandObject = commandsArray.get(commandIndex).getAsJsonObject();
 					endpoint = "/moves/" + commandObject.get("type").getAsString();
@@ -200,17 +237,19 @@ public class JsonPlugin implements PersistenceProvider {
 				// Add the fully restored model to the list
 				games.put(gameID, game);
 			}
-		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
+		} catch (JsonSyntaxException | JsonIOException e) {
 			e.printStackTrace();
 		}
 		loading = false;
+		System.out.println("Done.");
 		return games;
 	}
 
 	private void saveCheckpoint(int gameID, GameModel model) {
+		System.out.println("Saving checkpoint for game " + gameID + "...");
 		try {
 			// Read in the games array
-			JsonArray gamesArray = gson.fromJson(new FileReader(GAMES_FILE), JsonArray.class);
+			JsonArray gamesArray = readJSONFromFile(GAMES_FILE, JsonArray.class);
 			// Get the right game
 			JsonObject gameObject = getObjectForGame(gamesArray, gameID);
 			// Set the checkpoint
@@ -218,10 +257,11 @@ public class JsonPlugin implements PersistenceProvider {
 			// Set the last command executed
 			gameObject.addProperty("lastCommand", commandCounts.get(gameID));
 			// Write out the games array
-			gson.toJson(gamesArray, new FileWriter(GAMES_FILE));
-		} catch (JsonSyntaxException | JsonIOException | IOException e) {
+			writeJSONToFile(GAMES_FILE, gamesArray);
+		} catch (JsonSyntaxException | JsonIOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Done.");
 	}
 
 	private JsonObject getObjectForGame(JsonArray array, int gameID) {

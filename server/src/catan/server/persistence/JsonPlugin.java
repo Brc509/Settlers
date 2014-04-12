@@ -26,22 +26,38 @@ public class JsonPlugin implements PersistenceProvider {
 	// Static constants
 	private static final Gson gson = new Gson();
 	private static final JsonObject EMPTY_JSON_OBJECT = new JsonObject();
-	private static final File USERS_FILE = new File("users.json");
-	private static final File GAMES_FILE = new File("games.json");
-	private static final File COMMANDS_FILE = new File("commands.json");
+	private static final File USERS_FILE = new File("server/persistence/json/users.json");
+	private static final File GAMES_FILE = new File("server/persistence/json/games.json");
+	private static final File COMMANDS_FILE = new File("server/persistence/json/commands.json");
 
 	// Static mutables
 	private static boolean loading = false;
 
-	// Create new JSON files if they don't exist
+	// Create and initialize new JSON files if necessary
 	static {
-		if (!USERS_FILE.exists() || USERS_FILE.length() == 0) {
+		try {
+			if (!USERS_FILE.exists()) {
+				USERS_FILE.getParentFile().mkdirs();
+				USERS_FILE.createNewFile();
+			}
+			if (!GAMES_FILE.exists()) {
+				GAMES_FILE.getParentFile().mkdirs();
+				GAMES_FILE.createNewFile();
+			}
+			if (!COMMANDS_FILE.exists()) {
+				COMMANDS_FILE.getParentFile().mkdirs();
+				COMMANDS_FILE.createNewFile();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if (USERS_FILE.length() == 0) {
 			writeJSONToFile(USERS_FILE, new JsonArray());
 		}
-		if (!GAMES_FILE.exists() || GAMES_FILE.length() == 0) {
+		if (GAMES_FILE.length() == 0) {
 			writeJSONToFile(GAMES_FILE, new JsonArray());
 		}
-		if (!COMMANDS_FILE.exists() || COMMANDS_FILE.length() == 0) {
+		if (COMMANDS_FILE.length() == 0) {
 			writeJSONToFile(COMMANDS_FILE, new JsonArray());
 		}
 	}

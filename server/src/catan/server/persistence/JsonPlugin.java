@@ -161,9 +161,9 @@ public class JsonPlugin implements PersistenceProvider {
 			}
 			// Initialize command fields if necessary
 			JsonArray commandListArray = readJSONFromFile(COMMANDS_FILE, JsonArray.class);
-			JsonObject commandList = getObjectForGame(commandListArray, gameID);
-			if (!commandList.has("commands")) {
-				commandList.add("commands", new JsonArray());
+			JsonObject commandListObject = getObjectForGame(commandListArray, gameID);
+			if (!commandListObject.has("commands")) {
+				commandListObject.add("commands", new JsonArray());
 				writeJSONToFile(COMMANDS_FILE, commandListArray);
 			}
 			// Write out the games array
@@ -183,10 +183,6 @@ public class JsonPlugin implements PersistenceProvider {
 				JsonArray commandListArray = readJSONFromFile(COMMANDS_FILE, JsonArray.class);
 				// Get the right command list
 				JsonObject commandListObject = getObjectForGame(commandListArray, gameID);
-				// Create the internal commands array if it doesn't exist
-				if (!commandListObject.has("commands")) {
-					commandListObject.add("commands", new JsonArray());
-				}
 				// Add the command
 				commandListObject.getAsJsonArray("commands").add(gson.toJsonTree(command));
 				// Write out the commands array

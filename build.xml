@@ -7,7 +7,7 @@
 	<property name="port.arg" value="8081"/>
 	<property name="web.arg" value="gameplay"/>
 	<property name="requests.arg" value="ug"/>
-	
+
 	<property name="ppfactory.arg" value="catan.server.factory.JsonPluginFactory"/>
 	<property name="checkpointfreq.arg" value="3"/>
 
@@ -17,7 +17,7 @@
 	<property name="yuidoc.dir" value="${dest.dir}/javascript"/>
 	<!-- Jar file path/name from here -->
 	<property name="jar.file" value="server.jar"/>
-	
+
 	<!-- Our server's base folder -->
 	<property name="our-server.dir" value="server"/>
 	<!-- Our server's source folder -->
@@ -28,7 +28,9 @@
 	<property name="our-server-bin.dir" value="${our-server.dir}/bin"/>
 	<!-- Our server's library folder -->
 	<property name="our-server-lib.dir" value="${our-server.dir}/lib"/>
-	
+	<!-- Our server's persistence folder -->
+	<property name="our-server-persistence.dir" value="${our-server.dir}/persistence"/>
+
 	<!-- Cobertura folder and classpath -->
 	<property name="cobertura.dir" value="${our-server-lib.dir}/cobertura"/>
 	<path id="cobertura-classpath">
@@ -38,7 +40,7 @@
 		</fileset>
 	</path>
 	<taskdef classpathref="cobertura-classpath" resource="tasks.properties"/>
-	
+
 	<!-- Our server's classpath -->
 	<path id="our-server-classpath">
 		<pathelement location="${our-server-bin.dir}"/>
@@ -76,6 +78,11 @@
 		</java>
 	</target>
 
+	<target name="clear" description="Clears the data persisted by our team's server">
+		<delete dir="${our-server-persistence.dir}"/>
+		<mkdir dir="${our-server-persistence.dir}"/>
+	</target>
+
 	<target name="our-server" description="Compiles and runs our team's server">
 		<delete dir="${our-server-bin.dir}"/>
 		<mkdir dir="${our-server-bin.dir}"/>
@@ -88,7 +95,7 @@
 			<arg value="${checkpointfreq.arg}"/>
 		</java>
 	</target>
-	
+
 	<target name="test" description="Compiles and runs our team's tests">
 		<delete dir="${our-server-bin.dir}"/>
 		<mkdir dir="${our-server-bin.dir}"/>

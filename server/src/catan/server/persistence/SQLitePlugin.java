@@ -16,6 +16,7 @@ import catan.server.command.Command;
 public class SQLitePlugin implements PersistenceProvider {
 	
 	private final String db = "jdbc:sqlite:server/persistence/sqlite/catan.sqlite";
+	private int checkpointFrequency;
 
 	public SQLitePlugin() {
 		Connection conn = null;
@@ -86,7 +87,8 @@ public class SQLitePlugin implements PersistenceProvider {
 	
 	@Override
 	public void setCheckpointFrequency(int frequency) {
-		// TODO Auto-generated method stub
+		checkpointFrequency = frequency;
+		System.out.println("Checkpoint frequency set to " + checkpointFrequency + ".");
 	}
 
 	@Override
@@ -97,7 +99,6 @@ public class SQLitePlugin implements PersistenceProvider {
 		PreparedStatement stmt;
 		try {
 			stmt = connection.prepareStatement("INSERT INTO users (name,password,playerID) VALUES(?,?,?)");
-		
 			stmt.setString(1,user.getName());
 	        stmt.setString(2,user.getPassword());
 	        stmt.setInt(3,user.getPlayerID());

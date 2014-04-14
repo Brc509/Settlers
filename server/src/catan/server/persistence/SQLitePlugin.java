@@ -3,14 +3,16 @@ package catan.server.persistence;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;  
 import java.sql.DriverManager;  
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;  
 import java.sql.SQLException;
 import java.sql.Statement; 
+
 
 import catan.model.GameModel;
 import catan.server.RegisteredUser;
@@ -77,6 +79,7 @@ public class SQLitePlugin implements PersistenceProvider {
 	    				+"Id INTEGER NOT NULL, "
 	    				+"Command BLOB NOT NULL, "
 	    				+"GameID INTEGER NOT NULL, "
+	    				+"Type varchar(255) NOT NULL, "
 	    				+"PRIMARY KEY(Id), "
 	    				+"FOREIGN KEY(GameId) REFERENCES Game(Id)"
 	    				+");"; 
@@ -95,7 +98,6 @@ public class SQLitePlugin implements PersistenceProvider {
 		        stmt4.executeUpdate(activityTable);
 		        stmt4.close();
 		        
-			
 	        }
 		        
 			 	} catch (ClassNotFoundException e) {
@@ -144,7 +146,35 @@ public class SQLitePlugin implements PersistenceProvider {
 
 	@Override
 	public void saveCommand(int gameID, Command command) {
-		 
+		Connection connection = getConnection();
+		PreparedStatement stmt;
+		try {
+			stmt = connection.prepareStatement("INSERT INTO Commands(Command,GameId,Type) VALUES(?,?,?)");
+	        stmt.setBytes(2, createBlob(command));
+	        stmt.setInt(3,gameID);
+	        stmt.setString(4, Command.class.getSimpleName());
+	        stmt.executeUpdate();
+	        
+	        connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
+	
+	private byte[] createBlob(Object object)  {
+		ByteArrayOutputStream b = new ByteArrayOutputStream();
+        ObjectOutputStream o;
+		try {
+			o = new ObjectOutputStream(b);
+	        o.writeObject(object);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return b.toByteArray();
+		
 	}
 
 	@Override

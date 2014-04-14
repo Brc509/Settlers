@@ -43,56 +43,10 @@ public class SQLitePlugin implements PersistenceProvider {
 			}
 			
 	        conn = getConnection();
-	        stmt1 = conn.createStatement();
-	        String gameTable = "CREATE TABLE Game("
-	        				+"Id INTEGER NOT NULL, "
-	        				+"GameModel BLOB NOT NULL, "
-	        				+"OrigGameModel BLOB NOT NULL, "
-	        				+"LastSavedGame INTEGER NOT NULL, "
-	        				+"PRIMARY KEY(Id)"
-	        				+");"; 
-	        
-	        stmt1.executeUpdate(gameTable);
-	        stmt1.close();
-
-	        stmt2 = conn.createStatement();
-	        String userTable = "CREATE TABLE User("
-    				+"Id INTEGER NOT NULL, "
-    				+"Name varchar(255) NOT NULL, "
-    				+"Password varchar(255) NOT NULL, "
-    				+"PRIMARY KEY(Id)"
-    				+");"; 
-	        stmt2.executeUpdate(userTable);
-	        stmt2.close();
-	        
-	        stmt3 = conn.createStatement();
-	        String commandTable = "CREATE TABLE Command("
-    				+"Id INTEGER NOT NULL, "
-    				+"Command BLOB NOT NULL, "
-    				+"GameID INTEGER NOT NULL, "
-    				+"PRIMARY KEY(Id), "
-    				+"FOREIGN KEY(GameId) REFERENCES Game(Id)"
-    				+");"; 
-	        
-	        stmt3.executeUpdate(commandTable);
-	        stmt3.close();
-	        
-	        stmt4 = conn.createStatement();
-	        String activityTable = "CREATE TABLE Activity("
-    				+"UserId INTEGER NOT NULL, "
-    				+"GameId INTEGER NOT NULL, "
-    				+"FOREIGN KEY(UserId) REFERENCES User(Id)"
-    				+"FOREIGN KEY(GameId) REFERENCES Game(Id)"
-    				+");"; 
-	        
-	        stmt4.executeUpdate(activityTable);
-	        stmt4.close();
-	        
-			conn = DriverManager.getConnection("jdbc:sqlite:" + file.getPath());
-	        
 	        if(file.length() == 0){
+
 		        stmt1 = conn.createStatement();
-		        String gameTable = "CREATE TABLE Game("
+		        String gameTable = "CREATE TABLE Games("
 		        				+"Id INTEGER NOT NULL, "
 		        				+"GameModel BLOB NOT NULL, "
 		        				+"OrigGameModel BLOB NOT NULL, "
@@ -104,17 +58,18 @@ public class SQLitePlugin implements PersistenceProvider {
 		        stmt1.close();
 	
 		        stmt2 = conn.createStatement();
-		        String userTable = "CREATE TABLE User("
+		        String userTable = "CREATE TABLE Users("
 	    				+"Id INTEGER NOT NULL, "
 	    				+"Name varchar(255) NOT NULL, "
 	    				+"Password varchar(255) NOT NULL, "
 	    				+"PRIMARY KEY(Id)"
 	    				+");"; 
+		        
 		        stmt2.executeUpdate(userTable);
 		        stmt2.close();
 		        
 		        stmt3 = conn.createStatement();
-		        String commandTable = "CREATE TABLE Command("
+		        String commandTable = "CREATE TABLE Commands("
 	    				+"Id INTEGER NOT NULL, "
 	    				+"Command BLOB NOT NULL, "
 	    				+"GameID INTEGER NOT NULL, "
@@ -136,7 +91,8 @@ public class SQLitePlugin implements PersistenceProvider {
 		        stmt4.executeUpdate(activityTable);
 		        stmt4.close();
 		        
-		        }
+			
+	        }
 		        
 			 	} catch (ClassNotFoundException e) {
 					e.printStackTrace();
@@ -158,10 +114,10 @@ public class SQLitePlugin implements PersistenceProvider {
 
 		PreparedStatement stmt;
 		try {
-			stmt = connection.prepareStatement("INSERT INTO users (name,password,playerID) VALUES(?,?,?)");
-			stmt.setString(1,user.getName());
-	        stmt.setString(2,user.getPassword());
-	        stmt.setInt(3,user.getPlayerID());
+			stmt = connection.prepareStatement("INSERT INTO Users (Id,Name,Password) VALUES(?,?,?)");
+			stmt.setInt(1,user.getPlayerID());
+	        stmt.setString(2,user.getName());
+	        stmt.setString(3,user.getPassword());
 	        stmt.executeUpdate();
 	        
 	        connection.close();
@@ -184,7 +140,7 @@ public class SQLitePlugin implements PersistenceProvider {
 
 	@Override
 	public void saveCommand(int gameID, Command command) {
-		// TODO Auto-generated method stub
+		 
 	}
 
 	@Override

@@ -37,7 +37,7 @@ public class FileDownloadHandler_Prod implements FileDownloadHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
-		Server.println("\n" + this.getClass().getSimpleName() + " (Context: \"" + context + "\", Root: \"" + root + "\"):");
+//		Server.println("\n" + this.getClass().getSimpleName() + " (Context: \"" + context + "\", Root: \"" + root + "\"):");
 		URI uri = exchange.getRequestURI();
 		String relativePath = uri.getPath().substring(context.length());
 		// Ensure proper formatting

@@ -1,1 +1,1 @@
-[{"gameID":1,"commands":[]}]
+[{"gameID":1,"commands":[{"type":"finishTurn","playerIndex":0},{"type":"rollNumber","playerIndex":1,"number":4},{"type":"finishTurn","playerIndex":1},{"type":"rollNumber","playerIndex":2,"number":9},{"type":"buildRoad","playerIndex":2,"roadLocation":{"x":1,"y":0,"direction":"SW"},"free":false},{"type":"finishTurn","playerIndex":2},{"type":"rollNumber","playerIndex":3,"number":8},{"type":"finishTurn","playerIndex":3},{"type":"rollNumber","playerIndex":0,"number":6},{"type":"finishTurn","playerIndex":0}]},{"gameID":2,"commands":[]}]

@@ -1,6 +1,7 @@
 package catan.model;
 
 import java.io.FileReader;
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,7 +13,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
-public class GameModel {
+public class GameModel implements Serializable{
 
 	public static final String NEWGAMEFILE = "server/newGame.json";
 	public static final String DEFAULTGAMEFILE = "server/defaultGame.json";
@@ -360,4 +361,5 @@ public class GameModel {
 		JsonObject player = model.getAsJsonArray("players").get(playerIndex).getAsJsonObject();
 		player.add("oldDevCards", gson.toJsonTree(oldDevCards));
 	}
+	
 }

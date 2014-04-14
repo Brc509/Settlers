@@ -1,5 +1,6 @@
 package catan.server.persistence;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,12 @@ import java.sql.SQLException;
 import java.sql.Statement; 
 
 
+
+
+
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import catan.model.GameModel;
 import catan.server.RegisteredUser;
@@ -156,7 +163,7 @@ public class SQLitePlugin implements PersistenceProvider {
 	        
 	        connection.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("");
 			e.printStackTrace();
 		}
 		return users;
@@ -183,7 +190,7 @@ public class SQLitePlugin implements PersistenceProvider {
 		Connection connection = getConnection();
 		PreparedStatement stmt;
 		try {
-			stmt = connection.prepareStatement("INSERT INTO Commands(Command,GameId,Type) VALUES(?,?,?)");
+			stmt = connection.prepareStatement("INSERT INTO Commands(Command,GameId,Type) VALUES(?,?,?);");
 	        stmt.setBytes(2, createBlob(command));
 	        stmt.setInt(3,gameID);
 	        stmt.setString(4, Command.class.getSimpleName());
@@ -221,24 +228,33 @@ public class SQLitePlugin implements PersistenceProvider {
 		Statement stmt = null;
 		try {
 			
+			Gson gson = new Gson();
 			stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Games");
+			ResultSet gameRS = stmt.executeQuery("SELECT * FROM Games");
 	
-			// For every game
-			while (rs.next()) {
+			// For every game..
+			while (gameRS.next()) {
 				
-				int gameID = rs.getInt("Id");
-				rs.getString("");
+				// Get the game ID and game json
+				int gameID = gameRS.getInt("Id");
+				String gameBlob = gameRS.getString("GameModel");
+				//JsonObject modelObject = ;
+				//GameModel game = gson.fromJson(modelObject, GameModel.class);
 				
 				// Get all the commands for this game
 				Statement commandSTMT = connection.createStatement();
-				ResultSet commandRS = commandSTMT.executeQuery("SELECT * FROM COMMANDS WHERE GameID = " + gameID);
-						
+				ResultSet commandRS = commandSTMT.executeQuery("SELECT * FROM COMMANDS WHERE GameID = " + gameID + ";");
+				
+				// For every command in this game..
 				while (commandRS.next()) {
+					
+					
 					
 					// TODO get the updated game model (using the last saved model + the needed commands to be executed)
 				}
+				commandRS.close();
 			}
+			gameRS.close();
 		} 
 		catch (SQLException e) {
 			

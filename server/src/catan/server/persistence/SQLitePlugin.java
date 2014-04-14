@@ -165,7 +165,18 @@ public class SQLitePlugin implements PersistenceProvider {
 
 	@Override
 	public void saveBaseline(int gameID, GameModel model) {
-		// TODO Auto-generated method stub
+		Connection connection = getConnection();
+		PreparedStatement stmt;
+		try {
+			stmt = connection.prepareStatement("UPDATE Games SET origgamemodel=? WHERE ID=?;");
+	        stmt.setBytes(1, createBlob(model));
+	        stmt.setInt(2,gameID);
+	        stmt.executeUpdate();
+	        
+	        connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
 	}
 
 	@Override

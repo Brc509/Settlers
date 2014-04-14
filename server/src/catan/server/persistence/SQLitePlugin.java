@@ -137,8 +137,30 @@ public class SQLitePlugin implements PersistenceProvider {
 
 	@Override
 	public List<RegisteredUser> loadUsers() {
-		// TODO Auto-generated method stub
-		return null;
+		Connection connection = getConnection();
+        List<RegisteredUser> users = new ArrayList<RegisteredUser>();
+
+        Statement stmt = null;
+		try {	        
+	        stmt = connection.createStatement();
+	        ResultSet rs = stmt.executeQuery( "SELECT * FROM USERS;" );
+
+	        while(rs.next())
+	        {
+	        	String name = rs.getString("Name");
+	        	String password = rs.getString("Password");
+	        	int id = rs.getInt("Id");
+	        	
+	        	RegisteredUser nextUser = new RegisteredUser(name, password, id);
+	        	users.add(nextUser);
+	        }
+	        
+	        connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return users;
 	}
 
 	@Override

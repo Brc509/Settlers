@@ -14,6 +14,8 @@ import catan.server.RegisteredUser;
 import catan.server.command.Command;
 
 public class SQLitePlugin implements PersistenceProvider {
+	
+	private final String db = "jdbc:sqlite:server/persistence/sqlite/catan.sqlite";
 
 	public SQLitePlugin() {
 		Connection conn = null;
@@ -27,8 +29,7 @@ public class SQLitePlugin implements PersistenceProvider {
 			
 		 	Class.forName("org.sqlite.JDBC");
 			
-	        conn = DriverManager.getConnection("jdbc:sqlite:server/persistence/sqlite/catan.sqlite");
-	        
+	        conn = getConnection();
 	        stmt1 = conn.createStatement();
 	        String gameTable = "CREATE TABLE Game("
 	        				+"Id INTEGER NOT NULL, "
@@ -90,7 +91,23 @@ public class SQLitePlugin implements PersistenceProvider {
 
 	@Override
 	public void saveUser(RegisteredUser user) {
-		// TODO Auto-generated method stub
+        
+        Connection connection = getConnection();
+
+		PreparedStatement stmt;
+		try {
+			stmt = connection.prepareStatement("INSERT INTO users (name,password,playerID) VALUES(?,?,?)");
+		
+			stmt.setString(1,user.getName());
+	        stmt.setString(2,user.getPassword());
+	        stmt.setInt(3,user.getPlayerID());
+	        stmt.executeUpdate();
+	        
+	        connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -112,6 +129,16 @@ public class SQLitePlugin implements PersistenceProvider {
 	@Override
 	public Map<Integer, GameModel> loadGames() {
 		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private Connection getConnection () {
+		try {
+			return DriverManager.getConnection(db);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 }

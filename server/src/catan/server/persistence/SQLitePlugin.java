@@ -92,7 +92,7 @@ public class SQLitePlugin implements PersistenceProvider {
 	    				+"Id INTEGER NOT NULL, "
 	    				+"Command BLOB NOT NULL, "
 	    				+"GameID INTEGER NOT NULL, "
-	    				+"Type BLOB NOT NULL, "
+	    				+"Type varchar(255) NOT NULL, "
 	    				+"PRIMARY KEY(Id), "
 	    				+"FOREIGN KEY(GameId) REFERENCES Game(Id)"
 	    				+");"; 
@@ -182,10 +182,9 @@ public class SQLitePlugin implements PersistenceProvider {
 	        query = conn.createStatement();
 			ResultSet rs = query.executeQuery("SELECT * FROM Games WHERE Id = " + Integer.toString(gameID));
 			if(!rs.next()){
-				stmt = conn.prepareStatement("INSERT INTO Games(GameModel,OrigGameModel,LastSavedGame) VALUES(?,?,?)");
+				stmt = conn.prepareStatement("INSERT INTO Games(OrigGameModel,LastSavedGame) VALUES(?,?)");
 				stmt.setBytes(1, createBlob(model));
-				stmt.setBytes(2,createBlob(model));
-				stmt.setInt(3, 0);
+				stmt.setInt(2, 0);
 				stmt.executeUpdate();
 				stmt.close();
 			}else{
@@ -209,7 +208,7 @@ public class SQLitePlugin implements PersistenceProvider {
 			stmt = conn.prepareStatement("INSERT INTO Commands(Command,GameId,Type) VALUES(?,?,?)");
 	        stmt.setBytes(1, createBlob(command));
 	        stmt.setInt(2,gameID);
-	        stmt.setBytes(3, createBlob(command.getClass()));
+	        stmt.setString(3, command.getClass().getCanonicalName());
 	        stmt.executeUpdate();
 	        commandCount++;
 	     
@@ -300,7 +299,11 @@ public class SQLitePlugin implements PersistenceProvider {
 				
 				// Get the game ID and game json
 				int gameID = gameRS.getInt("Id");
-				GameModel game = getBlob(gameRS.getBytes("GameModel"), GameModel.class);
+				byte[] gameBytes = gameRS.getBytes("GameModel");
+				if(gameBytes == null){
+					gameBytes = gameRS.getBytes("OrigGameModel");
+				}
+				GameModel game = getBlob(gameBytes, GameModel.class);
 				int lastCommand = gameRS.getInt("LastSavedGame");
 				
 				// Get all the commands for this game
@@ -311,9 +314,17 @@ public class SQLitePlugin implements PersistenceProvider {
 				while (commandRS.next()) {
 					
 					// Get the command type and blob, and execute the command on this game
-					Class name = getBlob(commandRS.getBytes("Type"), Class.class);
-					Command nextCommand = getBlob(commandRS.getBytes("Command"), name);
-					nextCommand.execute(game);
+					String name = commandRS.getString("Type");
+					Class<? extends Command> commandClass = null;
+					try {
+						
+						commandClass = (Class<? extends Command>) Class.forName(name);
+						Command nextCommand = getBlob(commandRS.getBytes("Command"), commandClass);
+						nextCommand.execute(game);
+
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
 				}
 				commandRS.close();
 				

@@ -17,6 +17,8 @@ import catan.server.handler.UserHandler;
 import catan.server.handler.UtilChangeLogLevelHandler;
 import catan.server.persistence.PersistenceProvider;
 
+import catan.server.persistence.SQLitePlugin;
+
 // GOOGLE 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -64,6 +66,7 @@ public class Server {
 
 	public Server(Integer port, Integer queueSize, String ppFactoryClassName, Integer checkpointFrequency) {
 
+		SQLitePlugin sql = new SQLitePlugin();
 		injector = Guice.createInjector(new HandlerModule_Prod());
 		fdhFactory = injector.getInstance(FileDownloadHandlerFactory.class);
 

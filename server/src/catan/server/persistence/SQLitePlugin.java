@@ -203,7 +203,7 @@ public class SQLitePlugin implements PersistenceProvider {
 			stmt = conn.prepareStatement("INSERT INTO Commands(Command,GameId,Type) VALUES(?,?,?)");
 	        stmt.setBytes(1, createBlob(command));
 	        stmt.setInt(2,gameID);
-	        stmt.setString(3, command.getClass().getSimpleName());
+	        stmt.setBytes(3, createBlob(command.getClass()));
 	        stmt.executeUpdate();
 	     
 		} catch (SQLException e) {
@@ -268,7 +268,7 @@ public class SQLitePlugin implements PersistenceProvider {
 				// Get the game ID and game json
 				int gameID = gameRS.getInt("Id");
 				GameModel game = getBlob(gameRS.getBytes("GameModel"), GameModel.class);
-				int lastCommand = gameRS.getInt("LastCommand");
+				int lastCommand = gameRS.getInt("LastSavedGame");
 				
 				// Get all the commands for this game
 				Statement commandSTMT = connection.createStatement();

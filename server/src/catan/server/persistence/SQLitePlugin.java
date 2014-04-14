@@ -17,16 +17,20 @@ public class SQLitePlugin implements PersistenceProvider {
 
 	public SQLitePlugin() {
 		Connection conn = null;
-	    Statement stmt = null;
+	    Statement stmt1 = null;
+	    Statement stmt2 = null;
+	    Statement stmt3 = null;
+	    Statement stmt4 = null;
+
 		 	
 	    try {
 			
 		 	Class.forName("org.sqlite.JDBC");
 			
 	        conn = DriverManager.getConnection("jdbc:sqlite:server/persistence/sqlite/catan.sqlite");
-	        stmt = conn.createStatement();
 	        
-	        String sql = "CREATE TABLE Game("
+	        stmt1 = conn.createStatement();
+	        String gameTable = "CREATE TABLE Game("
 	        				+"Id INTEGER NOT NULL, "
 	        				+"GameModel BLOB NOT NULL, "
 	        				+"OrigGameModel BLOB NOT NULL, "
@@ -34,8 +38,42 @@ public class SQLitePlugin implements PersistenceProvider {
 	        				+"PRIMARY KEY(Id)"
 	        				+");"; 
 	        
-	        stmt.executeUpdate(sql);
-	        stmt.close();
+	        stmt1.executeUpdate(gameTable);
+	        stmt1.close();
+
+	        stmt2 = conn.createStatement();
+	        String userTable = "CREATE TABLE User("
+    				+"Id INTEGER NOT NULL, "
+    				+"Name varchar(255) NOT NULL, "
+    				+"Password varchar(255) NOT NULL, "
+    				+"PRIMARY KEY(Id)"
+    				+");"; 
+	        stmt2.executeUpdate(userTable);
+	        stmt2.close();
+	        
+	        stmt3 = conn.createStatement();
+	        String commandTable = "CREATE TABLE Command("
+    				+"Id INTEGER NOT NULL, "
+    				+"Command BLOB NOT NULL, "
+    				+"GameID INTEGER NOT NULL, "
+    				+"PRIMARY KEY(Id), "
+    				+"FOREIGN KEY(GameId) REFERENCES Game(Id)"
+    				+");"; 
+	        
+	        stmt3.executeUpdate(commandTable);
+	        stmt3.close();
+	        
+	        stmt4 = conn.createStatement();
+	        String activityTable = "CREATE TABLE Activity("
+    				+"UserId INTEGER NOT NULL, "
+    				+"GameId INTEGER NOT NULL, "
+    				+"FOREIGN KEY(UserId) REFERENCES User(Id)"
+    				+"FOREIGN KEY(GameId) REFERENCES Game(Id)"
+    				+");"; 
+	        
+	        stmt4.executeUpdate(activityTable);
+	        stmt4.close();
+	        
 	        conn.close();
 	        
 		 	} catch (ClassNotFoundException e) {

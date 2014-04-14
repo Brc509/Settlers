@@ -1,5 +1,6 @@
 package catan.server.persistence;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.io.ByteArrayOutputStream;
@@ -9,8 +10,10 @@ import java.io.ObjectOutputStream;
 import java.sql.Connection;  
 import java.sql.DriverManager;  
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement; 
+
 
 
 import catan.model.GameModel;
@@ -22,14 +25,17 @@ public class SQLitePlugin implements PersistenceProvider {
 	private static Connection conn;
 	private final String db = "jdbc:sqlite:server/persistence/sqlite/catan.sqlite";
 	private int checkpointFrequency;
+	private boolean loading;
 
 	public SQLitePlugin() {
 
+		loading = false;
+		
 		Statement stmt1 = null;
 	    Statement stmt2 = null;
 	    Statement stmt3 = null;
 	    Statement stmt4 = null;
-	
+	    
 	    try {
 			
 		 	Class.forName("org.sqlite.JDBC");
@@ -174,8 +180,43 @@ public class SQLitePlugin implements PersistenceProvider {
 
 	@Override
 	public Map<Integer, GameModel> loadGames() {
-		// TODO Auto-generated method stub
-		return null;
+
+		System.out.println("Loading games...");
+		Map<Integer, GameModel> games = new HashMap<>();
+		loading = true;		
+		
+		Connection connection = getConnection();
+		Statement stmt = null;
+		try {
+			
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Games");
+	
+			// For every game
+			while (rs.next()) {
+				
+				int gameID = rs.getInt("Id");
+				rs.getString("");
+				
+				// Get all the commands for this game
+				Statement commandSTMT = connection.createStatement();
+				ResultSet commandRS = commandSTMT.executeQuery("SELECT * FROM COMMANDS WHERE GameID = " + gameID);
+						
+				while (commandRS.next()) {
+					
+					// TODO get the updated game model (using the last saved model + the needed commands to be executed)
+				}
+			}
+		} 
+		catch (SQLException e) {
+			
+			System.out.println("SQL Exception in loadGames!");
+			e.printStackTrace();
+		}
+		
+		loading = false;
+		System.out.println("Done loading games.");
+		return games;
 	}
 	
 	private Connection getConnection () {

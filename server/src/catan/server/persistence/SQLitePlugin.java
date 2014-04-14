@@ -92,7 +92,7 @@ public class SQLitePlugin implements PersistenceProvider {
 	    				+"Id INTEGER NOT NULL, "
 	    				+"Command BLOB NOT NULL, "
 	    				+"GameID INTEGER NOT NULL, "
-	    				+"Type varchar(255) NOT NULL, "
+	    				+"Type BLOB NOT NULL, "
 	    				+"PRIMARY KEY(Id), "
 	    				+"FOREIGN KEY(GameId) REFERENCES Game(Id)"
 	    				+");"; 
@@ -168,7 +168,7 @@ public class SQLitePlugin implements PersistenceProvider {
 	        
 	        connection.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.out.println("");
 			e.printStackTrace();
 		}
 		return users;
@@ -280,6 +280,7 @@ public class SQLitePlugin implements PersistenceProvider {
 		
 		return null;
     }
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Map<Integer, GameModel> loadGames() {
 
@@ -290,25 +291,36 @@ public class SQLitePlugin implements PersistenceProvider {
 		Connection connection = getConnection();
 		Statement stmt = null;
 		try {
-			
+			// Make the query to get all games
 			stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Games");
+			ResultSet gameRS = stmt.executeQuery("SELECT * FROM Games;");
 	
-			// For every game
-			while (rs.next()) {
+			// For every game..
+			while (gameRS.next()) {
 				
-				int gameID = rs.getInt("Id");
-//				rs.getString("");
+				// Get the game ID and game json
+				int gameID = gameRS.getInt("Id");
+				GameModel game = getBlob(gameRS.getBytes("GameModel"), GameModel.class);
+				int lastCommand = gameRS.getInt("LastCommand");
 				
 				// Get all the commands for this game
 				Statement commandSTMT = connection.createStatement();
-				ResultSet commandRS = commandSTMT.executeQuery("SELECT * FROM COMMANDS WHERE GameID = " + gameID);
-						
+				ResultSet commandRS = commandSTMT.executeQuery("SELECT * FROM COMMANDS WHERE GameID = " + gameID + " AND Id > " + lastCommand + ";");
+				
+				// For every command in this game..
 				while (commandRS.next()) {
 					
-					// TODO get the updated game model (using the last saved model + the needed commands to be executed)
+					// Get the command type and blob, and execute the command on this game
+					Class name = getBlob(commandRS.getBytes("Type"), Class.class);
+					Command nextCommand = getBlob(commandRS.getBytes("Command"), name);
+					nextCommand.execute(game);
 				}
+				commandRS.close();
+				
+				// Save this game to a map
+				games.put(gameID, game);
 			}
+			gameRS.close();
 		} 
 		catch (SQLException e) {
 			

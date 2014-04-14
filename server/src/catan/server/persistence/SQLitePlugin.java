@@ -18,6 +18,8 @@ import catan.server.command.Command;
 public class SQLitePlugin implements PersistenceProvider {
 	
 	private static Connection conn;
+	private final String db = "jdbc:sqlite:server/persistence/sqlite/catan.sqlite";
+	private int checkpointFrequency;
 
 	public SQLitePlugin() {
 
@@ -29,6 +31,7 @@ public class SQLitePlugin implements PersistenceProvider {
 	    try {
 			
 		 	Class.forName("org.sqlite.JDBC");
+
 			File file = new File("server/persistence/sqlite/catan.sqlite");
 			if(!file.exists()){
 				file.getParentFile().mkdirs();
@@ -38,6 +41,52 @@ public class SQLitePlugin implements PersistenceProvider {
 					e.printStackTrace();
 				}
 			}
+			
+	        conn = getConnection();
+	        stmt1 = conn.createStatement();
+	        String gameTable = "CREATE TABLE Game("
+	        				+"Id INTEGER NOT NULL, "
+	        				+"GameModel BLOB NOT NULL, "
+	        				+"OrigGameModel BLOB NOT NULL, "
+	        				+"LastSavedGame INTEGER NOT NULL, "
+	        				+"PRIMARY KEY(Id)"
+	        				+");"; 
+	        
+	        stmt1.executeUpdate(gameTable);
+	        stmt1.close();
+
+	        stmt2 = conn.createStatement();
+	        String userTable = "CREATE TABLE User("
+    				+"Id INTEGER NOT NULL, "
+    				+"Name varchar(255) NOT NULL, "
+    				+"Password varchar(255) NOT NULL, "
+    				+"PRIMARY KEY(Id)"
+    				+");"; 
+	        stmt2.executeUpdate(userTable);
+	        stmt2.close();
+	        
+	        stmt3 = conn.createStatement();
+	        String commandTable = "CREATE TABLE Command("
+    				+"Id INTEGER NOT NULL, "
+    				+"Command BLOB NOT NULL, "
+    				+"GameID INTEGER NOT NULL, "
+    				+"PRIMARY KEY(Id), "
+    				+"FOREIGN KEY(GameId) REFERENCES Game(Id)"
+    				+");"; 
+	        
+	        stmt3.executeUpdate(commandTable);
+	        stmt3.close();
+	        
+	        stmt4 = conn.createStatement();
+	        String activityTable = "CREATE TABLE Activity("
+    				+"UserId INTEGER NOT NULL, "
+    				+"GameId INTEGER NOT NULL, "
+    				+"FOREIGN KEY(UserId) REFERENCES User(Id)"
+    				+"FOREIGN KEY(GameId) REFERENCES Game(Id)"
+    				+");"; 
+	        
+	        stmt4.executeUpdate(activityTable);
+	        stmt4.close();
 	        
 			conn = DriverManager.getConnection("jdbc:sqlite:" + file.getPath());
 	        
@@ -98,12 +147,28 @@ public class SQLitePlugin implements PersistenceProvider {
 	
 	@Override
 	public void setCheckpointFrequency(int frequency) {
-		// TODO Auto-generated method stub
+		checkpointFrequency = frequency;
+		System.out.println("Checkpoint frequency set to " + checkpointFrequency + ".");
 	}
 
 	@Override
 	public void saveUser(RegisteredUser user) {
-		// TODO Auto-generated method stub
+        
+        Connection connection = getConnection();
+
+		PreparedStatement stmt;
+		try {
+			stmt = connection.prepareStatement("INSERT INTO users (name,password,playerID) VALUES(?,?,?)");
+			stmt.setString(1,user.getName());
+	        stmt.setString(2,user.getPassword());
+	        stmt.setInt(3,user.getPlayerID());
+	        stmt.executeUpdate();
+	        
+	        connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -125,6 +190,16 @@ public class SQLitePlugin implements PersistenceProvider {
 	@Override
 	public Map<Integer, GameModel> loadGames() {
 		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private Connection getConnection () {
+		try {
+			return DriverManager.getConnection(db);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 }

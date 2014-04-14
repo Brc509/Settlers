@@ -18,8 +18,11 @@ import java.sql.SQLException;
 import java.sql.Statement; 
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import catan.model.GameModel;
+import catan.server.Games;
 import catan.server.RegisteredUser;
 import catan.server.command.Command;
 
@@ -29,9 +32,12 @@ public class SQLitePlugin implements PersistenceProvider {
 	private final String db = "jdbc:sqlite:server/persistence/sqlite/catan.sqlite";
 	private int checkpointFrequency;
 	private boolean loading;
+	private final Map<Integer, Integer> commandCounts;
+	private int commandCount = 0;
 
 	public SQLitePlugin() {
 		
+		commandCounts = new HashMap<Integer, Integer>();
 		System.out.println("CREATING OUR SQLITE PLUGIN");
 
 		loading = false;
@@ -205,10 +211,37 @@ public class SQLitePlugin implements PersistenceProvider {
 	        stmt.setInt(2,gameID);
 	        stmt.setString(3, command.getClass().getSimpleName());
 	        stmt.executeUpdate();
+	        commandCount++;
 	     
+	        if (!commandCounts.containsKey(gameID)) {
+				commandCounts.put(gameID, 0);
+			}
+	        
+			commandCounts.put(gameID, commandCounts.get(gameID) + 1);
+			
+			if (commandCounts.get(gameID) >= checkpointFrequency) {
+				saveCheckpoint(gameID, Games.get().getGames().get(gameID));
+				// Reset the checkpoint count for this game ID
+				commandCounts.put(gameID, 0);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} 
+	}
+	
+	private void saveCheckpoint(int gameID, GameModel model){
+
+		PreparedStatement stmt = null;
+		try {
+			stmt = conn.prepareStatement("UPDATE Games SET GameModel = ?, LastSavedGame = ? WHERE Id = ?");
+			stmt.setBytes(1, createBlob(model));
+			stmt.setInt(2, commandCount - 1);
+			stmt.setInt(3, gameID);
+			stmt.executeUpdate();
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
 	}
 	
 	private byte[] createBlob(Object object)  {

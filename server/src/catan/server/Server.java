@@ -66,7 +66,6 @@ public class Server {
 
 	public Server(Integer port, Integer queueSize, String ppFactoryClassName, Integer checkpointFrequency) {
 
-		SQLitePlugin sql = new SQLitePlugin();
 		injector = Guice.createInjector(new HandlerModule_Prod());
 		fdhFactory = injector.getInstance(FileDownloadHandlerFactory.class);
 

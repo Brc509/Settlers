@@ -46,6 +46,8 @@ public class tester {
 		assertEquals("Should be Mark", "Mark", users.get(3).getName());
 		assertEquals("Should be mark", "mark", users.get(3).getPassword());
 		assertEquals("Should be 3", 3, users.get(3).getPlayerID());
+		deleteFiles();
+
 	}
 	
 	@Test
@@ -66,7 +68,10 @@ public class tester {
 //		System.out.println(retrievedModel);
 		
 		assertTrue("Testing if GameModel saved and retrieved", originalModel.equals(retrievedModel));
+		deleteFiles();
+
 	}
+	
 
 	@Test
 	public void JsonPluginTest1() {
@@ -97,6 +102,8 @@ public class tester {
 		assertEquals("Should be Mark", "Mark", users.get(3).getName());
 		assertEquals("Should be mark", "mark", users.get(3).getPassword());
 		assertEquals("Should be 3", 3, users.get(3).getPlayerID());
+		deleteFiles();
+
 	}
 	
 	@Test
@@ -117,6 +124,8 @@ public class tester {
 //		System.out.println(retrievedModel);
 		
 		assertTrue("Testing if GameModel saved and retrieved", originalModel.equals(retrievedModel));
+		deleteFiles();
+
 	}
 	
 	public void deleteFiles(){

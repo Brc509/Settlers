@@ -1,4 +1,4 @@
-﻿<project name="Demo Server" default="server" basedir=".">
+<project name="Demo Server" default="server" basedir=".">
 
 	<!-- PROPERTIES -->
 	<!-- ********** -->
@@ -107,7 +107,7 @@
 			<classpath>
 				<path refid="our-server-classpath"/>
 			</classpath>
-			<arg value="catan.test.MovesHandlerTests"/>
+			<arg value="catan.test.tester"/>
 		</java>
 	</target>
 

@@ -15,6 +15,7 @@ public class BuyDevCardCommand implements Command {
 
 	private String type;
 	private int playerIndex;
+	private int pick = -1;
 
 	public BuyDevCardCommand() {}
 
@@ -23,26 +24,28 @@ public class BuyDevCardCommand implements Command {
 
 		Server.println("Executing command: \"" + type + "\".");
 
-		// Pick a random dev card from the deck
 		DevCardList deck = game.getDeck();
-		List<Integer> stack = new ArrayList<>();
-		for (int n = 0; n < deck.getMonopoly(); n++) {
-			stack.add(0);
+		if (pick == -1) {
+			// Pick a random dev card from the deck
+			List<Integer> stack = new ArrayList<>();
+			for (int n = 0; n < deck.getMonopoly(); n++) {
+				stack.add(0);
+			}
+			for (int n = 0; n < deck.getMonument(); n++) {
+				stack.add(1);
+			}
+			for (int n = 0; n < deck.getRoadBuilding(); n++) {
+				stack.add(2);
+			}
+			for (int n = 0; n < deck.getSoldier(); n++) {
+				stack.add(3);
+			}
+			for (int n = 0; n < deck.getYearOfPlenty(); n++) {
+				stack.add(4);
+			}
+			int index = new Random().nextInt(stack.size());
+			pick = stack.get(index);
 		}
-		for (int n = 0; n < deck.getMonument(); n++) {
-			stack.add(1);
-		}
-		for (int n = 0; n < deck.getRoadBuilding(); n++) {
-			stack.add(2);
-		}
-		for (int n = 0; n < deck.getSoldier(); n++) {
-			stack.add(3);
-		}
-		for (int n = 0; n < deck.getYearOfPlenty(); n++) {
-			stack.add(4);
-		}
-		int index = new Random().nextInt(stack.size());
-		int pick = stack.get(index);
 
 		// Move the dev card from the deck to the player
 		DevCardList newDC = game.getPlayerNewDevCards(playerIndex);

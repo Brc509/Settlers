@@ -21,6 +21,7 @@ public class SoldierCommand implements Command {
 	private int playerIndex;
 	private int victimIndex;
 	private HexLocation location;
+	private String robResource = null;
 
 	public SoldierCommand() {}
 
@@ -97,7 +98,9 @@ public class SoldierCommand implements Command {
 				Player player = players[playerIndex];
 				Player victim = players[victimIndex];
 
-				String robResource = victim.getResources().getRandomResource();
+				if (robResource == null) {
+					robResource = victim.getResources().getRandomResource();
+				}
 				player.getResources().incrementResource(robResource);
 				victim.getResources().decrementResource(robResource);
 

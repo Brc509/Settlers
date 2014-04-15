@@ -134,6 +134,7 @@ public class JsonPlugin implements PersistenceProvider {
 				userObject = usersArray.get(n).getAsJsonObject();
 				RegisteredUser user = new RegisteredUser(userObject.get("username").getAsString(), userObject.get("password").getAsString(), userObject.get("userID").getAsInt());
 				users.add(user);
+				System.out.println("  User (\"" + user.getName() + "\", \"" + user.getPassword() + "\", " + user.getPlayerID() + ") loaded.");
 			}
 		} catch (JsonSyntaxException | JsonIOException e) {
 			e.printStackTrace();
@@ -177,7 +178,7 @@ public class JsonPlugin implements PersistenceProvider {
 	@Override
 	public void saveCommand(int gameID, Command command) {
 		if (!loading) {
-			System.out.println("Saving command \"" + command.getClass().getSimpleName() + "\" for game " + gameID + "...");
+			System.out.println("Saving command for game " + gameID + "...");
 			try {
 				// Read in the commands array
 				JsonArray commandListArray = readJSONFromFile(COMMANDS_FILE, JsonArray.class);
@@ -196,6 +197,7 @@ public class JsonPlugin implements PersistenceProvider {
 				}
 				// Increment the command count for this game ID
 				commandCounts.put(gameID, commandCounts.get(gameID) + 1);
+				System.out.println("  Command " + commandCounts.get(gameID) + " (" + command.getClass().getSimpleName() + ") saved.");
 				// Increment the checkpoint count for this game ID
 				checkpointCounts.put(gameID, checkpointCounts.get(gameID) + 1);
 				// If the checkpoint count has reached the checkpoint threshold, save a checkpoint
@@ -230,24 +232,32 @@ public class JsonPlugin implements PersistenceProvider {
 			for (int gameIndex = 0; gameIndex < gamesArray.size(); gameIndex++) {
 				gameObject = gamesArray.get(gameIndex).getAsJsonObject();
 				int gameID = gameObject.get("gameID").getAsInt();
+				System.out.println("  Loading game " + gameID + "...");
 				// Get the checkpoint model, or the baseline model if there is no checkpoint
 				modelObject = gameObject.getAsJsonObject("checkpoint");
 				if (modelObject.equals(EMPTY_JSON_OBJECT)) {
 					modelObject = gameObject.getAsJsonObject("baseline");
 				}
 				GameModel game = gson.fromJson(modelObject, GameModel.class);
-				// Get the internal commands array
-				commandsArray = getObjectForGame(commandListArray, gameID).getAsJsonArray("commands");
-				// Deserialize and execute remaining commands on the model
+				System.out.println("    Baseline/checkpoint loaded.");
+				// Restore the command count for this game ID
 				int lastCommand = gameObject.get("lastCommand").getAsInt();
-				for (int commandIndex = lastCommand; commandIndex < commandsArray.size(); commandIndex++) {
+				commandCounts.put(gameID, lastCommand);
+				// Deserialize and execute remaining commands on the model
+				System.out.println("    Loading extra commands...");
+				commandsArray = getObjectForGame(commandListArray, gameID).getAsJsonArray("commands");
+				for (int commandIndex = commandCounts.get(gameID); commandIndex < commandsArray.size(); commandIndex++) {
 					commandObject = commandsArray.get(commandIndex).getAsJsonObject();
 					endpoint = "/moves/" + commandObject.get("type").getAsString();
 					command = gson.fromJson(commandObject, HandlerUtils.getCommandClassForEndpoint(endpoint));
 					command.execute(game);
+					commandCounts.put(gameID, commandCounts.get(gameID) + 1);
+					System.out.println("      Command " + commandCounts.get(gameID) + " (" + command.getClass().getSimpleName() + ") loaded.");
 				}
+				System.out.println("    Done.");
 				// Add the fully restored model to the list
 				games.put(gameID, game);
+				System.out.println("  Done.");
 			}
 		} catch (JsonSyntaxException | JsonIOException e) {
 			e.printStackTrace();
@@ -258,7 +268,7 @@ public class JsonPlugin implements PersistenceProvider {
 	}
 
 	private void saveCheckpoint(int gameID, GameModel model) {
-		System.out.println("Saving checkpoint for game " + gameID + "...");
+		System.out.println("  Saving checkpoint for game " + gameID + "...");
 		try {
 			// Read in the games array
 			JsonArray gamesArray = readJSONFromFile(GAMES_FILE, JsonArray.class);
@@ -273,7 +283,7 @@ public class JsonPlugin implements PersistenceProvider {
 		} catch (JsonSyntaxException | JsonIOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Done.");
+		System.out.println("  Done.");
 	}
 
 	private JsonObject getObjectForGame(JsonArray array, int gameID) {

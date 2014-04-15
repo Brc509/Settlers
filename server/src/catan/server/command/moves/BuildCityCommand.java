@@ -23,7 +23,7 @@ public class BuildCityCommand implements Command {
 
 		int x;
 		int y;
-		String direction;
+		int direction;
 	}
 
 	@Override
@@ -49,42 +49,42 @@ public class BuildCityCommand implements Command {
 
 		JsonArray hexes = game.getModel().get("map").getAsJsonObject().get("hexGrid").getAsJsonObject().get("hexes").getAsJsonArray();
 
-		String direction = vertexLocation.direction;
-		int corner = getCornerValue(direction);
+		int direction = vertexLocation.direction;
+		//int corner = getCornerValue(direction);
 
-		if (direction.equals("NE")) {
+		if (direction==2) {
 			// (x, y-1, "SE")(x+1, y-1, "W") too
-			setHex(getHex(vertexLocation.x, vertexLocation.y, direction, hexes), corner, playerIndex);
+			setHex(getHex(vertexLocation.x, vertexLocation.y, "NE", hexes), direction, playerIndex);
 			setHex(getHex(vertexLocation.x, vertexLocation.y - 1, "SE", hexes), getCornerValue("SE"), playerIndex);
 			setHex(getHex(vertexLocation.x + 1, vertexLocation.y - 1, "W", hexes), getCornerValue("W"), playerIndex);
 		}
-		if (direction.equals("NW")) {
+		if (direction==1) {
 			// (x, y-1, "SW")(x-1, y, "E") too
-			setHex(getHex(vertexLocation.x, vertexLocation.y, direction, hexes), corner, playerIndex);
+			setHex(getHex(vertexLocation.x, vertexLocation.y, "NW", hexes), direction, playerIndex);
 			setHex(getHex(vertexLocation.x, vertexLocation.y - 1, "SW", hexes), getCornerValue("SW"), playerIndex);
 			setHex(getHex(vertexLocation.x - 1, vertexLocation.y, "E", hexes), getCornerValue("E"), playerIndex);
 		}
-		if (direction.equals("E")) {
+		if (direction==3) {
 			// (x+1, y-1, "SW")(x+1, y, "NW") too
-			setHex(getHex(vertexLocation.x, vertexLocation.y, direction, hexes), corner, playerIndex);
+			setHex(getHex(vertexLocation.x, vertexLocation.y, "E", hexes), direction, playerIndex);
 			setHex(getHex(vertexLocation.x + 1, vertexLocation.y - 1, "SW", hexes), getCornerValue("SW"), playerIndex);
 			setHex(getHex(vertexLocation.x + 1, vertexLocation.y, "NW", hexes), getCornerValue("NW"), playerIndex);
 		}
-		if (direction.equals("SW")) {
+		if (direction==5) {
 			// (x, y+1, "NW")(x-1, y+1, "E") too
-			setHex(getHex(vertexLocation.x, vertexLocation.y, direction, hexes), corner, playerIndex);
+			setHex(getHex(vertexLocation.x, vertexLocation.y, "SW", hexes), direction, playerIndex);
 			setHex(getHex(vertexLocation.x, vertexLocation.y + 1, "NW", hexes), getCornerValue("NW"), playerIndex);
 			setHex(getHex(vertexLocation.x - 1, vertexLocation.y + 1, "E", hexes), getCornerValue("E"), playerIndex);
 		}
-		if (direction.equals("SE")) {
+		if (direction==4) {
 			// (x, y+1, "NE")(x+1, y, "W") too
-			setHex(getHex(vertexLocation.x, vertexLocation.y, direction, hexes), corner, playerIndex);
+			setHex(getHex(vertexLocation.x, vertexLocation.y, "SE", hexes), direction, playerIndex);
 			setHex(getHex(vertexLocation.x, vertexLocation.y + 1, "NE", hexes), getCornerValue("NE"), playerIndex);
 			setHex(getHex(vertexLocation.x + 1, vertexLocation.y, "W", hexes), getCornerValue("W"), playerIndex);
 		}
-		if (direction.equals("W")) {
+		if (direction==0) {
 			// (x-1, y, "SE")(x-1, y+1, "NE") too
-			setHex(getHex(vertexLocation.x, vertexLocation.y, direction, hexes), corner, playerIndex);
+			setHex(getHex(vertexLocation.x, vertexLocation.y, "W", hexes), direction, playerIndex);
 			setHex(getHex(vertexLocation.x - 1, vertexLocation.y, "SE", hexes), getCornerValue("SE"), playerIndex);
 			setHex(getHex(vertexLocation.x - 1, vertexLocation.y + 1, "NE", hexes), getCornerValue("NE"), playerIndex);
 		}

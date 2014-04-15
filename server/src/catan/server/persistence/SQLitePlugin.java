@@ -112,6 +112,14 @@ public class SQLitePlugin implements PersistenceProvider {
 		        stmt4.close();
 		        
 	        }
+	        
+			Statement selectCommands = conn.createStatement();
+			ResultSet commandRS = selectCommands.executeQuery("SELECT * FROM Commands;");
+			int counter = 0;
+			while(commandRS.next()){
+				counter++;
+			}
+			commandCount = counter;
 		        
 			 	} catch (ClassNotFoundException e) {
 					e.printStackTrace();
@@ -129,18 +137,15 @@ public class SQLitePlugin implements PersistenceProvider {
 	@Override
 	public void saveUser(RegisteredUser user) {
         
-        Connection connection = getConnection();
-
 		PreparedStatement stmt;
 		try {
 			
-			stmt = connection.prepareStatement("INSERT INTO Users (Id,Name,Password) VALUES(?,?,?)");
+			stmt = conn.prepareStatement("INSERT INTO Users (Id,Name,Password) VALUES(?,?,?)");
 			stmt.setInt(1,user.getPlayerID());
 	        stmt.setString(2,user.getName());
 	        stmt.setString(3,user.getPassword());
 	        stmt.executeUpdate();
 	        
-	        connection.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -148,12 +153,11 @@ public class SQLitePlugin implements PersistenceProvider {
 
 	@Override
 	public List<RegisteredUser> loadUsers() {
-		Connection connection = getConnection();
         List<RegisteredUser> users = new ArrayList<RegisteredUser>();
 
         Statement stmt = null;
 		try {	        
-	        stmt = connection.createStatement();
+	        stmt = conn.createStatement();
 	        ResultSet rs = stmt.executeQuery( "SELECT * FROM USERS;" );
 
 	        while(rs.next())
@@ -166,7 +170,6 @@ public class SQLitePlugin implements PersistenceProvider {
 	        	users.add(nextUser);
 	        }
 	        
-	        connection.close();
 		} catch (SQLException e) {
 			System.out.println("");
 			e.printStackTrace();
@@ -203,38 +206,43 @@ public class SQLitePlugin implements PersistenceProvider {
 
 	@Override
 	public void saveCommand(int gameID, Command command) {
-		PreparedStatement stmt;
-		try {
-			stmt = conn.prepareStatement("INSERT INTO Commands(Command,GameId,Type) VALUES(?,?,?)");
-	        stmt.setBytes(1, createBlob(command));
-	        stmt.setInt(2,gameID);
-	        stmt.setString(3, command.getClass().getCanonicalName());
-	        stmt.executeUpdate();
-	        commandCount++;
-	     
-	        if (!commandCounts.containsKey(gameID)) {
-				commandCounts.put(gameID, 0);
-			}
-	        
-			commandCounts.put(gameID, commandCounts.get(gameID) + 1);
-			
-			if (commandCounts.get(gameID) >= checkpointFrequency) {
-				saveCheckpoint(gameID, Games.get().getGames().get(gameID));
-				// Reset the checkpoint count for this game ID
-				commandCounts.put(gameID, 0);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} 
+		if(!loading){
+			System.out.println("SAVING COMMAND \"" + command.getClass().getSimpleName() + "\"");
+			PreparedStatement stmt;
+			try {
+				stmt = conn.prepareStatement("INSERT INTO Commands(Command,GameId,Type) VALUES(?,?,?)");
+		        stmt.setBytes(1, createBlob(command));
+		        stmt.setInt(2,gameID);
+		        stmt.setString(3, command.getClass().getCanonicalName());
+		        stmt.executeUpdate();
+		        commandCount++;
+		        System.out.println(commandCount + " COMMANDS HAVE BEEN SAVED");
+		     
+		        if (!commandCounts.containsKey(gameID)) {
+					commandCounts.put(gameID, 0);
+				}
+		        
+				commandCounts.put(gameID, commandCounts.get(gameID) + 1);
+				
+				if (commandCounts.get(gameID) >= checkpointFrequency) {
+					saveCheckpoint(gameID, Games.get().getGames().get(gameID));
+					// Reset the checkpoint count for this game ID
+					commandCounts.put(gameID, 0);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} 
+		}
 	}
 	
 	private void saveCheckpoint(int gameID, GameModel model){
 
+		System.out.println("SAVING CHECKPOINT");
 		PreparedStatement stmt = null;
 		try {
 			stmt = conn.prepareStatement("UPDATE Games SET GameModel = ?, LastSavedGame = ? WHERE Id = ?");
 			stmt.setBytes(1, createBlob(model));
-			stmt.setInt(2, commandCount - 1);
+			stmt.setInt(2, commandCount);
 			stmt.setInt(3, gameID);
 			stmt.executeUpdate();
 			stmt.close();
@@ -279,7 +287,7 @@ public class SQLitePlugin implements PersistenceProvider {
 		
 		return null;
     }
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	@Override
 	public Map<Integer, GameModel> loadGames() {
 
@@ -287,11 +295,10 @@ public class SQLitePlugin implements PersistenceProvider {
 		Map<Integer, GameModel> games = new HashMap<>();
 		loading = true;		
 		
-		Connection connection = getConnection();
 		Statement stmt = null;
 		try {
 			// Make the query to get all games
-			stmt = connection.createStatement();
+			stmt = conn.createStatement();
 			ResultSet gameRS = stmt.executeQuery("SELECT * FROM Games;");
 	
 			// For every game..
@@ -307,7 +314,7 @@ public class SQLitePlugin implements PersistenceProvider {
 				int lastCommand = gameRS.getInt("LastSavedGame");
 				
 				// Get all the commands for this game
-				Statement commandSTMT = connection.createStatement();
+				Statement commandSTMT = conn.createStatement();
 				ResultSet commandRS = commandSTMT.executeQuery("SELECT * FROM COMMANDS WHERE GameID = " + gameID + " AND Id > " + lastCommand + ";");
 				
 				// For every command in this game..
@@ -320,6 +327,7 @@ public class SQLitePlugin implements PersistenceProvider {
 						
 						commandClass = (Class<? extends Command>) Class.forName(name);
 						Command nextCommand = getBlob(commandRS.getBytes("Command"), commandClass);
+						System.out.println("LOADING EXTRA COMMAND \"" + nextCommand.getClass().getSimpleName() + "\"");
 						nextCommand.execute(game);
 
 					} catch (ClassNotFoundException e) {

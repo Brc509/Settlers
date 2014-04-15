@@ -34,33 +34,6 @@ public class JsonPlugin implements PersistenceProvider {
 	private static boolean loading = false;
 
 	// Create and initialize new JSON files if necessary
-	static {
-		try {
-			if (!USERS_FILE.exists()) {
-				USERS_FILE.getParentFile().mkdirs();
-				USERS_FILE.createNewFile();
-			}
-			if (!GAMES_FILE.exists()) {
-				GAMES_FILE.getParentFile().mkdirs();
-				GAMES_FILE.createNewFile();
-			}
-			if (!COMMANDS_FILE.exists()) {
-				COMMANDS_FILE.getParentFile().mkdirs();
-				COMMANDS_FILE.createNewFile();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if (USERS_FILE.length() == 0) {
-			writeJSONToFile(USERS_FILE, new JsonArray());
-		}
-		if (GAMES_FILE.length() == 0) {
-			writeJSONToFile(GAMES_FILE, new JsonArray());
-		}
-		if (COMMANDS_FILE.length() == 0) {
-			writeJSONToFile(COMMANDS_FILE, new JsonArray());
-		}
-	}
 
 	private static <T> T readJSONFromFile(File file, Class<T> classOfT) {
 		T t = null;
@@ -93,6 +66,31 @@ public class JsonPlugin implements PersistenceProvider {
 		checkpointFrequency = 1; // Default to save a checkpoint every time a command is saved
 		commandCounts = new HashMap<>();
 		checkpointCounts = new HashMap<>();
+		try {
+			if (!USERS_FILE.exists()) {
+				USERS_FILE.getParentFile().mkdirs();
+				USERS_FILE.createNewFile();
+			}
+			if (!GAMES_FILE.exists()) {
+				GAMES_FILE.getParentFile().mkdirs();
+				GAMES_FILE.createNewFile();
+			}
+			if (!COMMANDS_FILE.exists()) {
+				COMMANDS_FILE.getParentFile().mkdirs();
+				COMMANDS_FILE.createNewFile();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if (USERS_FILE.length() == 0) {
+			writeJSONToFile(USERS_FILE, new JsonArray());
+		}
+		if (GAMES_FILE.length() == 0) {
+			writeJSONToFile(GAMES_FILE, new JsonArray());
+		}
+		if (COMMANDS_FILE.length() == 0) {
+			writeJSONToFile(COMMANDS_FILE, new JsonArray());
+		}
 	}
 
 	@Override

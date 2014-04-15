@@ -57,13 +57,13 @@ public class tester {
 		GameModel testModel = new GameModel();
 		Gson gson = new Gson();
 		String originalModel = gson.toJson(testModel);
-		System.out.println(originalModel);
+//		System.out.println(originalModel);
 		
 		test.saveBaseline(1, testModel);
 		
 		Map<Integer, GameModel> testMap = test.loadGames();
 		String retrievedModel = gson.toJson(testMap.get(1));
-		System.out.println(retrievedModel);
+//		System.out.println(retrievedModel);
 		
 		assertTrue("Testing if GameModel saved and retrieved", originalModel.equals(retrievedModel));
 	}
@@ -108,13 +108,13 @@ public class tester {
 		GameModel testModel = new GameModel();
 		Gson gson = new Gson();
 		String originalModel = gson.toJson(testModel);
-		System.out.println(originalModel);
+//		System.out.println(originalModel);
 		
 		test.saveBaseline(0, testModel);
 		
 		Map<Integer, GameModel> testMap = test.loadGames();
 		String retrievedModel = gson.toJson(testMap.get(0));
-		System.out.println(retrievedModel);
+//		System.out.println(retrievedModel);
 		
 		assertTrue("Testing if GameModel saved and retrieved", originalModel.equals(retrievedModel));
 	}
